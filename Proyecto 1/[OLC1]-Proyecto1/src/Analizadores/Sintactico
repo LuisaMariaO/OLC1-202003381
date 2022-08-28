@@ -24,6 +24,7 @@ parser code
 
 terminal String PTCOMA,PARIZQ,PARDER,CORIZQ,CORDER;
 terminal String MAS,MENOS,POR,DIVIDIDO;
+terminal string mas,menos,por,dividido;
 terminal String ENTERO;
 terminal String DECIMAL;
 terminal String UMENOS;
