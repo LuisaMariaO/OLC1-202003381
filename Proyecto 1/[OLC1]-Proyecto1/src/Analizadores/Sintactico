@@ -22,44 +22,55 @@ parser code
     }  
 :} 
 
-terminal String PTCOMA,PARIZQ,PARDER,CORIZQ,CORDER;
-terminal String MAS,MENOS,POR,DIVIDIDO;
-terminal string mas,menos,por,dividido;
-terminal String ENTERO;
-terminal String DECIMAL;
-terminal String UMENOS;
-terminal String REVALUAR;
+terminal String t_numero,t_cadena,t_boolean,t_caracter;
+terminal String mas, menos, por, dividido,potencia, corcheteAbre, corcheteCierra, mod, parentesisAbre, parentesisCierra;
+terminal string mayor, menor, mayorIgual, menorIgual, esIgual, esDifetente;
+terminal String or, and, not;
+terminal String inicio, fin;
+terminal String comentarioSimple, comentarioMultiple;
+terminal String ingresar, como, conValor, puntoycoma, coma, variable;
+terminal String flecha;
+terminal String si, entonses, finSi, deLoContraro, oSi;
+terminal String segun, interrogacionAbre, interrogacionCierra, finSegun;
+terminal String para, hasta, hacer, incremental, finPara;
+terminal String mientras, finMientras;
+terminal String repetir, hastaQue;
+terminal String retornar;
+terminal String metodo, finMetodo, conParametros;
+terminal String funcion, finFuncion;
+terminal String ejecutar;
+terminal String imprimir, imprimirNl;
+terminal String entero, decimal, cadena, booleano, caracter;
 
-non terminal ini;
-non terminal instrucciones;
-non terminal instruccion;
-non terminal Double expresion;
+non terminal INICIO;
+non terminal INSTRUCCIONES;
+non terminal INSTRUCCION;
+non terminal Double EXPRESION;
 
-precedence left MAS,MENOS;
-precedence left POR,DIVIDIDO;
-precedence right UMENOS; 
+precedence left mas, menos;
+precedence left por, dividido;
 
-start with ini; 
 
-ini::=instrucciones;
+start with INICIO; 
 
-instrucciones ::= 
-   instruccion instrucciones
- | instruccion
- | error instrucciones
+INICIO::=INSTRUCCIONES;
+
+INSTRUCCIONES ::= 
+   INSTRUCCION INSTRUCCIONES
+ | INSTRUCCION
+ | error INSTRUCCIONES
 ; 
 
-instruccion ::= 
-   REVALUAR CORIZQ expresion:a CORDER PTCOMA{:System.out.println("El valor de la expresión es: "+a);:}
+INSTRUCCION ::= 
+   EXPRESION:a{:System.out.println("El valor de la expresión es: "+a);:}
 ;
 
-expresion  ::= 
-    MENOS expresion:a                      {:RESULT=a*-1;:}%prec UMENOS     
- |  expresion:a MAS        expresion:b     {:RESULT=a+b;:}
- |  expresion:a MENOS      expresion:b     {:RESULT=a-b;:}
- |  expresion:a POR        expresion:b     {:RESULT=a*b;:}
- |  expresion:a DIVIDIDO   expresion:b     {:RESULT=a/b;:}
- |  ENTERO:a                               {:RESULT=new Double(a);:}
- |  DECIMAL:a                              {:RESULT=new Double(a);:}
- |  PARIZQ expresion:a PARDER              {:RESULT=a;:}
+EXPRESION  ::=  
+    EXPRESION:a mas        EXPRESION:b     {:RESULT=a+b;:}
+ |  EXPRESION:a menos      EXPRESION:b     {:RESULT=a-b;:}
+ |  EXPRESION:a por        EXPRESION:b     {:RESULT=a*b;:}
+ |  EXPRESION:a dividido   EXPRESION:b     {:RESULT=a/b;:}
+ |  entero:a                               {:RESULT=new Double(a);:}
+ |  decimal:a                              {:RESULT=new Double(a);:}
+ |  parentesisAbre EXPRESION:a parentesisCierra              {:RESULT=a;:}
 ;

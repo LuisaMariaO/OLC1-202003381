@@ -31,11 +31,11 @@ public class Sintactico extends java_cup.runtime.lr_parser {
   /** Production table. */
   protected static final short _production_table[][] = 
     unpackFromStrings(new String[] {
-    "\000\016\000\002\002\004\000\002\002\003\000\002\003" +
-    "\004\000\002\003\003\000\002\003\004\000\002\004\007" +
-    "\000\002\005\004\000\002\005\005\000\002\005\005\000" +
-    "\002\005\005\000\002\005\005\000\002\005\003\000\002" +
-    "\005\003\000\002\005\005" });
+    "\000\015\000\002\002\004\000\002\002\003\000\002\003" +
+    "\004\000\002\003\003\000\002\003\004\000\002\004\003" +
+    "\000\002\005\005\000\002\005\005\000\002\005\005\000" +
+    "\002\005\005\000\002\005\003\000\002\005\003\000\002" +
+    "\005\005" });
 
   /** Access to production table. */
   public short[][] production_table() {return _production_table;}
@@ -43,31 +43,31 @@ public class Sintactico extends java_cup.runtime.lr_parser {
   /** Parse-action table. */
   protected static final short[][] _action_table = 
     unpackFromStrings(new String[] {
-    "\000\034\000\006\003\006\024\007\001\002\000\004\002" +
-    "\000\001\002\000\004\002\036\001\002\000\006\003\006" +
-    "\024\007\001\002\000\004\007\012\001\002\000\010\002" +
-    "\ufffe\003\006\024\007\001\002\000\004\002\uffff\001\002" +
-    "\000\012\005\013\012\014\021\017\022\015\001\002\000" +
-    "\012\005\013\012\014\021\017\022\015\001\002\000\012" +
-    "\005\013\012\014\021\017\022\015\001\002\000\016\006" +
-    "\ufff5\010\ufff5\011\ufff5\012\ufff5\013\ufff5\014\ufff5\001\002" +
-    "\000\014\010\024\011\020\012\021\013\023\014\022\001" +
-    "\002\000\016\006\ufff6\010\ufff6\011\ufff6\012\ufff6\013\ufff6" +
-    "\014\ufff6\001\002\000\012\005\013\012\014\021\017\022" +
-    "\015\001\002\000\012\005\013\012\014\021\017\022\015" +
-    "\001\002\000\012\005\013\012\014\021\017\022\015\001" +
-    "\002\000\012\005\013\012\014\021\017\022\015\001\002" +
-    "\000\004\004\025\001\002\000\010\002\ufffc\003\ufffc\024" +
-    "\ufffc\001\002\000\016\006\ufff8\010\ufff8\011\ufff8\012\ufff8" +
-    "\013\ufff8\014\ufff8\001\002\000\016\006\ufff7\010\ufff7\011" +
-    "\ufff7\012\ufff7\013\ufff7\014\ufff7\001\002\000\016\006\ufff9" +
-    "\010\ufff9\011\ufff9\012\ufff9\013\023\014\022\001\002\000" +
-    "\016\006\ufffa\010\ufffa\011\ufffa\012\ufffa\013\023\014\022" +
-    "\001\002\000\016\006\ufffb\010\ufffb\011\ufffb\012\ufffb\013" +
-    "\ufffb\014\ufffb\001\002\000\014\006\034\011\020\012\021" +
-    "\013\023\014\022\001\002\000\016\006\ufff4\010\ufff4\011" +
-    "\ufff4\012\ufff4\013\ufff4\014\ufff4\001\002\000\004\002\ufffd" +
-    "\001\002\000\004\002\001\001\002" });
+    "\000\026\000\012\003\010\020\005\101\006\102\004\001" +
+    "\002\000\026\002\ufff6\003\ufff6\010\ufff6\011\ufff6\012\ufff6" +
+    "\013\ufff6\020\ufff6\021\ufff6\101\ufff6\102\ufff6\001\002\000" +
+    "\010\020\005\101\006\102\004\001\002\000\026\002\ufff7" +
+    "\003\ufff7\010\ufff7\011\ufff7\012\ufff7\013\ufff7\020\ufff7\021" +
+    "\ufff7\101\ufff7\102\ufff7\001\002\000\004\002\000\001\002" +
+    "\000\012\003\010\020\005\101\006\102\004\001\002\000" +
+    "\014\002\ufffe\003\010\020\005\101\006\102\004\001\002" +
+    "\000\024\002\ufffc\003\ufffc\010\016\011\017\012\015\013" +
+    "\020\020\ufffc\101\ufffc\102\ufffc\001\002\000\004\002\014" +
+    "\001\002\000\004\002\001\001\002\000\010\020\005\101" +
+    "\006\102\004\001\002\000\010\020\005\101\006\102\004" +
+    "\001\002\000\010\020\005\101\006\102\004\001\002\000" +
+    "\010\020\005\101\006\102\004\001\002\000\026\002\ufff8" +
+    "\003\ufff8\010\ufff8\011\ufff8\012\ufff8\013\ufff8\020\ufff8\021" +
+    "\ufff8\101\ufff8\102\ufff8\001\002\000\026\002\ufffa\003\ufffa" +
+    "\010\ufffa\011\ufffa\012\015\013\020\020\ufffa\021\ufffa\101" +
+    "\ufffa\102\ufffa\001\002\000\026\002\ufffb\003\ufffb\010\ufffb" +
+    "\011\ufffb\012\015\013\020\020\ufffb\021\ufffb\101\ufffb\102" +
+    "\ufffb\001\002\000\026\002\ufff9\003\ufff9\010\ufff9\011\ufff9" +
+    "\012\ufff9\013\ufff9\020\ufff9\021\ufff9\101\ufff9\102\ufff9\001" +
+    "\002\000\004\002\uffff\001\002\000\004\002\ufffd\001\002" +
+    "\000\014\010\016\011\017\012\015\013\020\021\030\001" +
+    "\002\000\026\002\ufff5\003\ufff5\010\ufff5\011\ufff5\012\ufff5" +
+    "\013\ufff5\020\ufff5\021\ufff5\101\ufff5\102\ufff5\001\002" });
 
   /** Access to parse-action table. */
   public short[][] action_table() {return _action_table;}
@@ -75,17 +75,16 @@ public class Sintactico extends java_cup.runtime.lr_parser {
   /** <code>reduce_goto</code> table. */
   protected static final short[][] _reduce_table = 
     unpackFromStrings(new String[] {
-    "\000\034\000\010\002\004\003\003\004\007\001\001\000" +
-    "\002\001\001\000\002\001\001\000\006\003\034\004\007" +
-    "\001\001\000\002\001\001\000\006\003\010\004\007\001" +
-    "\001\000\002\001\001\000\004\005\015\001\001\000\004" +
-    "\005\032\001\001\000\004\005\031\001\001\000\002\001" +
-    "\001\000\002\001\001\000\002\001\001\000\004\005\030" +
-    "\001\001\000\004\005\027\001\001\000\004\005\026\001" +
-    "\001\000\004\005\025\001\001\000\002\001\001\000\002" +
-    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
+    "\000\026\000\012\002\012\003\006\004\010\005\011\001" +
+    "\001\000\002\001\001\000\004\005\026\001\001\000\002" +
+    "\001\001\000\002\001\001\000\010\003\025\004\010\005" +
+    "\011\001\001\000\010\003\024\004\010\005\011\001\001" +
+    "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
+    "\004\005\023\001\001\000\004\005\022\001\001\000\004" +
+    "\005\021\001\001\000\004\005\020\001\001\000\002\001" +
     "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
-    "\000\002\001\001\000\002\001\001\000\002\001\001" });
+    "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
+    "\002\001\001" });
 
   /** Access to <code>reduce_goto</code> table. */
   public short[][] reduce_table() {return _reduce_table;}
@@ -168,7 +167,7 @@ class CUP$Sintactico$actions {
       switch (CUP$Sintactico$act_num)
         {
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 0: // $START ::= ini EOF 
+          case 0: // $START ::= INICIO EOF 
             {
               Object RESULT =null;
 		int start_valleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).left;
@@ -182,67 +181,55 @@ class CUP$Sintactico$actions {
           return CUP$Sintactico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 1: // ini ::= instrucciones 
+          case 1: // INICIO ::= INSTRUCCIONES 
             {
               Object RESULT =null;
 
-              CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("ini",0, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
+              CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("INICIO",0, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 2: // instrucciones ::= instruccion instrucciones 
+          case 2: // INSTRUCCIONES ::= INSTRUCCION INSTRUCCIONES 
             {
               Object RESULT =null;
 
-              CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("instrucciones",1, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
+              CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("INSTRUCCIONES",1, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 3: // instrucciones ::= instruccion 
+          case 3: // INSTRUCCIONES ::= INSTRUCCION 
             {
               Object RESULT =null;
 
-              CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("instrucciones",1, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
+              CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("INSTRUCCIONES",1, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 4: // instrucciones ::= error instrucciones 
+          case 4: // INSTRUCCIONES ::= error INSTRUCCIONES 
             {
               Object RESULT =null;
 
-              CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("instrucciones",1, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
+              CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("INSTRUCCIONES",1, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 5: // instruccion ::= REVALUAR CORIZQ expresion CORDER PTCOMA 
+          case 5: // INSTRUCCION ::= EXPRESION 
             {
               Object RESULT =null;
-		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).left;
-		int aright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).right;
-		Double a = (Double)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).value;
-		System.out.println("El valor de la expresión es: "+a);
-              CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-4)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
-            }
-          return CUP$Sintactico$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 6: // expresion ::= MENOS expresion 
-            {
-              Double RESULT =null;
 		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
 		int aright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
 		Double a = (Double)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
-		RESULT=a*-1;
-              CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("expresion",3, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
+		System.out.println("El valor de la expresión es: "+a);
+              CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("INSTRUCCION",2, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 7: // expresion ::= expresion MAS expresion 
+          case 6: // EXPRESION ::= EXPRESION mas EXPRESION 
             {
               Double RESULT =null;
 		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).left;
@@ -252,12 +239,12 @@ class CUP$Sintactico$actions {
 		int bright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
 		Double b = (Double)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
 		RESULT=a+b;
-              CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("expresion",3, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
+              CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXPRESION",3, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 8: // expresion ::= expresion MENOS expresion 
+          case 7: // EXPRESION ::= EXPRESION menos EXPRESION 
             {
               Double RESULT =null;
 		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).left;
@@ -267,12 +254,12 @@ class CUP$Sintactico$actions {
 		int bright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
 		Double b = (Double)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
 		RESULT=a-b;
-              CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("expresion",3, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
+              CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXPRESION",3, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 9: // expresion ::= expresion POR expresion 
+          case 8: // EXPRESION ::= EXPRESION por EXPRESION 
             {
               Double RESULT =null;
 		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).left;
@@ -282,12 +269,12 @@ class CUP$Sintactico$actions {
 		int bright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
 		Double b = (Double)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
 		RESULT=a*b;
-              CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("expresion",3, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
+              CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXPRESION",3, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 10: // expresion ::= expresion DIVIDIDO expresion 
+          case 9: // EXPRESION ::= EXPRESION dividido EXPRESION 
             {
               Double RESULT =null;
 		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).left;
@@ -297,43 +284,43 @@ class CUP$Sintactico$actions {
 		int bright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
 		Double b = (Double)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
 		RESULT=a/b;
-              CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("expresion",3, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
+              CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXPRESION",3, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 11: // expresion ::= ENTERO 
+          case 10: // EXPRESION ::= entero 
             {
               Double RESULT =null;
 		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
 		int aright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
 		String a = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
 		RESULT=new Double(a);
-              CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("expresion",3, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
+              CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXPRESION",3, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 12: // expresion ::= DECIMAL 
+          case 11: // EXPRESION ::= decimal 
             {
               Double RESULT =null;
 		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).left;
 		int aright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()).right;
 		String a = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.peek()).value;
 		RESULT=new Double(a);
-              CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("expresion",3, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
+              CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXPRESION",3, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 13: // expresion ::= PARIZQ expresion PARDER 
+          case 12: // EXPRESION ::= parentesisAbre EXPRESION parentesisCierra 
             {
               Double RESULT =null;
 		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).left;
 		int aright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).right;
 		Double a = (Double)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).value;
 		RESULT=a;
-              CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("expresion",3, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
+              CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("EXPRESION",3, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
 

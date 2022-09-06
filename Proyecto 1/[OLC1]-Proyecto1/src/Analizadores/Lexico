@@ -30,7 +30,7 @@ variable=_[a-zA-Z0-9]+_
 
 %%
 
-"Evaluar" {return new Symbol(sym.REVALUAR,yyline,yychar,yytext());}
+
 
 
 {numero} {return new Symbol(sym.t_numero,yyline,yychar,yytext());}
