@@ -14,20 +14,22 @@ public class sym {
   public static final int finFuncion = 59;
   public static final int imprimir = 61;
   public static final int mod = 13;
+  public static final int deLoContrario = 39;
   public static final int flecha = 35;
   public static final int conValor = 31;
   public static final int hasta = 46;
+  public static final int esDiferente = 21;
   public static final int comentarioMultiple = 28;
   public static final int parentesisCierra = 15;
   public static final int hastaQue = 53;
   public static final int coma = 33;
+  public static final int entonces = 37;
   public static final int finSi = 38;
   public static final int inicio = 25;
   public static final int t_cadena = 3;
   public static final int caracter = 67;
   public static final int repetir = 52;
   public static final int menorIgual = 19;
-  public static final int entonses = 37;
   public static final int dividido = 9;
   public static final int si = 36;
   public static final int corcheteAbre = 11;
@@ -50,7 +52,6 @@ public class sym {
   public static final int or = 22;
   public static final int incremental = 48;
   public static final int por = 8;
-  public static final int esDifetente = 21;
   public static final int funcion = 58;
   public static final int potencia = 10;
   public static final int finPara = 49;
@@ -60,7 +61,6 @@ public class sym {
   public static final int variable = 34;
   public static final int ingresar = 29;
   public static final int fin = 26;
-  public static final int deLoContraro = 39;
   public static final int and = 23;
   public static final int not = 24;
   public static final int booleano = 66;
@@ -98,7 +98,7 @@ public class sym {
   "mayorIgual",
   "menorIgual",
   "esIgual",
-  "esDifetente",
+  "esDiferente",
   "or",
   "and",
   "not",
@@ -114,9 +114,9 @@ public class sym {
   "variable",
   "flecha",
   "si",
-  "entonses",
+  "entonces",
   "finSi",
-  "deLoContraro",
+  "deLoContrario",
   "oSi",
   "segun",
   "interrogacionAbre",

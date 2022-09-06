@@ -46,7 +46,7 @@ variable=_[a-zA-Z0-9]+_
 "potencia" {return new Symbol(sym.potencia,yyline,yychar,yytext());}
 "[" {return new Symbol(sym.corcheteAbre,yyline,yychar,yytext());}
 "]" {return new Symbol(sym.corcheteCierra,yyline,yychar,yytext());}
-"mod" {return new Symbol(sym.mod,yyline,yychar,yytext());} 
+"modulo" {return new Symbol(sym.mod,yyline,yychar,yytext());} 
 "(" {return new Symbol(sym.parentesisAbre,yyline,yychar,yytext());}
 ")" {return new Symbol(sym.parentesisCierra,yyline,yychar,yytext());}
 

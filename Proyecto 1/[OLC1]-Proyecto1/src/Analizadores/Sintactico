@@ -24,13 +24,13 @@ parser code
 
 terminal String t_numero,t_cadena,t_boolean,t_caracter;
 terminal String mas, menos, por, dividido,potencia, corcheteAbre, corcheteCierra, mod, parentesisAbre, parentesisCierra;
-terminal string mayor, menor, mayorIgual, menorIgual, esIgual, esDifetente;
+terminal string mayor, menor, mayorIgual, menorIgual, esIgual, esDiferente;
 terminal String or, and, not;
 terminal String inicio, fin;
 terminal String comentarioSimple, comentarioMultiple;
 terminal String ingresar, como, conValor, puntoycoma, coma, variable;
 terminal String flecha;
-terminal String si, entonses, finSi, deLoContraro, oSi;
+terminal String si, entonces, finSi, deLoContrario, oSi;
 terminal String segun, interrogacionAbre, interrogacionCierra, finSegun;
 terminal String para, hasta, hacer, incremental, finPara;
 terminal String mientras, finMientras;
