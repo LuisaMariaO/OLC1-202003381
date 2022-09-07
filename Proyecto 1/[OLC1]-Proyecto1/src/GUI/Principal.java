@@ -31,6 +31,15 @@ public class Principal extends javax.swing.JFrame {
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextPane_code = new javax.swing.JTextPane();
+        jLabel_errors = new javax.swing.JLabel();
+        jLabel_errorsName = new javax.swing.JLabel();
+        jButton_clean = new javax.swing.JButton();
+        jButton_run = new javax.swing.JButton();
+        jComboBox = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
         jMenuBar = new javax.swing.JMenuBar();
         jMenu_File = new javax.swing.JMenu();
         jMenuItem_openFile = new javax.swing.JMenuItem();
@@ -54,23 +63,69 @@ public class Principal extends javax.swing.JFrame {
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1338, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 645, Short.MAX_VALUE)
-        );
+        jLabel1.setFont(new java.awt.Font("Berlin Sans FB", 0, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(51, 51, 51));
+        jLabel1.setText("OLC1_2S_2022 <202003381>");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 20, -1, -1));
+
+        jScrollPane1.setForeground(new java.awt.Color(0, 0, 0));
+        jScrollPane1.setFont(new java.awt.Font("Consolas", 0, 14)); // NOI18N
+
+        jTextPane_code.setBackground(new java.awt.Color(255, 255, 255));
+        jTextPane_code.setFont(new java.awt.Font("Consolas", 0, 14)); // NOI18N
+        jTextPane_code.setForeground(new java.awt.Color(102, 102, 102));
+        jScrollPane1.setViewportView(jTextPane_code);
+
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 150, 1300, 430));
+
+        jLabel_errors.setFont(new java.awt.Font("Berlin Sans FB", 0, 18)); // NOI18N
+        jLabel_errors.setForeground(new java.awt.Color(51, 51, 51));
+        jLabel_errors.setText("0");
+        jPanel1.add(jLabel_errors, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 600, 180, -1));
+
+        jLabel_errorsName.setBackground(new java.awt.Color(51, 51, 51));
+        jLabel_errorsName.setFont(new java.awt.Font("Berlin Sans FB", 0, 18)); // NOI18N
+        jLabel_errorsName.setForeground(new java.awt.Color(51, 51, 51));
+        jLabel_errorsName.setText("Errors:");
+        jPanel1.add(jLabel_errorsName, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 600, -1, -1));
+
+        jButton_clean.setBackground(new java.awt.Color(0, 153, 153));
+        jButton_clean.setFont(new java.awt.Font("Berlin Sans FB", 0, 14)); // NOI18N
+        jButton_clean.setForeground(new java.awt.Color(255, 255, 255));
+        jButton_clean.setText("Clean");
+        jButton_clean.setToolTipText("Clean the text area.");
+        jButton_clean.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_cleanActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton_clean, new org.netbeans.lib.awtextra.AbsoluteConstraints(1110, 90, 90, 40));
+
+        jButton_run.setBackground(new java.awt.Color(51, 153, 0));
+        jButton_run.setFont(new java.awt.Font("Berlin Sans FB", 0, 14)); // NOI18N
+        jButton_run.setForeground(new java.awt.Color(255, 255, 255));
+        jButton_run.setText("Run");
+        jButton_run.setToolTipText("Translate the pseudocode.");
+        jPanel1.add(jButton_run, new org.netbeans.lib.awtextra.AbsoluteConstraints(1220, 90, 90, 40));
+
+        jComboBox.setBackground(new java.awt.Color(255, 255, 255));
+        jComboBox.setFont(new java.awt.Font("Berlin Sans FB", 0, 18)); // NOI18N
+        jComboBox.setForeground(new java.awt.Color(51, 51, 51));
+        jComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Golang", "Python" }));
+        jPanel1.add(jComboBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(1205, 590, 110, -1));
+
+        jLabel2.setFont(new java.awt.Font("Berlin Sans FB", 0, 18)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(51, 51, 51));
+        jLabel2.setText("Language:");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1110, 590, -1, 30));
 
         jMenu_File.setText("File");
-        jMenu_File.setFont(new java.awt.Font("Berlin Sans FB", 0, 15)); // NOI18N
+        jMenu_File.setFont(new java.awt.Font("Berlin Sans FB", 0, 16)); // NOI18N
 
         jMenuItem_openFile.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem_openFile.setFont(new java.awt.Font("Berlin Sans FB", 0, 14)); // NOI18N
+        jMenuItem_openFile.setFont(new java.awt.Font("Berlin Sans FB", 0, 16)); // NOI18N
         jMenuItem_openFile.setText("Open File");
         jMenuItem_openFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -80,33 +135,33 @@ public class Principal extends javax.swing.JFrame {
         jMenu_File.add(jMenuItem_openFile);
 
         jMenuItem_saveAs.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem_saveAs.setFont(new java.awt.Font("Berlin Sans FB", 0, 14)); // NOI18N
+        jMenuItem_saveAs.setFont(new java.awt.Font("Berlin Sans FB", 0, 16)); // NOI18N
         jMenuItem_saveAs.setText("Save As...");
         jMenu_File.add(jMenuItem_saveAs);
 
         jMenuBar.add(jMenu_File);
 
         jMenu_Report.setText("Report");
-        jMenu_Report.setFont(new java.awt.Font("Berlin Sans FB", 0, 15)); // NOI18N
+        jMenu_Report.setFont(new java.awt.Font("Berlin Sans FB", 0, 16)); // NOI18N
 
-        jMenuItem_flowChart.setFont(new java.awt.Font("Berlin Sans FB", 0, 14)); // NOI18N
+        jMenuItem_flowChart.setFont(new java.awt.Font("Berlin Sans FB", 0, 16)); // NOI18N
         jMenuItem_flowChart.setText("FlowChart");
         jMenu_Report.add(jMenuItem_flowChart);
 
-        jMenuItem_errors.setFont(new java.awt.Font("Berlin Sans FB", 0, 14)); // NOI18N
+        jMenuItem_errors.setFont(new java.awt.Font("Berlin Sans FB", 0, 16)); // NOI18N
         jMenuItem_errors.setText("Errors");
         jMenu_Report.add(jMenuItem_errors);
 
         jMenuBar.add(jMenu_Report);
 
         jMenu_View.setText("View");
-        jMenu_View.setFont(new java.awt.Font("Berlin Sans FB", 0, 15)); // NOI18N
+        jMenu_View.setFont(new java.awt.Font("Berlin Sans FB", 0, 16)); // NOI18N
 
-        jMenuItem_userManual.setFont(new java.awt.Font("Berlin Sans FB", 0, 14)); // NOI18N
+        jMenuItem_userManual.setFont(new java.awt.Font("Berlin Sans FB", 0, 16)); // NOI18N
         jMenuItem_userManual.setText("User manual");
         jMenu_View.add(jMenuItem_userManual);
 
-        jMenuItem_technicalManual.setFont(new java.awt.Font("Berlin Sans FB", 0, 14)); // NOI18N
+        jMenuItem_technicalManual.setFont(new java.awt.Font("Berlin Sans FB", 0, 16)); // NOI18N
         jMenuItem_technicalManual.setText("Technical manual");
         jMenu_View.add(jMenuItem_technicalManual);
 
@@ -120,14 +175,14 @@ public class Principal extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1338, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 653, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -137,6 +192,10 @@ public class Principal extends javax.swing.JFrame {
     private void jMenuItem_openFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_openFileActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem_openFileActionPerformed
+
+    private void jButton_cleanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_cleanActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton_cleanActionPerformed
 
     /**
      * @param args the command line arguments
@@ -174,6 +233,13 @@ public class Principal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton_clean;
+    private javax.swing.JButton jButton_run;
+    private javax.swing.JComboBox<String> jComboBox;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel_errors;
+    private javax.swing.JLabel jLabel_errorsName;
     private javax.swing.JMenuBar jMenuBar;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
@@ -188,5 +254,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu_Report;
     private javax.swing.JMenu jMenu_View;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextPane jTextPane_code;
     // End of variables declaration//GEN-END:variables
 }
