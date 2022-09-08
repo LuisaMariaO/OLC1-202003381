@@ -5,6 +5,7 @@
  */
 package Main;
 
+import GUI.Principal;
 import Utils.Analizador;
 
 /**
@@ -18,8 +19,10 @@ public class main {
      */
     public static void main(String[] args) {
         
-        Analizador analizador = new Analizador();
-        analizador.interpretar("./public/Entrada.olc");
+        
+        
+        Principal ventana = new Principal();
+        ventana.setVisible(true);
     }
     
 }

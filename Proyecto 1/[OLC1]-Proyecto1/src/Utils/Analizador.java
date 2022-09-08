@@ -6,6 +6,7 @@
 package Utils;
 
 
+import java.io.File;
 import java.io.FileInputStream;
 
 /**
@@ -16,12 +17,13 @@ public class Analizador {
 
     public Analizador() {
     }
-    public void interpretar (String ruta){
-     
+    public void interpretar (String text){
+        File file = new File("./public/parse.txt");  //Pasando el contenido de la interfaz a un archivo para ser analizado
+        (new Files()).createFile(file, text);
         analizadores.Sintactico pars;
         
         try{
-            pars = new analizadores.Sintactico(new analizadores.Lexico(new FileInputStream(ruta)));
+            pars = new analizadores.Sintactico(new analizadores.Lexico(new FileInputStream(file)));
             pars.parse();
         }catch(Exception e){
             System.out.println(e);

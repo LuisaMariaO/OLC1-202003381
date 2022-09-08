@@ -5,6 +5,14 @@
  */
 package GUI;
 
+import Utils.Analizador;
+import Utils.Files;
+import java.io.File;
+import java.io.FileFilter;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 /**
  *
  * @author Luisa María Ortiz
@@ -14,8 +22,12 @@ public class Principal extends javax.swing.JFrame {
     /**
      * Creates new form Principal
      */
+    Files fs;
+    Analizador analizador;
     public Principal() {
         initComponents();
+        fs = new Files();
+        analizador = new Analizador();
     }
 
     /**
@@ -74,7 +86,7 @@ public class Principal extends javax.swing.JFrame {
         jScrollPane1.setFont(new java.awt.Font("Consolas", 0, 14)); // NOI18N
 
         jTextPane_code.setBackground(new java.awt.Color(255, 255, 255));
-        jTextPane_code.setFont(new java.awt.Font("Consolas", 0, 14)); // NOI18N
+        jTextPane_code.setFont(new java.awt.Font("Consolas", 0, 16)); // NOI18N
         jTextPane_code.setForeground(new java.awt.Color(102, 102, 102));
         jScrollPane1.setViewportView(jTextPane_code);
 
@@ -108,6 +120,11 @@ public class Principal extends javax.swing.JFrame {
         jButton_run.setForeground(new java.awt.Color(255, 255, 255));
         jButton_run.setText("Run");
         jButton_run.setToolTipText("Translate the pseudocode.");
+        jButton_run.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_runActionPerformed(evt);
+            }
+        });
         jPanel1.add(jButton_run, new org.netbeans.lib.awtextra.AbsoluteConstraints(1220, 90, 90, 40));
 
         jComboBox.setBackground(new java.awt.Color(255, 255, 255));
@@ -190,47 +207,37 @@ public class Principal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItem_openFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_openFileActionPerformed
-        // TODO add your handling code here:
+        JFileChooser selectArchivo = new JFileChooser();
+        selectArchivo.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("OLC FILES","olc");
+        selectArchivo.setFileFilter(filter);
+        int result = selectArchivo.showOpenDialog(this);
+        File archivo = selectArchivo.getSelectedFile();
+        
+        if(archivo==null || archivo.getName().equals("")){
+            JOptionPane.showMessageDialog(this, "Archivo inválido","Archivo inválido",JOptionPane.ERROR_MESSAGE);
+        }
+        else{
+            jTextPane_code.setText(fs.readFile(archivo));
+        }
+        
     }//GEN-LAST:event_jMenuItem_openFileActionPerformed
 
     private void jButton_cleanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_cleanActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton_cleanActionPerformed
 
+    private void jButton_runActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_runActionPerformed
+        // TODO add your handling code here:
+        
+        
+        analizador.interpretar(jTextPane_code.getText());
+    }//GEN-LAST:event_jButton_runActionPerformed
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Principal().setVisible(true);
-            }
-        });
-    }
+ 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton_clean;
