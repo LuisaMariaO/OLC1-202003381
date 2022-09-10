@@ -6,7 +6,8 @@
 package Main;
 
 import GUI.Principal;
-import Utils.Analizador;
+
+
 
 /**
  *
@@ -23,6 +24,8 @@ public class main {
         
         Principal ventana = new Principal();
         ventana.setVisible(true);
+        
+     
     }
     
 }

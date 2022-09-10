@@ -1,8 +1,12 @@
 package analizadores; 
 import java_cup.runtime.*;
-
+import Structures.Instructions.Operacion;
+import Structures.Instructions.Instruccion;
+import java.util.LinkedList;
 parser code 
 {:
+
+    public LinkedList<Instruccion> AST;
     /**
      * Método al que se llama automáticamente ante algún error sintactico.
      **/ 
@@ -20,15 +24,20 @@ parser code
         (s.left)+ " Columna "+s.right+". Componente " + s.value + 
         " no reconocido."); 
     }  
+
+    public LinkedList<Instruccion> getAST() {
+        return AST;
+    }
 :} 
 
 terminal String t_numero,t_cadena,t_boolean,t_caracter;
 terminal String mas, menos, por, dividido,potencia, corcheteAbre, corcheteCierra, mod, parentesisAbre, parentesisCierra;
+terminal String umenos;
 terminal string mayor, menor, mayorIgual, menorIgual, esIgual, esDiferente;
 terminal String or, and, not;
 terminal String inicio, fin;
 terminal String comentarioSimple, comentarioMultiple;
-terminal String ingresar, como, conValor, puntoycoma, coma, variable;
+terminal String ingresar, como, conValor, puntoycoma, coma;
 terminal String flecha;
 terminal String si, entonces, finSi, deLoContrario, oSi;
 terminal String segun, interrogacionAbre, interrogacionCierra, finSegun;
@@ -40,37 +49,60 @@ terminal String metodo, finMetodo, conParametros;
 terminal String funcion, finFuncion;
 terminal String ejecutar;
 terminal String imprimir, imprimirNl;
-terminal String entero, decimal, cadena, booleano, caracter;
+terminal String entero, decimal, cadena, booleano, caracter,variable;
 
 non terminal INICIO;
-non terminal INSTRUCCIONES;
-non terminal INSTRUCCION;
-non terminal Double EXPRESION;
+non terminal LinkedList<Instruccion> INSTRUCCIONES;
+non terminal Instruccion INSTRUCCION;
+non terminal Operacion EXPRESION;
 
 precedence left mas, menos;
-precedence left por, dividido;
+precedence left por, dividido, mod;
+precedence left potencia;
+precedence right umenos;
+precedence left or, and;
+precedence right not;
+precedence left mayor,menor,mayorIgual,menorIgual,esIgual,esDiferente;
 
 
 start with INICIO; 
 
-INICIO::=INSTRUCCIONES;
+INICIO::=INSTRUCCIONES:a{:
+    parser.AST=a;
+:};
 
 INSTRUCCIONES ::= 
-   INSTRUCCION INSTRUCCIONES
- | INSTRUCCION
- | error INSTRUCCIONES
+   INSTRUCCIONES:a INSTRUCCION:b{:RESULT=a; RESULT.add(b);:}
+ | INSTRUCCION:a{:RESULT=new LinkedList<>(); RESULT.add(a);:}
+
 ; 
 
 INSTRUCCION ::= 
    EXPRESION:a{:System.out.println("El valor de la expresión es: "+a);:}
 ;
 
-EXPRESION  ::=  
-    EXPRESION:a mas        EXPRESION:b     {:RESULT=a+b;:}
- |  EXPRESION:a menos      EXPRESION:b     {:RESULT=a-b;:}
- |  EXPRESION:a por        EXPRESION:b     {:RESULT=a*b;:}
- |  EXPRESION:a dividido   EXPRESION:b     {:RESULT=a/b;:}
- |  entero:a                               {:RESULT=new Double(a);:}
- |  decimal:a                              {:RESULT=new Double(a);:}
- |  parentesisAbre EXPRESION:a parentesisCierra              {:RESULT=a;:}
+EXPRESION  ::= 
+    menos EXPRESION:a                      {:RESULT=new Operacion(a,Operacion.Tipo_operacion.NEGATIVO);:} %prec umenos                 
+ |  EXPRESION:a mas        EXPRESION:b     {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.SUMA);:}
+ |  EXPRESION:a menos      EXPRESION:b     {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.RESTA);:}
+ |  EXPRESION:a por        EXPRESION:b     {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.MULTIPLICACION);:}
+ |  EXPRESION:a dividido   EXPRESION:b     {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.DIVISION);:}
+ |  EXPRESION:a potencia corcheteAbre EXPRESION:b corcheteCierra     {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.POTENCIA);:}
+ |  EXPRESION:a mod   EXPRESION:b     {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.MODULO);:}
+ |  parentesisAbre EXPRESION:a parentesisCierra               {:RESULT=new Operacion(a,Operacion.Tipo_operacion.PARENTESIS);:}
+ |  entero:a                               {:RESULT=new Operacion(a,Operacion.Tipo_operacion.ENTERO);:}
+ |  decimal:a                              {:RESULT=new Operacion(a,Operacion.Tipo_operacion.DECIMAL);:}
+ |  cadena:a                               {:RESULT=new Operacion(a,Operacion.Tipo_operacion.CADENA);:}
+ |  booleano:a                             {:RESULT=new Operacion(a,Operacion.Tipo_operacion.BOOLEAN);:}
+ |  caracter:a                             {:RESULT=new Operacion(a,Operacion.Tipo_operacion.CARACTER);:}
+ |  EXPRESION:a mayor        EXPRESION:b     {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.MAYOR);:}
+ |  EXPRESION:a menor        EXPRESION:b     {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.MENOR);:}
+ |  EXPRESION:a mayorIgual       EXPRESION:b     {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.MAYOR_IGUAL);:}
+ |  EXPRESION:a menorIgual       EXPRESION:b     {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.MENOR_IGUAL);:}
+ |  EXPRESION:a esIgual          EXPRESION:b     {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.IGUAL);:}
+ |  EXPRESION:a esDiferente      EXPRESION:b     {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.DIFERENTE);:}
+ |  EXPRESION:a or               EXPRESION:b     {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.OR);:}
+ |  EXPRESION:a and              EXPRESION:b     {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.AND);:}
+ |  not EXPRESION:a                  {:RESULT=new Operacion(a,Operacion.Tipo_operacion.NOT);:}
+ |  variable:a                   {:RESULT=new Operacion(a,Operacion.Tipo_operacion.IDENTIFICDOR);:}
 ;
