@@ -231,7 +231,8 @@ public class Principal extends javax.swing.JFrame {
         // TODO add your handling code here:
         
         
-        System.out.println( analizador.interpretar(jTextPane_code.getText()));
+       // System.out.println( analizador.interpretar(jTextPane_code.getText()));
+       analizador.interpretar(jTextPane_code.getText());
     }//GEN-LAST:event_jButton_runActionPerformed
 
     /**

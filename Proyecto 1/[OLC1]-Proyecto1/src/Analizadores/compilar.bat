@@ -1,4 +1,3 @@
-javac JLex/Main.java
-java JLex.Main Lexico
-java -jar Cup/java-cup-11b.jar -parser Sintactico Sintactico
+java -jar jflex-full-1.7.0.jar Lexico.jflex
+java -jar java-cup-11b.jar -parser Sintactico -symbols Simbolos Sintactico.cup
 PAUSE

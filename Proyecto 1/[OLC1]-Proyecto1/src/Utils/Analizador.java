@@ -7,8 +7,12 @@ package Utils;
 
 
 import Structures.Instructions.Instruccion;
+import analizadores.Lexico;
+import analizadores.Sintactico;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.StringReader;
 import java.util.LinkedList;
 
 /**
@@ -19,19 +23,23 @@ public class Analizador {
 
     public Analizador() {
     }
-    public String interpretar (String text){
+    public void interpretar (String text){
         File file = new File("./public/parse.txt");  //Pasando el contenido de la interfaz a un archivo para ser analizado
-        (new Files()).createFile(file, text);
-        analizadores.Sintactico pars;
-         LinkedList<Instruccion> AST_arbolSintaxisAbstracta=null;
+        
+     //   (new Files()).createFile(file, text);
+       // analizadores.Sintactico pars;
+       
+         //LinkedList<Instruccion> AST_arbolSintaxisAbstracta=null;
         try{
-            pars = new analizadores.Sintactico(new analizadores.Lexico(new FileInputStream(file)));
-            pars.parse();
-            AST_arbolSintaxisAbstracta=pars.getAST();
+            Lexico lexico = new Lexico(new BufferedReader(new StringReader(text)));
+            Sintactico sintactico = new Sintactico(lexico);
+            sintactico.parse();
+          //  AST_arbolSintaxisAbstracta=pars.getAST();
         }catch(Exception e){
             System.out.println(e);
+            System.out.println("Mega error");
         }
-         return ejecutarAST(AST_arbolSintaxisAbstracta);
+       //  return ejecutarAST(AST_arbolSintaxisAbstracta);
     }
     
     public String ejecutarAST(LinkedList<Instruccion> ast) {

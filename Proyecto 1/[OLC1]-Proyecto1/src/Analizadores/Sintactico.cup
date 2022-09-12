@@ -1,0 +1,97 @@
+package analizadores;
+import java_cup.runtime.Symbol;
+terminal entero, decimal, cadena, booleano, caracter;
+terminal mas, menos, por, dividido, potencia, modulo;
+terminal parentesisAbre, parentesisCierra, corcheteAbre, corcheteCierra;
+terminal mayor, menor, mayorIgual, menorIgual, esIgual, esDiferente;
+terminal or, and, not;
+terminal t_inicio, t_fin;
+terminal comentarioSimple, comentarioMultiple;
+terminal ingresar, identificador, como, tipoDato, conValor, puntoycoma, coma;
+terminal flecha;
+terminal si, entonces, finSi, deLoContrario, oSi;
+terminal segun, hacer, interrogacionAbre, interrogacionCierra, finSegun;
+
+non terminal INICIO,INSTRUCCIONES, INSTRUCCIONESP, INSTRUCCION;
+non terminal DECLARACION, ASIGNACION, SI, DELOCONTRARIO, OSI, SEGUN;
+non terminal EXPRESION;
+non terminal LISTANOMBRES, LISTACONDICIONES, LISTASEGUN;
+
+precedence right mas, menos, or;
+precedence right por, dividido, and;
+precedence right modulo, potencia;
+precedence left not;
+precedence right mayor, menor, mayorIgual, menorIgual, esIgual, esDiferente;
+
+start with INICIO;
+INICIO::= INSTRUCCIONES {:System.out.println("Fin de analisis de entrada");:}
+;
+INSTRUCCIONES::= t_inicio INSTRUCCIONESP t_fin
+;
+INSTRUCCIONESP::= INSTRUCCION INSTRUCCIONESP
+|
+;
+INSTRUCCION::= comentarioSimple
+| comentarioMultiple
+| DECLARACION
+| ASIGNACION
+| SI
+| SEGUN
+;
+
+DECLARACION::= ingresar identificador LISTANOMBRES como tipoDato conValor EXPRESION puntoycoma
+;
+
+LISTANOMBRES::= coma identificador LISTANOMBRES
+|
+;
+
+ASIGNACION::= identificador LISTANOMBRES flecha EXPRESION puntoycoma
+;
+
+SI::= si EXPRESION entonces INSTRUCCIONESP LISTACONDICIONES DELOCONTRARIO finSi
+;
+
+DELOCONTRARIO::= deLoContrario INSTRUCCIONESP
+|
+;
+
+OSI::=
+    oSi EXPRESION entonces INSTRUCCIONESP 
+;
+
+LISTACONDICIONES::= OSI LISTACONDICIONES
+|
+;
+
+SEGUN::= segun EXPRESION hacer LISTASEGUN DELOCONTRARIO finSegun
+;
+
+LISTASEGUN::= interrogacionAbre EXPRESION interrogacionCierra entonces INSTRUCCIONESP LISTASEGUN
+|
+;
+
+EXPRESION::= EXPRESION mas EXPRESION
+| EXPRESION menos EXPRESION
+| EXPRESION por EXPRESION
+| EXPRESION dividido EXPRESION
+| EXPRESION potencia corcheteAbre EXPRESION corcheteCierra
+| EXPRESION modulo EXPRESION
+| parentesisAbre EXPRESION parentesisCierra
+| EXPRESION mayor EXPRESION
+| EXPRESION menor EXPRESION
+| EXPRESION menorIgual EXPRESION
+| EXPRESION mayorIgual EXPRESION
+| EXPRESION esIgual EXPRESION
+| EXPRESION esDiferente EXPRESION
+| EXPRESION or EXPRESION
+| EXPRESION and EXPRESION
+| not EXPRESION
+| entero
+| decimal
+| booleano
+| cadena
+| caracter
+| identificador
+;
+

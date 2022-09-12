@@ -2,6 +2,8 @@ package analizadores;
 import java_cup.runtime.*;
 import Structures.Instructions.Operacion;
 import Structures.Instructions.Instruccion;
+import Structures.Instructions.ComentarioSimple;
+import Structures.Instructions.ComentarioMultilinea;
 import java.util.LinkedList;
 parser code 
 {:
@@ -53,7 +55,7 @@ terminal String entero, decimal, cadena, booleano, caracter,variable;
 
 non terminal INICIO;
 non terminal LinkedList<Instruccion> INSTRUCCIONES;
-non terminal Instruccion INSTRUCCION;
+non terminal Instruccion INSTRUCCION, COMENTARIO;
 non terminal Operacion EXPRESION;
 
 precedence left mas, menos;
@@ -67,18 +69,20 @@ precedence left mayor,menor,mayorIgual,menorIgual,esIgual,esDiferente;
 
 start with INICIO; 
 
-INICIO::=INSTRUCCIONES:a{:
-    parser.AST=a;
-:};
+INICIO::= inicio fin{:System.out.println("Ya terminé");:};
 
 INSTRUCCIONES ::= 
    INSTRUCCIONES:a INSTRUCCION:b{:RESULT=a; RESULT.add(b);:}
  | INSTRUCCION:a{:RESULT=new LinkedList<>(); RESULT.add(a);:}
-
 ; 
 
 INSTRUCCION ::= 
-   EXPRESION:a{:System.out.println("El valor de la expresión es: "+a);:}
+   COMENTARIO 
+;
+
+COMENTARIO ::=
+     comentarioSimple:a {:RESULT=new ComentarioSimple(a);:}
+    |comentarioMultiple:a {:RESULT=new ComentarioMultilinea(a);:}
 ;
 
 EXPRESION  ::= 
@@ -104,5 +108,5 @@ EXPRESION  ::=
  |  EXPRESION:a or               EXPRESION:b     {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.OR);:}
  |  EXPRESION:a and              EXPRESION:b     {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.AND);:}
  |  not EXPRESION:a                  {:RESULT=new Operacion(a,Operacion.Tipo_operacion.NOT);:}
- |  variable:a                   {:RESULT=new Operacion(a,Operacion.Tipo_operacion.IDENTIFICDOR);:}
+ |  variable:a                   {:RESULT=new Operacion(a,Operacion.Tipo_operacion.IDENTIFICADOR);:}
 ;

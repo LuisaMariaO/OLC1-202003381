@@ -1,1 +1,3 @@
-5+5
+evaluar[2+2];
+Evaluar[5+5];
+evaluar[3];
