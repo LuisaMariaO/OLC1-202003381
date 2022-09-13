@@ -17,10 +17,10 @@ cadena=\"[^\"]+\"
 booleano=(verdadero|falso)
 caracter=\'([ -~]|\$\{[0-9]+\})\'
 comentariosimple=\/\/.+
-comentariomultiple=\/\*[^"\*\/"]+\*\/
+comentariomultiple=\/\*[^]+\*\/
 identificador=_[a-zA-Z0-9]+_
 tipodedato="numero"|"cadena"|"boolean"|"caracter"
-interrogacionabre=\¿
+interrogacionabre=[\¿]
 %%
 <YYINITIAL> {comentariosimple} {
 System.out.println("Reconocio token:<comentarioSimple> lexema:"+yytext());
@@ -208,7 +208,7 @@ return new Symbol(Simbolos.hacer, yycolumn, yyline, yytext());
 System.out.println("Reconocio token:<interrogacionCierra> lexema:"+yytext());
 return new Symbol(Simbolos.interrogacionCierra, yycolumn, yyline, yytext());
 }
-<YYINITIAL> "%" {
+<YYINITIAL> {interrogacionabre} {
 System.out.println("Reconocio token:<interrogacionAbre> lexema:"+yytext());
 return new Symbol(Simbolos.interrogacionAbre, yycolumn, yyline, yytext());
 }
@@ -217,10 +217,89 @@ System.out.println("Reconocio token:<finSegun> lexema:"+yytext());
 return new Symbol(Simbolos.finSegun, yycolumn, yyline, yytext());
 }
 
+<YYINITIAL> "para" {
+System.out.println("Reconocio token:<para> lexema:"+yytext());
+return new Symbol(Simbolos.para, yycolumn, yyline, yytext());
+}
+<YYINITIAL> "hasta" {
+System.out.println("Reconocio token:<hasta> lexema:"+yytext());
+return new Symbol(Simbolos.hasta, yycolumn, yyline, yytext());
+}
+<YYINITIAL> "fin_para" {
+System.out.println("Reconocio token:<finPara> lexema:"+yytext());
+return new Symbol(Simbolos.finPara, yycolumn, yyline, yytext());
+}
+<YYINITIAL> "con" {
+System.out.println("Reconocio token:<con> lexema:"+yytext());
+return new Symbol(Simbolos.con, yycolumn, yyline, yytext());
+}
+<YYINITIAL> "incremental" {
+System.out.println("Reconocio token:<incremental> lexema:"+yytext());
+return new Symbol(Simbolos.incremental, yycolumn, yyline, yytext());
+}
+
+<YYINITIAL> "mientras" {
+System.out.println("Reconocio token:<mientras> lexema:"+yytext());
+return new Symbol(Simbolos.mientras, yycolumn, yyline, yytext());
+}
+<YYINITIAL> "fin_mientras" {
+System.out.println("Reconocio token:<finMientras> lexema:"+yytext());
+return new Symbol(Simbolos.finMientras, yycolumn, yyline, yytext());
+}
+
+<YYINITIAL> "repetir" {
+System.out.println("Reconocio token:<repetir> lexema:"+yytext());
+return new Symbol(Simbolos.repetir, yycolumn, yyline, yytext());
+}
+<YYINITIAL> "hasta_que" {
+System.out.println("Reconocio token:<hastaQue> lexema:"+yytext());
+return new Symbol(Simbolos.hastaQue, yycolumn, yyline, yytext());
+}
+
+<YYINITIAL> "retornar" {
+System.out.println("Reconocio token:<retornar> lexema:"+yytext());
+return new Symbol(Simbolos.retornar, yycolumn, yyline, yytext());
+}
+
+<YYINITIAL> "metodo" {
+System.out.println("Reconocio token:<metodo> lexema:"+yytext());
+return new Symbol(Simbolos.metodo, yycolumn, yyline, yytext());
+}
+<YYINITIAL> "fin_metodo" {
+System.out.println("Reconocio token:<finMetodo> lexema:"+yytext());
+return new Symbol(Simbolos.finMetodo, yycolumn, yyline, yytext());
+}
+<YYINITIAL> "con_parametros" {
+System.out.println("Reconocio token:<conParametros> lexema:"+yytext());
+return new Symbol(Simbolos.conParametros, yycolumn, yyline, yytext());
+}
+
+<YYINITIAL> "funcion" {
+System.out.println("Reconocio token:<funcion> lexema:"+yytext());
+return new Symbol(Simbolos.funcion, yycolumn, yyline, yytext());
+}
+<YYINITIAL> "fin_funcion" {
+System.out.println("Reconocio token:<finFuncion> lexema:"+yytext());
+return new Symbol(Simbolos.finFuncion, yycolumn, yyline, yytext());
+}
+<YYINITIAL> "ejecutar" {
+System.out.println("Reconocio token:<ejecutar> lexema:"+yytext());
+return new Symbol(Simbolos.ejecutar, yycolumn, yyline, yytext());
+}
+
+<YYINITIAL> "imprimir_nl" {
+System.out.println("Reconocio token:<imprimirNl> lexema:"+yytext());
+return new Symbol(Simbolos.imprimirNl, yycolumn, yyline, yytext());
+}
+<YYINITIAL> "imprimir" {
+System.out.println("Reconocio token:<imprimir> lexema:"+yytext());
+return new Symbol(Simbolos.imprimir, yycolumn, yyline, yytext());
+}
+
 [ \t\r\n\f] { /* Espacios en blanco, se ignoran */ }
 .
 {
 System.out.println("Error Lexico : "+yytext()+
-"Linea"+yyline+" Columna "+yycolumn);
+"Linea "+yyline+" Columna "+yycolumn);
 }
 

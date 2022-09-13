@@ -1,5 +1,25 @@
 package analizadores;
 import java_cup.runtime.Symbol;
+parser code {:
+   /**
+     * Método al que se llama automáticamente ante algún error sintactico.
+     **/ 
+    public void syntax_error(Symbol s){ 
+        System.out.println("Error Sintáctico en la Línea " + (s.right) +
+        " Columna "+s.left+ ". No se esperaba este componente: " +s.value+"."); 
+    } 
+
+    /**
+     * Método al que se llama automáticamente ante algún error sintáctico 
+     * en el que ya no es posible una recuperación de errores.
+     **/ 
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+        System.out.println("Error síntactico irrecuperable en la Línea " + 
+        (s.right)+ " Columna "+s.left+". Componente " + s.value + 
+        " no reconocido."); 
+    }  
+:}
+
 terminal entero, decimal, cadena, booleano, caracter;
 terminal mas, menos, por, dividido, potencia, modulo;
 terminal parentesisAbre, parentesisCierra, corcheteAbre, corcheteCierra;
@@ -11,16 +31,25 @@ terminal ingresar, identificador, como, tipoDato, conValor, puntoycoma, coma;
 terminal flecha;
 terminal si, entonces, finSi, deLoContrario, oSi;
 terminal segun, hacer, interrogacionAbre, interrogacionCierra, finSegun;
+terminal para, hasta, finPara, con, incremental;
+terminal mientras, finMientras;
+terminal repetir, hastaQue;
+terminal retornar;
+terminal metodo, finMetodo, conParametros;
+terminal funcion, finFuncion, ejecutar;
+terminal imprimir, imprimirNl;
+terminal umenos;
 
 non terminal INICIO,INSTRUCCIONES, INSTRUCCIONESP, INSTRUCCION;
-non terminal DECLARACION, ASIGNACION, SI, DELOCONTRARIO, OSI, SEGUN;
+non terminal DECLARACION, ASIGNACION, SI, DELOCONTRARIO, OSI, SEGUN, DELOCONTRARIOSEGUN, PARA, INCREMENTAL, MIENTRAS, REPETIR, RETORNAR, IMPRIMIR, IMPRIMIRNL;
 non terminal EXPRESION;
-non terminal LISTANOMBRES, LISTACONDICIONES, LISTASEGUN;
+non terminal LISTANOMBRES, LISTACONDICIONES, LISTASEGUN, LISTAPARAMETROS, LISTAEXPRESIONES, LISTAEXPRESIONESP;
+non terminal METODO, CONPARAMETROS, FUNCION, LLAMADA;
 
 precedence right mas, menos, or;
 precedence right por, dividido, and;
 precedence right modulo, potencia;
-precedence left not;
+precedence left not, umenos;
 precedence right mayor, menor, mayorIgual, menorIgual, esIgual, esDiferente;
 
 start with INICIO;
@@ -29,6 +58,9 @@ INICIO::= INSTRUCCIONES {:System.out.println("Fin de analisis de entrada");:}
 INSTRUCCIONES::= t_inicio INSTRUCCIONESP t_fin
 ;
 INSTRUCCIONESP::= INSTRUCCION INSTRUCCIONESP
+| METODO INSTRUCCIONESP
+| FUNCION INSTRUCCIONESP
+| error INSTRUCCIONESP
 |
 ;
 INSTRUCCION::= comentarioSimple
@@ -37,6 +69,12 @@ INSTRUCCION::= comentarioSimple
 | ASIGNACION
 | SI
 | SEGUN
+| PARA
+| MIENTRAS
+| REPETIR
+| LLAMADA puntoycoma
+| IMPRIMIR
+| IMPRIMIRNL
 ;
 
 DECLARACION::= ingresar identificador LISTANOMBRES como tipoDato conValor EXPRESION puntoycoma
@@ -64,14 +102,49 @@ LISTACONDICIONES::= OSI LISTACONDICIONES
 |
 ;
 
-SEGUN::= segun EXPRESION hacer LISTASEGUN DELOCONTRARIO finSegun
+SEGUN::= segun EXPRESION hacer LISTASEGUN DELOCONTRARIOSEGUN finSegun
 ;
 
 LISTASEGUN::= interrogacionAbre EXPRESION interrogacionCierra entonces INSTRUCCIONESP LISTASEGUN
 |
 ;
 
+DELOCONTRARIOSEGUN::= deLoContrario entonces INSTRUCCIONESP
+|
+;
+
+PARA::= para identificador flecha EXPRESION hasta EXPRESION INCREMENTAL hacer INSTRUCCIONESP finPara
+;
+
+INCREMENTAL::= con incremental entero
+|
+;
+
+MIENTRAS::= mientras EXPRESION hacer INSTRUCCIONESP finMientras 
+;
+
+REPETIR::= repetir INSTRUCCIONESP hastaQue EXPRESION
+;
+
+RETORNAR::= retornar EXPRESION puntoycoma
+;
+
+METODO::= metodo identificador CONPARAMETROS INSTRUCCIONESP finMetodo
+;
+
+CONPARAMETROS::= conParametros parentesisAbre identificador tipoDato LISTAPARAMETROS parentesisCierra
+|
+;
+
+LISTAPARAMETROS::= coma identificador tipoDato LISTAPARAMETROS
+|
+;
+
+FUNCION::= funcion identificador tipoDato CONPARAMETROS INSTRUCCIONESP RETORNAR finFuncion
+;
+
 EXPRESION::= EXPRESION mas EXPRESION
+| menos EXPRESION %prec umenos
 | EXPRESION menos EXPRESION
 | EXPRESION por EXPRESION
 | EXPRESION dividido EXPRESION
@@ -93,5 +166,18 @@ EXPRESION::= EXPRESION mas EXPRESION
 | cadena
 | caracter
 | identificador
+| LLAMADA
 ;
 
+LLAMADA::= ejecutar identificador parentesisAbre LISTAEXPRESIONES parentesisCierra
+;
+LISTAEXPRESIONES::= EXPRESION LISTAEXPRESIONESP
+|
+;
+LISTAEXPRESIONESP::= coma EXPRESION LISTAEXPRESIONESP
+|
+;
+IMPRIMIR::= imprimir EXPRESION puntoycoma
+;
+IMPRIMIR::= imprimirNl EXPRESION puntoycoma
+;

@@ -11,21 +11,29 @@ public class Simbolos {
   public static final int comentarioSimple = 28;
   public static final int t_fin = 27;
   public static final int como = 32;
+  public static final int finMientras = 54;
+  public static final int finFuncion = 62;
+  public static final int imprimir = 64;
   public static final int deLoContrario = 41;
   public static final int flecha = 37;
   public static final int conValor = 34;
+  public static final int con = 51;
+  public static final int hasta = 49;
   public static final int esDiferente = 22;
   public static final int comentarioMultiple = 29;
   public static final int parentesisCierra = 14;
+  public static final int hastaQue = 56;
   public static final int coma = 36;
   public static final int entonces = 39;
   public static final int identificador = 31;
   public static final int finSi = 40;
   public static final int caracter = 6;
+  public static final int repetir = 55;
   public static final int menorIgual = 20;
   public static final int dividido = 10;
   public static final int si = 38;
   public static final int corcheteAbre = 15;
+  public static final int mientras = 53;
   public static final int puntoycoma = 35;
   public static final int tipoDato = 33;
   public static final int parentesisAbre = 13;
@@ -35,27 +43,38 @@ public class Simbolos {
   public static final int corcheteCierra = 16;
   public static final int EOF = 0;
   public static final int mas = 7;
+  public static final int para = 48;
   public static final int mayorIgual = 19;
   public static final int error = 1;
   public static final int mayor = 17;
+  public static final int metodo = 58;
   public static final int entero = 2;
   public static final int esIgual = 21;
   public static final int or = 23;
+  public static final int incremental = 52;
   public static final int t_inicio = 26;
   public static final int por = 9;
+  public static final int funcion = 61;
   public static final int potencia = 11;
+  public static final int finPara = 50;
   public static final int segun = 43;
   public static final int hacer = 44;
   public static final int ingresar = 30;
   public static final int and = 24;
   public static final int not = 25;
   public static final int booleano = 5;
+  public static final int umenos = 66;
+  public static final int retornar = 57;
   public static final int interrogacionAbre = 45;
   public static final int interrogacionCierra = 46;
+  public static final int conParametros = 60;
+  public static final int ejecutar = 63;
   public static final int oSi = 42;
   public static final int modulo = 12;
   public static final int decimal = 3;
+  public static final int imprimirNl = 65;
   public static final int cadena = 4;
+  public static final int finMetodo = 59;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -104,7 +123,26 @@ public class Simbolos {
   "hacer",
   "interrogacionAbre",
   "interrogacionCierra",
-  "finSegun"
+  "finSegun",
+  "para",
+  "hasta",
+  "finPara",
+  "con",
+  "incremental",
+  "mientras",
+  "finMientras",
+  "repetir",
+  "hastaQue",
+  "retornar",
+  "metodo",
+  "finMetodo",
+  "conParametros",
+  "funcion",
+  "finFuncion",
+  "ejecutar",
+  "imprimir",
+  "imprimirNl",
+  "umenos"
   };
 }
 
