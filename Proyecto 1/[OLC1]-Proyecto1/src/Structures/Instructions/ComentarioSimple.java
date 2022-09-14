@@ -19,7 +19,7 @@ public class ComentarioSimple implements Instruccion {
 
     @Override
     public String traducirGolang() {
-        return this.comentario;
+        return this.comentario+"\n";
     }
 
 	@Override

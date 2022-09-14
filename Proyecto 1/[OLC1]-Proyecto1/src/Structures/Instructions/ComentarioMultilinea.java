@@ -18,7 +18,8 @@ public class ComentarioMultilinea implements Instruccion {
 
     @Override
     public String traducirGolang() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.comentario+"\n";
+        		
     }
 
 	@Override

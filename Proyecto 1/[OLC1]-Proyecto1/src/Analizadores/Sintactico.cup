@@ -70,7 +70,7 @@ INICIO::= INSTRUCCIONES:a {:System.out.println("Fin de analisis de entrada");:}
 ;
 INSTRUCCIONES::= t_inicio INSTRUCCIONESP:a t_fin {::}
 ;
-INSTRUCCIONESP::= INSTRUCCION:b INSTRUCCIONESP:a {:parser.AST.add(b);:}
+INSTRUCCIONESP::= INSTRUCCION:b INSTRUCCIONESP:a {:parser.AST.addFirst(b);:}
 | METODO INSTRUCCIONESP
 | FUNCION INSTRUCCIONESP
 | error INSTRUCCIONESP
@@ -80,7 +80,7 @@ BLOQUE::= INSTRUCCION BLOQUE
 |
 ;
 INSTRUCCION::= comentarioSimple:a {:RESULT=new ComentarioSimple(a);:}
-| comentarioMultiple
+| comentarioMultiple:a {:RESULT=new ComentarioMultilinea(a);:}
 | DECLARACION
 | ASIGNACION
 | SI
