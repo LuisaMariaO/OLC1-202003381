@@ -1,48 +1,61 @@
-package analizadores;
+package Analizadores;
 import java_cup.runtime.Symbol;
+import java.util.LinkedList;
+import Structures.Instructions.*;
 parser code {:
+	/**
+     * Variable en la que se almacena el arbol de sintaxis abstracta que se 
+     * genera luego del analisis sint·ctico.
+     */
+    public LinkedList<Instruccion> AST = new LinkedList<Instruccion>();
    /**
-     * M√©todo al que se llama autom√°ticamente ante alg√∫n error sintactico.
+     * MÈtodo al que se llama autom·ticamente ante algun error sintactico.
      **/ 
     public void syntax_error(Symbol s){ 
-        System.out.println("Error Sint√°ctico en la L√≠nea " + (s.right) +
+        System.out.println("Error Sint·ctico en la LÌnea " + (s.right) +
         " Columna "+s.left+ ". No se esperaba este componente: " +s.value+"."); 
     } 
 
     /**
-     * M√©todo al que se llama autom√°ticamente ante alg√∫n error sint√°ctico 
-     * en el que ya no es posible una recuperaci√≥n de errores.
+     * MÈtodo al que se llama autom·ticamente ante alg˙n error sint·ctico 
+     * en el que ya no es posible una recuperaciÛn de errores.
      **/ 
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
-        System.out.println("Error s√≠ntactico irrecuperable en la L√≠nea " + 
+        System.out.println("Error sÌntactico irrecuperable en la LÌnea " + 
         (s.right)+ " Columna "+s.left+". Componente " + s.value + 
         " no reconocido."); 
-    }  
+    } 
+    
+    public LinkedList<Instruccion> getAST() {
+        return AST;
+    } 
 :}
 
-terminal entero, decimal, cadena, booleano, caracter;
-terminal mas, menos, por, dividido, potencia, modulo;
-terminal parentesisAbre, parentesisCierra, corcheteAbre, corcheteCierra;
-terminal mayor, menor, mayorIgual, menorIgual, esIgual, esDiferente;
-terminal or, and, not;
-terminal t_inicio, t_fin;
-terminal comentarioSimple, comentarioMultiple;
-terminal ingresar, identificador, como, tipoDato, conValor, puntoycoma, coma;
-terminal flecha;
-terminal si, entonces, finSi, deLoContrario, oSi;
-terminal segun, hacer, interrogacionAbre, interrogacionCierra, finSegun;
-terminal para, hasta, finPara, con, incremental;
-terminal mientras, finMientras;
-terminal repetir, hastaQue;
-terminal retornar;
-terminal metodo, finMetodo, conParametros;
-terminal funcion, finFuncion, ejecutar;
-terminal imprimir, imprimirNl;
-terminal umenos;
+terminal String entero, decimal, cadena, booleano, caracter;
+terminal String mas, menos, por, dividido, potencia, modulo;
+terminal String parentesisAbre, parentesisCierra, corcheteAbre, corcheteCierra;
+terminal String mayor, menor, mayorIgual, menorIgual, esIgual, esDiferente;
+terminal String or, and, not;
+terminal String t_inicio, t_fin;
+terminal String comentarioSimple, comentarioMultiple;
+terminal String ingresar, identificador, como, tipoDato, conValor, puntoycoma, coma;
+terminal String flecha;
+terminal String si, entonces, finSi, deLoContrario, oSi;
+terminal String segun, hacer, interrogacionAbre, interrogacionCierra, finSegun;
+terminal String para, hasta, finPara, con, incremental;
+terminal String mientras, finMientras;
+terminal String repetir, hastaQue;
+terminal String retornar;
+terminal String metodo, finMetodo, conParametros;
+terminal String funcion, finFuncion, ejecutar;
+terminal String imprimir, imprimirNl;
+terminal String umenos;
 
-non terminal INICIO,INSTRUCCIONES, INSTRUCCIONESP, INSTRUCCION;
+non terminal INICIO, INSTRUCCIONESP;
+non terminal LinkedList<Instruccion> INSTRUCCIONES, BLOQUE;
+non terminal Instruccion INSTRUCCION;
 non terminal DECLARACION, ASIGNACION, SI, DELOCONTRARIO, OSI, SEGUN, DELOCONTRARIOSEGUN, PARA, INCREMENTAL, MIENTRAS, REPETIR, RETORNAR, IMPRIMIR, IMPRIMIRNL;
-non terminal EXPRESION;
+non terminal Operacion EXPRESION;
 non terminal LISTANOMBRES, LISTACONDICIONES, LISTASEGUN, LISTAPARAMETROS, LISTAEXPRESIONES, LISTAEXPRESIONESP;
 non terminal METODO, CONPARAMETROS, FUNCION, LLAMADA;
 
@@ -53,17 +66,20 @@ precedence left not, umenos;
 precedence right mayor, menor, mayorIgual, menorIgual, esIgual, esDiferente;
 
 start with INICIO;
-INICIO::= INSTRUCCIONES {:System.out.println("Fin de analisis de entrada");:}
+INICIO::= INSTRUCCIONES:a {:System.out.println("Fin de analisis de entrada");:}
 ;
-INSTRUCCIONES::= t_inicio INSTRUCCIONESP t_fin
+INSTRUCCIONES::= t_inicio INSTRUCCIONESP:a t_fin {::}
 ;
-INSTRUCCIONESP::= INSTRUCCION INSTRUCCIONESP
+INSTRUCCIONESP::= INSTRUCCION:b INSTRUCCIONESP:a {:parser.AST.add(b);:}
 | METODO INSTRUCCIONESP
 | FUNCION INSTRUCCIONESP
 | error INSTRUCCIONESP
+|{:RESULT=new LinkedList<>();:}
+;
+BLOQUE::= INSTRUCCION BLOQUE
 |
 ;
-INSTRUCCION::= comentarioSimple
+INSTRUCCION::= comentarioSimple:a {:RESULT=new ComentarioSimple(a);:}
 | comentarioMultiple
 | DECLARACION
 | ASIGNACION
@@ -87,15 +103,15 @@ LISTANOMBRES::= coma identificador LISTANOMBRES
 ASIGNACION::= identificador LISTANOMBRES flecha EXPRESION puntoycoma
 ;
 
-SI::= si EXPRESION entonces INSTRUCCIONESP LISTACONDICIONES DELOCONTRARIO finSi
+SI::= si EXPRESION entonces BLOQUE LISTACONDICIONES DELOCONTRARIO finSi
 ;
 
-DELOCONTRARIO::= deLoContrario INSTRUCCIONESP
+DELOCONTRARIO::= deLoContrario BLOQUE
 |
 ;
 
 OSI::=
-    oSi EXPRESION entonces INSTRUCCIONESP 
+    oSi EXPRESION entonces BLOQUE 
 ;
 
 LISTACONDICIONES::= OSI LISTACONDICIONES
@@ -105,31 +121,31 @@ LISTACONDICIONES::= OSI LISTACONDICIONES
 SEGUN::= segun EXPRESION hacer LISTASEGUN DELOCONTRARIOSEGUN finSegun
 ;
 
-LISTASEGUN::= interrogacionAbre EXPRESION interrogacionCierra entonces INSTRUCCIONESP LISTASEGUN
+LISTASEGUN::= interrogacionAbre EXPRESION interrogacionCierra entonces BLOQUE LISTASEGUN
 |
 ;
 
-DELOCONTRARIOSEGUN::= deLoContrario entonces INSTRUCCIONESP
+DELOCONTRARIOSEGUN::= deLoContrario entonces BLOQUE
 |
 ;
 
-PARA::= para identificador flecha EXPRESION hasta EXPRESION INCREMENTAL hacer INSTRUCCIONESP finPara
+PARA::= para identificador flecha EXPRESION hasta EXPRESION INCREMENTAL hacer BLOQUE finPara
 ;
 
 INCREMENTAL::= con incremental entero
 |
 ;
 
-MIENTRAS::= mientras EXPRESION hacer INSTRUCCIONESP finMientras 
+MIENTRAS::= mientras EXPRESION hacer BLOQUE finMientras 
 ;
 
-REPETIR::= repetir INSTRUCCIONESP hastaQue EXPRESION
+REPETIR::= repetir BLOQUE hastaQue EXPRESION
 ;
 
 RETORNAR::= retornar EXPRESION puntoycoma
 ;
 
-METODO::= metodo identificador CONPARAMETROS INSTRUCCIONESP finMetodo
+METODO::= metodo identificador CONPARAMETROS BLOQUE finMetodo
 ;
 
 CONPARAMETROS::= conParametros parentesisAbre identificador tipoDato LISTAPARAMETROS parentesisCierra
@@ -140,7 +156,7 @@ LISTAPARAMETROS::= coma identificador tipoDato LISTAPARAMETROS
 |
 ;
 
-FUNCION::= funcion identificador tipoDato CONPARAMETROS INSTRUCCIONESP RETORNAR finFuncion
+FUNCION::= funcion identificador tipoDato CONPARAMETROS BLOQUE RETORNAR finFuncion
 ;
 
 EXPRESION::= EXPRESION mas EXPRESION

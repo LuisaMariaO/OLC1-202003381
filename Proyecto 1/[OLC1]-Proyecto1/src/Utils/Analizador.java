@@ -4,49 +4,54 @@
  * and open the template in the editor.
  */
 package Utils;
+import Analizadores.Lexico;
 
-
+import Analizadores.Sintactico;
 import Structures.Instructions.Instruccion;
-import analizadores.Lexico;
-import analizadores.Sintactico;
+
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.StringReader;
 import java.util.LinkedList;
 
 /**
  *
- * @author Luisa Mar√≠a Ortiz
+ * @author Luisa MarÌa Ortiz
  */
 public class Analizador {
 
     public Analizador() {
     }
-    public void interpretar (String text){
-        File file = new File("./public/parse.txt");  //Pasando el contenido de la interfaz a un archivo para ser analizado
-        
-     //   (new Files()).createFile(file, text);
-       // analizadores.Sintactico pars;
-       
-         //LinkedList<Instruccion> AST_arbolSintaxisAbstracta=null;
+    public String interpretar (String text, int lenguaje){
+    	System.out.println(lenguaje);
+    	//Lenguaje=0 -> Golang
+    	//Lenguaje=1 -> Python
+    	LinkedList <Instruccion> AST = null;
         try{
+        	
             Lexico lexico = new Lexico(new BufferedReader(new StringReader(text)));
             Sintactico sintactico = new Sintactico(lexico);
             sintactico.parse();
-          //  AST_arbolSintaxisAbstracta=pars.getAST();
+            AST = sintactico.getAST();
         }catch(Exception e){
             System.out.println(e);
             System.out.println("Mega error");
         }
+        
+        if(lenguaje==0) {
+        	return ejecutarGolang(AST);
+        }
+        else {
+        	return "a";
+        }
        //  return ejecutarAST(AST_arbolSintaxisAbstracta);
     }
     
-    public String ejecutarAST(LinkedList<Instruccion> ast) {
+    public String ejecutarGolang(LinkedList<Instruccion> ast) {
         if(ast==null){
             return("No es posible ejecutar las instrucciones porque\r\n"
-                    + "el √°rbol no fue cargado de forma adecuada por la existencia\r\n"
-                    + "de errores l√©xicos o sint√°cticos.");
+                    + "el ·rbol no fue cargado de forma adecuada por la existencia\r\n"
+                    + "de errores lÈxicos o sint·cticos.");
         }
         //Se ejecuta cada instruccion en el ast, es decir, cada instruccion de 
         //la lista principal de instrucciones.
@@ -54,11 +59,13 @@ public class Analizador {
         String traduccion = "";
         
         for(Instruccion ins:ast){
-            //Si existe un error l√©xico o sint√°ctico en cierta instrucci√≥n esta
-            //ser√° inv√°lida y se cargar√° como null, por lo tanto no deber√° ejecutarse
-            //es por esto que se hace esta validaci√≥n.
-            if(ins!=null)
+            //Si existe un error lÈxico o sint·ctico en cierta instrucciÛn esta
+            //ser· inv·lida y se cargar· como null, por lo tanto no deber· ejecutarse
+            //es por esto que se hace esta validaciÛn.
+            if(ins!=null) {
                 traduccion += ins.traducirGolang();
+            }
+           
         }
         
         return traduccion;

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="dist/_OLC1_-Proyecto1.jar"/>
+	<classpathentry kind="lib" path="dist/lib/AbsoluteLayout.jar"/>
+	<classpathentry kind="lib" path="dist/lib/java-cup-11b-runtime.jar"/>
+	<classpathentry kind="lib" path="dist/lib/java-cup-11b.jar"/>
+	<classpathentry kind="lib" path="dist/lib/jflex-full-1.7.0.jar"/>
+	<classpathentry kind="lib" path="lib/java-cup-11b-runtime.jar"/>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>

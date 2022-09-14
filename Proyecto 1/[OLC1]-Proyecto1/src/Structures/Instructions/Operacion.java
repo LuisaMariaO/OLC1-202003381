@@ -93,5 +93,11 @@ public class Operacion implements Instruccion {
             return "";
         }
     }
+
+	@Override
+	public String traducirPython() {
+		// TODO Auto-generated method stub
+		return null;
+	}
     
 }

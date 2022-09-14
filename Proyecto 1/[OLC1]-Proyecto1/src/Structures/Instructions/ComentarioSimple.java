@@ -19,7 +19,13 @@ public class ComentarioSimple implements Instruccion {
 
     @Override
     public String traducirGolang() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.comentario;
     }
+
+	@Override
+	public String traducirPython() {
+		// TODO Auto-generated method stub
+		return null;
+	}
     
 }

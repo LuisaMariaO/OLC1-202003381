@@ -11,7 +11,7 @@ import GUI.Principal;
 
 /**
  *
- * @author Luisa MarÃ­a Ortiz
+ * @author Luisa María Ortiz
  */
 public class main {
 

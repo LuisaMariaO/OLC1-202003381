@@ -215,7 +215,7 @@ public class Principal extends javax.swing.JFrame {
         File archivo = selectArchivo.getSelectedFile();
         
         if(archivo==null || archivo.getName().equals("")){
-            JOptionPane.showMessageDialog(this, "Archivo inv√°lido","Archivo inv√°lido",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Archivo inv·lido","Archivo inv·lido",JOptionPane.ERROR_MESSAGE);
         }
         else{
             jTextPane_code.setText(fs.readFile(archivo));
@@ -232,7 +232,10 @@ public class Principal extends javax.swing.JFrame {
         
         
        // System.out.println( analizador.interpretar(jTextPane_code.getText()));
-       analizador.interpretar(jTextPane_code.getText());
+    	
+       String trad = analizador.interpretar(jTextPane_code.getText(),(int)jComboBox.getSelectedIndex());
+       Traduccion traduccion = new Traduccion ((int)jComboBox.getSelectedIndex(),trad);
+       traduccion.setVisible(true);
     }//GEN-LAST:event_jButton_runActionPerformed
 
     /**
