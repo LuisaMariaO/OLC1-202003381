@@ -3,12 +3,12 @@ package Structures.Instructions;
 import java.util.LinkedList;
 
 public class Declaracion implements Instruccion {
-	private String nombre;
+
 	private LinkedList<String> listaNombres;
 	private String tipoDato;
 	private Operacion valor;
-	public Declaracion(String nombre, LinkedList<String> listaNombres, String tipoDato, Operacion valor) {
-		this.nombre=nombre;
+	public Declaracion(LinkedList<String> listaNombres, String tipoDato, Operacion valor) {
+	
 		this.listaNombres=listaNombres;
 		this.tipoDato=tipoDato;
 		this.valor=valor;
@@ -28,7 +28,6 @@ public class Declaracion implements Instruccion {
 		else {
 			tipoDato="float64";
 		}
-		declaraciones+= "var "+nombre +" "+tipoDato+" = " + valor.traducirGolang()+"\n";
 		
 		for(String declaracion:listaNombres) {
 		

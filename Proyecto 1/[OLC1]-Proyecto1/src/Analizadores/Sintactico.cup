@@ -67,7 +67,8 @@ non terminal SEGUN, DELOCONTRARIOSEGUN, PARA, INCREMENTAL, MIENTRAS, REPETIR, RE
 non terminal Map.Entry<Operacion,LinkedList<Instruccion>> OSI;
 non terminal Operacion EXPRESION;
 non terminal LinkedList<Map.Entry<Operacion,LinkedList<Instruccion>>> LISTACONDICIONES, CONDICIONES;
-non terminal LISTANOMBRES, LISTASEGUN, LISTAPARAMETROS, LISTAEXPRESIONES, LISTAEXPRESIONESP;
+non terminal LinkedList<String> LISTANOMBRES; 
+non terminal LISTASEGUN, LISTAPARAMETROS, LISTAEXPRESIONES, LISTAEXPRESIONESP;
 non terminal METODO, CONPARAMETROS, FUNCION, LLAMADA;
 
 precedence right mas, menos, or;
@@ -108,14 +109,14 @@ INSTRUCCION::= comentarioSimple:a {:RESULT=new ComentarioSimple(a);:}
 | IMPRIMIRNL
 ;
 
-DECLARACION::= ingresar identificador:a LISTANOMBRES como tipoDato:b conValor EXPRESION:c puntoycoma{:RESULT=new Declaracion(a,parser.listaNombres,b,c);:}
+DECLARACION::= ingresar LISTANOMBRES:a como tipoDato:b conValor EXPRESION:c puntoycoma{:RESULT=new Declaracion(a,b,c);:}
 ;
 
-LISTANOMBRES::= coma identificador:a LISTANOMBRES{:parser.listaNombres.addFirst(a);:}
-|{:parser.listaNombres.clear();:}
+LISTANOMBRES::= LISTANOMBRES:a coma identificador:b{:RESULT=a; a.add(b);:}
+| identificador:a{:RESULT=new LinkedList<>(); RESULT.add(a);:}
 ;
 
-ASIGNACION::= identificador:a LISTANOMBRES flecha EXPRESION:b puntoycoma{:RESULT=new Asignacion(a,parser.listaNombres,b);:}
+ASIGNACION::= LISTANOMBRES:a flecha EXPRESION:b puntoycoma{:RESULT=new Asignacion(a,b);:}
 ;
 
 SI::= si EXPRESION:a entonces BLOQUE:b CONDICIONES:c DELOCONTRARIO:d finSi{:RESULT=new If(a,b,c,d);:}

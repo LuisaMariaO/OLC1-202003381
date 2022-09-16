@@ -4,12 +4,12 @@ import java.util.LinkedList;
 
 public class Asignacion implements Instruccion {
 	
-	private String nombre;
+
 	private LinkedList <String> listaNombres;
 	private Operacion valor;
 	
-	public Asignacion(String nombre, LinkedList<String> listaNombres, Operacion valor) {
-		this.nombre=nombre;
+	public Asignacion( LinkedList<String> listaNombres, Operacion valor) {
+		
 		this.listaNombres=listaNombres;
 		this.valor=valor;
 	}
@@ -17,7 +17,7 @@ public class Asignacion implements Instruccion {
 	@Override
 	public String traducirGolang() {
 		String declaraciones="";
-		declaraciones+=nombre+ " = " + valor.traducirGolang()+"\n";
+		
 		for(String asignacion:listaNombres) {
 			declaraciones+=asignacion+" = "+valor.traducirGolang()+"\n";
 		}
