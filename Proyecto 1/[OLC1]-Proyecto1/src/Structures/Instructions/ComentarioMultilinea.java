@@ -24,8 +24,9 @@ public class ComentarioMultilinea implements Instruccion {
 
 	@Override
 	public String traducirPython() {
-		// TODO Auto-generated method stub
-		return null;
+		String traduccion = this.comentario;
+		traduccion = traduccion.substring(2, traduccion.length()-2);
+		return "\"\"\""+traduccion+"\"\"\"\n";
 	}
     
 }

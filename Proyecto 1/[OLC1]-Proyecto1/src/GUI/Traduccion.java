@@ -5,6 +5,8 @@
  */
 package GUI;
 
+import java.awt.event.FocusListener;
+
 /**
  *
  * @author Luisa María Ortiz
@@ -47,6 +49,7 @@ public class Traduccion extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea_traduccion = new javax.swing.JTextArea();
         jButton_guardar = new javax.swing.JButton();
+      
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Traduccion");
@@ -84,25 +87,29 @@ public class Traduccion extends javax.swing.JFrame {
         jButton_guardar.setText("Guardar");
         jPanel1.add(jButton_guardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 60, 150, 40));
 
+        
+      
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 935, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 936, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 570, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+
 
     /**
      * @param args the command line arguments
@@ -110,6 +117,7 @@ public class Traduccion extends javax.swing.JFrame {
    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+ //   private javax.swing.JButton jButton_copiar;
     private javax.swing.JButton jButton_guardar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel_lenguaje;

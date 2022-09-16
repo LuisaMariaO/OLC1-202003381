@@ -7,7 +7,7 @@ package Structures.Instructions;
 
 /**
  *
- * @author Luisa MarÃ­a Ortiz
+ * @author Luisa María Ortiz
  */
 public class ComentarioSimple implements Instruccion {
     private final String comentario;
@@ -24,8 +24,10 @@ public class ComentarioSimple implements Instruccion {
 
 	@Override
 	public String traducirPython() {
-		// TODO Auto-generated method stub
-		return null;
+	
+		String traduccion = this.comentario;
+		traduccion=traduccion.substring(2, traduccion.length());
+		return "#"+traduccion+"\n";
 	}
     
 }

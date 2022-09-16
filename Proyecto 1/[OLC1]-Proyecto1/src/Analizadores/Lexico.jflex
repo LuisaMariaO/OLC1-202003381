@@ -20,7 +20,7 @@ comentariosimple=\/\/.+
 comentariomultiple=\/\*[^]+\*\/
 identificador=_[a-zA-Z0-9]+_
 tipodedato="numero"|"cadena"|"boolean"|"caracter"
-interrogacionabre=[\Â¿]
+interrogacionabre=[\¿]
 %%
 <YYINITIAL> {comentariosimple} {
 System.out.println("Reconocio token:<comentarioSimple> lexema:"+yytext());

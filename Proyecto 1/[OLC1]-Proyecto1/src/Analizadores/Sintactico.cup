@@ -1,13 +1,22 @@
 package Analizadores;
 import java_cup.runtime.Symbol;
 import java.util.LinkedList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.AbstractMap;
 import Structures.Instructions.*;
+import Structures.Instructions.Operacion.Tipo_operacion;
 parser code {:
 	/**
      * Variable en la que se almacena el arbol de sintaxis abstracta que se 
      * genera luego del analisis sintáctico.
      */
     public LinkedList<Instruccion> AST = new LinkedList<Instruccion>();
+    public LinkedList<String> listaNombres = new LinkedList<String>();
+    public LinkedList<Instruccion> bloque = new LinkedList<Instruccion>();
+    public LinkedList<HashMap<Operacion,LinkedList<Instruccion>>> listaCondiciones = new LinkedList<HashMap<Operacion,LinkedList<Instruccion>>>();
+    public HashMap<Operacion,LinkedList<Instruccion>> mapAux = new HashMap<Operacion,LinkedList<Instruccion>>();
+    public LinkedList<Instruccion> bloqueContrario = new LinkedList<Instruccion>();
    /**
      * Método al que se llama automáticamente ante algun error sintactico.
      **/ 
@@ -52,11 +61,13 @@ terminal String imprimir, imprimirNl;
 terminal String umenos;
 
 non terminal INICIO, INSTRUCCIONESP;
-non terminal LinkedList<Instruccion> INSTRUCCIONES, BLOQUE;
-non terminal Instruccion INSTRUCCION;
-non terminal DECLARACION, ASIGNACION, SI, DELOCONTRARIO, OSI, SEGUN, DELOCONTRARIOSEGUN, PARA, INCREMENTAL, MIENTRAS, REPETIR, RETORNAR, IMPRIMIR, IMPRIMIRNL;
+non terminal LinkedList<Instruccion> INSTRUCCIONES, BLOQUE, DELOCONTRARIO, BLOQUEP;
+non terminal Instruccion INSTRUCCION, DECLARACION, ASIGNACION, SI;
+non terminal SEGUN, DELOCONTRARIOSEGUN, PARA, INCREMENTAL, MIENTRAS, REPETIR, RETORNAR, IMPRIMIR, IMPRIMIRNL;
+non terminal Map.Entry<Operacion,LinkedList<Instruccion>> OSI;
 non terminal Operacion EXPRESION;
-non terminal LISTANOMBRES, LISTACONDICIONES, LISTASEGUN, LISTAPARAMETROS, LISTAEXPRESIONES, LISTAEXPRESIONESP;
+non terminal LinkedList<Map.Entry<Operacion,LinkedList<Instruccion>>> LISTACONDICIONES, CONDICIONES;
+non terminal LISTANOMBRES, LISTASEGUN, LISTAPARAMETROS, LISTAEXPRESIONES, LISTAEXPRESIONESP;
 non terminal METODO, CONPARAMETROS, FUNCION, LLAMADA;
 
 precedence right mas, menos, or;
@@ -76,14 +87,18 @@ INSTRUCCIONESP::= INSTRUCCION:b INSTRUCCIONESP:a {:parser.AST.addFirst(b);:}
 | error INSTRUCCIONESP
 |{:RESULT=new LinkedList<>();:}
 ;
-BLOQUE::= INSTRUCCION BLOQUE
+BLOQUEP::=BLOQUEP:a INSTRUCCION:b{:RESULT=a; a.add(b);:}
+|INSTRUCCION:a{:RESULT=new LinkedList<>(); RESULT.add(a);:}
+;
+
+BLOQUE::=BLOQUEP:a{:RESULT=a;:}
 |
 ;
 INSTRUCCION::= comentarioSimple:a {:RESULT=new ComentarioSimple(a);:}
 | comentarioMultiple:a {:RESULT=new ComentarioMultilinea(a);:}
-| DECLARACION
-| ASIGNACION
-| SI
+| DECLARACION:a{:RESULT=a;:}
+| ASIGNACION:a{:RESULT=a;:}
+| SI:a{:RESULT=a;:}
 | SEGUN
 | PARA
 | MIENTRAS
@@ -93,31 +108,35 @@ INSTRUCCION::= comentarioSimple:a {:RESULT=new ComentarioSimple(a);:}
 | IMPRIMIRNL
 ;
 
-DECLARACION::= ingresar identificador LISTANOMBRES como tipoDato conValor EXPRESION puntoycoma
+DECLARACION::= ingresar identificador:a LISTANOMBRES como tipoDato:b conValor EXPRESION:c puntoycoma{:RESULT=new Declaracion(a,parser.listaNombres,b,c);:}
 ;
 
-LISTANOMBRES::= coma identificador LISTANOMBRES
+LISTANOMBRES::= coma identificador:a LISTANOMBRES{:parser.listaNombres.addFirst(a);:}
+|{:parser.listaNombres.clear();:}
+;
+
+ASIGNACION::= identificador:a LISTANOMBRES flecha EXPRESION:b puntoycoma{:RESULT=new Asignacion(a,parser.listaNombres,b);:}
+;
+
+SI::= si EXPRESION:a entonces BLOQUE:b CONDICIONES:c DELOCONTRARIO:d finSi{:RESULT=new If(a,b,c,d);:}
+;
+
+DELOCONTRARIO::= deLoContrario BLOQUE:a{:RESULT=a;:}
 |
 ;
 
-ASIGNACION::= identificador LISTANOMBRES flecha EXPRESION puntoycoma
-;
-
-SI::= si EXPRESION entonces BLOQUE LISTACONDICIONES DELOCONTRARIO finSi
-;
-
-DELOCONTRARIO::= deLoContrario BLOQUE
-|
-;
 
 OSI::=
-    oSi EXPRESION entonces BLOQUE 
+    oSi EXPRESION:a entonces BLOQUE:b{:RESULT=new  AbstractMap.SimpleEntry<Operacion, LinkedList<Instruccion>>(a, b);:}
 ;
 
-LISTACONDICIONES::= OSI LISTACONDICIONES
+LISTACONDICIONES::= LISTACONDICIONES:a OSI:b{:RESULT=a; a.add(b);:}
+| OSI:a{:RESULT=new LinkedList<>(); RESULT.add(a);:}
+;
+
+CONDICIONES::= LISTACONDICIONES:a{:RESULT=a;:}
 |
 ;
-
 SEGUN::= segun EXPRESION hacer LISTASEGUN DELOCONTRARIOSEGUN finSegun
 ;
 
@@ -159,29 +178,29 @@ LISTAPARAMETROS::= coma identificador tipoDato LISTAPARAMETROS
 FUNCION::= funcion identificador tipoDato CONPARAMETROS BLOQUE RETORNAR finFuncion
 ;
 
-EXPRESION::= EXPRESION mas EXPRESION
-| menos EXPRESION %prec umenos
-| EXPRESION menos EXPRESION
-| EXPRESION por EXPRESION
-| EXPRESION dividido EXPRESION
-| EXPRESION potencia corcheteAbre EXPRESION corcheteCierra
-| EXPRESION modulo EXPRESION
-| parentesisAbre EXPRESION parentesisCierra
-| EXPRESION mayor EXPRESION
-| EXPRESION menor EXPRESION
-| EXPRESION menorIgual EXPRESION
-| EXPRESION mayorIgual EXPRESION
-| EXPRESION esIgual EXPRESION
-| EXPRESION esDiferente EXPRESION
-| EXPRESION or EXPRESION
-| EXPRESION and EXPRESION
-| not EXPRESION
-| entero
-| decimal
-| booleano
-| cadena
-| caracter
-| identificador
+EXPRESION::= EXPRESION:a mas EXPRESION:b{:RESULT=new Operacion(a,b,Tipo_operacion.SUMA);:}
+| menos EXPRESION:a{:RESULT=new Operacion(a,Tipo_operacion.NEGATIVO);:} %prec umenos
+| EXPRESION:a menos EXPRESION:b{:RESULT=new Operacion(a,b,Tipo_operacion.RESTA);:}
+| EXPRESION:a por EXPRESION:b{:RESULT=new Operacion(a,b,Tipo_operacion.MULTIPLICACION);:}
+| EXPRESION:a dividido EXPRESION:b{:RESULT=new Operacion(a,b,Tipo_operacion.DIVISION);:}
+| EXPRESION:a potencia corcheteAbre EXPRESION:b corcheteCierra{:RESULT=new Operacion(a,b,Tipo_operacion.POTENCIA);:}
+| EXPRESION:a modulo EXPRESION:b {:RESULT=new Operacion(a,b,Tipo_operacion.MODULO);:}
+| parentesisAbre EXPRESION:a parentesisCierra {:RESULT=new Operacion(a,Tipo_operacion.PARENTESIS);:}
+| EXPRESION:a mayor EXPRESION:b{:RESULT=new Operacion(a,b,Tipo_operacion.MAYOR);:}
+| EXPRESION:a menor EXPRESION:b{:RESULT=new Operacion(a,b,Tipo_operacion.MENOR);:}
+| EXPRESION:a menorIgual EXPRESION:b{:RESULT=new Operacion(a,b,Tipo_operacion.MENOR_IGUAL);:}
+| EXPRESION:a mayorIgual EXPRESION:b{:RESULT=new Operacion(a,b,Tipo_operacion.MAYOR_IGUAL);:}
+| EXPRESION:a esIgual EXPRESION:b{:RESULT=new Operacion(a,b,Tipo_operacion.IGUAL);:}
+| EXPRESION:a esDiferente EXPRESION:b{:RESULT=new Operacion(a,b,Tipo_operacion.DIFERENTE);:}
+| EXPRESION:a or EXPRESION:b{:RESULT=new Operacion(a,b,Tipo_operacion.OR);:}
+| EXPRESION:a and EXPRESION:b{:RESULT=new Operacion(a,b,Tipo_operacion.AND);:}
+| not EXPRESION:a{:RESULT=new Operacion(a,Tipo_operacion.NOT);:}
+| entero:a{:RESULT=new Operacion(a,Tipo_operacion.ENTERO);:}
+| decimal:a{:RESULT=new Operacion(a,Tipo_operacion.DECIMAL);:}
+| booleano:a{:RESULT=new Operacion(a,Tipo_operacion.BOOLEAN);:}
+| cadena:a{:RESULT=new Operacion(a,Tipo_operacion.CADENA);:}
+| caracter:a{:RESULT=new Operacion(a,Tipo_operacion.CARACTER);:}
+| identificador:a{:RESULT=new Operacion(a,Tipo_operacion.IDENTIFICADOR);:}
 | LLAMADA
 ;
 

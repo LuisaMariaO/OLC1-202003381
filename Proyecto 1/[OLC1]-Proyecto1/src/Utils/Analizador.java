@@ -42,7 +42,7 @@ public class Analizador {
         	return ejecutarGolang(AST);
         }
         else {
-        	return "a";
+        	return ejecutarPython(AST);
         }
        //  return ejecutarAST(AST_arbolSintaxisAbstracta);
     }
@@ -64,6 +64,30 @@ public class Analizador {
             //es por esto que se hace esta validación.
             if(ins!=null) {
                 traduccion += ins.traducirGolang();
+            }
+           
+        }
+        
+        return traduccion;
+    }
+    
+    public String ejecutarPython(LinkedList<Instruccion> ast) {
+        if(ast==null){
+            return("No es posible ejecutar las instrucciones porque\r\n"
+                    + "el árbol no fue cargado de forma adecuada por la existencia\r\n"
+                    + "de errores léxicos o sintácticos.");
+        }
+        //Se ejecuta cada instruccion en el ast, es decir, cada instruccion de 
+        //la lista principal de instrucciones.
+        
+        String traduccion = "";
+        
+        for(Instruccion ins:ast){
+            //Si existe un error léxico o sintáctico en cierta instrucción esta
+            //será inválida y se cargará como null, por lo tanto no deberá ejecutarse
+            //es por esto que se hace esta validación.
+            if(ins!=null) {
+                traduccion += ins.traducirPython();
             }
            
         }
