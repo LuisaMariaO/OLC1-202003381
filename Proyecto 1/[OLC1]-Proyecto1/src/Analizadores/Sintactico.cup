@@ -61,15 +61,17 @@ terminal String imprimir, imprimirNl;
 terminal String umenos;
 
 non terminal INICIO, INSTRUCCIONESP;
-non terminal LinkedList<Instruccion> INSTRUCCIONES, BLOQUE, DELOCONTRARIO, BLOQUEP;
-non terminal Instruccion INSTRUCCION, DECLARACION, ASIGNACION, SI;
-non terminal SEGUN, DELOCONTRARIOSEGUN, PARA, INCREMENTAL, MIENTRAS, REPETIR, RETORNAR, IMPRIMIR, IMPRIMIRNL;
-non terminal Map.Entry<Operacion,LinkedList<Instruccion>> OSI;
+non terminal LinkedList<Instruccion> INSTRUCCIONES, BLOQUE, DELOCONTRARIO, BLOQUEP, DELOCONTRARIOSEGUN;
+non terminal Instruccion INSTRUCCION, DECLARACION, ASIGNACION, SI, SEGUN, PARA, MIENTRAS, REPETIR, LLAMADA, IMPRIMIR, IMPRIMIRNL;
+non terminal RETORNAR;
+non terminal String INCREMENTAL;
+non terminal Map.Entry<Operacion,LinkedList<Instruccion>> OSI,CONDICIONESEGUN;
 non terminal Operacion EXPRESION;
-non terminal LinkedList<Map.Entry<Operacion,LinkedList<Instruccion>>> LISTACONDICIONES, CONDICIONES;
+non terminal LinkedList<Map.Entry<Operacion,LinkedList<Instruccion>>> LISTACONDICIONES,LISTASEGUN, CONDICIONES;
 non terminal LinkedList<String> LISTANOMBRES; 
-non terminal LISTASEGUN, LISTAPARAMETROS, LISTAEXPRESIONES, LISTAEXPRESIONESP;
-non terminal METODO, CONPARAMETROS, FUNCION, LLAMADA;
+non terminal LISTAPARAMETROS;
+non terminal LinkedList<Operacion> LISTAEXPRESIONES, LISTAEXPRESIONESP;
+non terminal METODO, CONPARAMETROS, FUNCION;
 
 precedence right mas, menos, or;
 precedence right por, dividido, and;
@@ -100,13 +102,13 @@ INSTRUCCION::= comentarioSimple:a {:RESULT=new ComentarioSimple(a);:}
 | DECLARACION:a{:RESULT=a;:}
 | ASIGNACION:a{:RESULT=a;:}
 | SI:a{:RESULT=a;:}
-| SEGUN
-| PARA
-| MIENTRAS
-| REPETIR
-| LLAMADA puntoycoma
-| IMPRIMIR
-| IMPRIMIRNL
+| SEGUN:a{:RESULT=a;:}
+| PARA:a{:RESULT=a;:}
+| MIENTRAS:a{:RESULT=a;:}
+| REPETIR:a{:RESULT=a;:}
+| LLAMADA:a puntoycoma{:RESULT=a;:}
+| IMPRIMIR:a{:RESULT=a;:}
+| IMPRIMIRNL:a{:RESULT=a;:}
 ;
 
 DECLARACION::= ingresar LISTANOMBRES:a como tipoDato:b conValor EXPRESION:c puntoycoma{:RESULT=new Declaracion(a,b,c);:}
@@ -138,28 +140,31 @@ LISTACONDICIONES::= LISTACONDICIONES:a OSI:b{:RESULT=a; a.add(b);:}
 CONDICIONES::= LISTACONDICIONES:a{:RESULT=a;:}
 |
 ;
-SEGUN::= segun EXPRESION hacer LISTASEGUN DELOCONTRARIOSEGUN finSegun
+SEGUN::= segun EXPRESION:a hacer LISTASEGUN:b DELOCONTRARIOSEGUN:c finSegun{:RESULT= new Switch(a,b,c);:}
 ;
 
-LISTASEGUN::= interrogacionAbre EXPRESION interrogacionCierra entonces BLOQUE LISTASEGUN
+LISTASEGUN::= LISTASEGUN:a CONDICIONESEGUN:b{:RESULT=a; a.add(b);:}
+|CONDICIONESEGUN:a{:RESULT=new LinkedList<>(); RESULT.add(a);:}
+;
+
+CONDICIONESEGUN::= interrogacionAbre EXPRESION:a interrogacionCierra entonces BLOQUE:b{:RESULT= new AbstractMap.SimpleEntry<Operacion,LinkedList<Instruccion>>(a,b);:}
+;
+
+DELOCONTRARIOSEGUN::= deLoContrario entonces BLOQUE:a{:RESULT=a;:}
 |
 ;
 
-DELOCONTRARIOSEGUN::= deLoContrario entonces BLOQUE
+PARA::= para identificador:a flecha EXPRESION:b hasta EXPRESION:c INCREMENTAL:d hacer BLOQUE:e finPara{:RESULT=new For(a,b,c,d,e);:}
+;
+
+INCREMENTAL::= con incremental entero:a{:RESULT=a;:}
 |
 ;
 
-PARA::= para identificador flecha EXPRESION hasta EXPRESION INCREMENTAL hacer BLOQUE finPara
+MIENTRAS::= mientras EXPRESION:a hacer BLOQUE:b finMientras{:RESULT=new Mientras(a,b);:}
 ;
 
-INCREMENTAL::= con incremental entero
-|
-;
-
-MIENTRAS::= mientras EXPRESION hacer BLOQUE finMientras 
-;
-
-REPETIR::= repetir BLOQUE hastaQue EXPRESION
+REPETIR::= repetir BLOQUE:a hastaQue EXPRESION:b{:RESULT=new Repetir(a,b);:}
 ;
 
 RETORNAR::= retornar EXPRESION puntoycoma
@@ -202,18 +207,18 @@ EXPRESION::= EXPRESION:a mas EXPRESION:b{:RESULT=new Operacion(a,b,Tipo_operacio
 | cadena:a{:RESULT=new Operacion(a,Tipo_operacion.CADENA);:}
 | caracter:a{:RESULT=new Operacion(a,Tipo_operacion.CARACTER);:}
 | identificador:a{:RESULT=new Operacion(a,Tipo_operacion.IDENTIFICADOR);:}
-| LLAMADA
+| LLAMADA:a{:RESULT=new Operacion(a,Tipo_operacion.LLAMADA);:}
 ;
 
-LLAMADA::= ejecutar identificador parentesisAbre LISTAEXPRESIONES parentesisCierra
+LLAMADA::= ejecutar identificador:a parentesisAbre LISTAEXPRESIONES:b parentesisCierra{:RESULT=new Llamada(a,b);:}
 ;
-LISTAEXPRESIONES::= EXPRESION LISTAEXPRESIONESP
+LISTAEXPRESIONES::=LISTAEXPRESIONESP:a{:RESULT=a;:}
 |
 ;
-LISTAEXPRESIONESP::= coma EXPRESION LISTAEXPRESIONESP
-|
+LISTAEXPRESIONESP::= LISTAEXPRESIONESP:a coma EXPRESION:b{:RESULT=a; a.add(b);:}
+|EXPRESION:a{:RESULT=new LinkedList<>(); RESULT.add(a);:}
 ;
-IMPRIMIR::= imprimir EXPRESION puntoycoma
+IMPRIMIR::= imprimir EXPRESION:a puntoycoma{:RESULT=new Imprimir(a);:}
 ;
-IMPRIMIR::= imprimirNl EXPRESION puntoycoma
+IMPRIMIR::= imprimirNl EXPRESION:a puntoycoma{:RESULT=new Imprimirnl(a);:}
 ;

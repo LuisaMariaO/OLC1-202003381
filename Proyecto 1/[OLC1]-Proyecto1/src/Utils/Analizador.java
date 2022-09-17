@@ -63,7 +63,7 @@ public class Analizador {
             //será inválida y se cargará como null, por lo tanto no deberá ejecutarse
             //es por esto que se hace esta validación.
             if(ins!=null) {
-                traduccion += ins.traducirGolang();
+                traduccion += ins.traducirGolang()+"\n";
             }
            
         }

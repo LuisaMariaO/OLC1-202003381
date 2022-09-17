@@ -19,7 +19,7 @@ public class Asignacion implements Instruccion {
 		String declaraciones="";
 		
 		for(String asignacion:listaNombres) {
-			declaraciones+=asignacion+" = "+valor.traducirGolang()+"\n";
+			declaraciones+=asignacion+" = "+valor.traducirGolang();
 		}
 		return declaraciones;
 	}

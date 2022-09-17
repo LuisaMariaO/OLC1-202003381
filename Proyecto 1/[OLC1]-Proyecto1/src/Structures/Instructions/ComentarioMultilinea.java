@@ -18,7 +18,7 @@ public class ComentarioMultilinea implements Instruccion {
 
     @Override
     public String traducirGolang() {
-        return this.comentario+"\n";
+        return this.comentario+"";
         		
     }
 

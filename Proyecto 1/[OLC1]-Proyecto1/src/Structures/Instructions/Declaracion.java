@@ -31,7 +31,7 @@ public class Declaracion implements Instruccion {
 		
 		for(String declaracion:listaNombres) {
 		
-		declaraciones+= "var "+declaracion +" "+tipoDato+" = " + valor.traducirGolang()+"\n";
+		declaraciones+= "var "+declaracion +" "+tipoDato+" = " + valor.traducirGolang()+"";
 		}
 		
 		return declaraciones;

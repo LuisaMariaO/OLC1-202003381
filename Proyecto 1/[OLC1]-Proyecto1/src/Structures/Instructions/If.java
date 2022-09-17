@@ -1,6 +1,6 @@
 package Structures.Instructions;
 
-import java.util.HashMap;
+
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -21,15 +21,19 @@ public class If implements Instruccion{
 	public String traducirGolang() {
 		String traduccion="";
 		traduccion+="if " + condicion.traducirGolang()+"{\n";
+		if(bloque!=null) {
 		for(Instruccion ins:bloque) {
 			traduccion+=ins.traducirGolang();
+		}
 		}
 		traduccion+="}";
 	if(oSi!=null) {//Si trae else if
 		for(Map.Entry<Operacion, LinkedList<Instruccion>> cond:oSi) {
 			traduccion+="else if " + cond.getKey().traducirGolang()+"{\n";
+			if(cond.getValue()!=null) {
 			for(Instruccion ins:cond.getValue()) {
 				traduccion+=ins.traducirGolang();
+			}
 			}
 			traduccion+="}";
 		}
@@ -42,7 +46,7 @@ public class If implements Instruccion{
 		}
 		traduccion+="}";
 	}
-		return traduccion+"\n";
+		return traduccion+"";
 	}
 
 	@Override

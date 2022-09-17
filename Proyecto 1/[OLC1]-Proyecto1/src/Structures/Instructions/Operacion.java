@@ -57,6 +57,7 @@ public class Operacion implements Instruccion {
     private Operacion operadorIzq;
     private Operacion operadorDer;
     private Object valor;
+    private Instruccion llamada;
     
     /*Constructor para operaciones con dos operaores: SUMA,RESTA,MULTIPLICACION,DIVISON,MODULO,POTENCIA,MAYOR,MENOR,,IGUAL,DIFERENTE,AND,OR*/
     public Operacion (Operacion operadorIzq, Operacion operadorDer, Tipo_operacion tipo){
@@ -75,6 +76,10 @@ public class Operacion implements Instruccion {
     public Operacion(String valor, Tipo_operacion tipo){
         this.tipo=tipo;
         this.valor=valor;
+    }
+    public Operacion(Instruccion llamada, Tipo_operacion tipo) {
+    	this.llamada=llamada;
+    	this.tipo=tipo;
     }
     
     
@@ -173,7 +178,9 @@ public class Operacion implements Instruccion {
         else if(tipo==Tipo_operacion.IDENTIFICADOR) {
         	return valor.toString();
         }
-    	//TODO: Llamadas de funciones y metodos
+        else if(tipo==Tipo_operacion.LLAMADA) {
+        	return llamada.traducirGolang();
+        }
         else{
             return "";
         }
