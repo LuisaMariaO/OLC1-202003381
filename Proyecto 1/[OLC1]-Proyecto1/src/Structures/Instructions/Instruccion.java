@@ -11,6 +11,6 @@ package Structures.Instructions;
  */
 public interface Instruccion {
     public String traducirGolang();
-    public String traducirPython();
+    public String traducirPython(int identacion);
     
 }

@@ -7,7 +7,9 @@ package Utils;
 import Analizadores.Lexico;
 
 import Analizadores.Sintactico;
+import Structures.Instructions.Funcion;
 import Structures.Instructions.Instruccion;
+import Structures.Instructions.Metodo;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -56,19 +58,30 @@ public class Analizador {
         //Se ejecuta cada instruccion en el ast, es decir, cada instruccion de 
         //la lista principal de instrucciones.
         
-        String traduccion = "";
+        //Primero busco las instrucciones fuera de metodos para el metodo main
+        String main = "package main\n";
+        main+="import(\n\"fmt\"\n\"math\"\n)\n";
+        main+="func main(){\n";
+        String traduccion="";
         
         for(Instruccion ins:ast){
             //Si existe un error léxico o sintáctico en cierta instrucción esta
             //será inválida y se cargará como null, por lo tanto no deberá ejecutarse
             //es por esto que se hace esta validación.
             if(ins!=null) {
-                traduccion += ins.traducirGolang()+"\n";
+            	if(!(ins instanceof Metodo) && !(ins instanceof Funcion) ) {
+            		main += ins.traducirGolang()+"\n";
+            		
+            	}
+            	else {
+            		traduccion+=ins.traducirGolang()+"\n";
+            	}
+                
             }
            
         }
-        
-        return traduccion;
+        main+="}\n";
+        return main+traduccion;
     }
     
     public String ejecutarPython(LinkedList<Instruccion> ast) {
@@ -79,19 +92,19 @@ public class Analizador {
         }
         //Se ejecuta cada instruccion en el ast, es decir, cada instruccion de 
         //la lista principal de instrucciones.
-        
+        String main="def main():\n";
+        main+="  print(\"python main function\")\n";
         String traduccion = "";
         
         for(Instruccion ins:ast){
-            //Si existe un error léxico o sintáctico en cierta instrucción esta
-            //será inválida y se cargará como null, por lo tanto no deberá ejecutarse
-            //es por esto que se hace esta validación.
+  
             if(ins!=null) {
-                traduccion += ins.traducirPython();
+            	if(!(ins instanceof Metodo) && !(ins instanceof Funcion))
+                main += ins.traducirPython(1)+"\n";
             }
            
         }
-        
-        return traduccion;
+        main+="if __name__=='__main__':\n  main()\n";
+        return main;
     }
 }

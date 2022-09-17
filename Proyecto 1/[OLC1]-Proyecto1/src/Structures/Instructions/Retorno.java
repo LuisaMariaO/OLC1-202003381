@@ -14,7 +14,7 @@ public class Retorno implements Instruccion {
 	}
 
 	@Override
-	public String traducirPython() {
+	public String traducirPython(int identacion) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -30,7 +30,7 @@ public class Switch implements Instruccion {
 		if(contrario!=null) {//Si trae default
 			traduccion+="default:\n";
 			for(Instruccion ins: contrario) {
-				traduccion+=ins.traducirGolang();
+				traduccion+=ins.traducirGolang()+"\n";
 			}
 		}
 		traduccion+="}";
@@ -38,7 +38,7 @@ public class Switch implements Instruccion {
 	}
 
 	@Override
-	public String traducirPython() {
+	public String traducirPython(int identacion) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -23,7 +23,7 @@ public class If implements Instruccion{
 		traduccion+="if " + condicion.traducirGolang()+"{\n";
 		if(bloque!=null) {
 		for(Instruccion ins:bloque) {
-			traduccion+=ins.traducirGolang();
+			traduccion+=ins.traducirGolang()+"\n";
 		}
 		}
 		traduccion+="}";
@@ -32,7 +32,7 @@ public class If implements Instruccion{
 			traduccion+="else if " + cond.getKey().traducirGolang()+"{\n";
 			if(cond.getValue()!=null) {
 			for(Instruccion ins:cond.getValue()) {
-				traduccion+=ins.traducirGolang();
+				traduccion+=ins.traducirGolang()+"\n";
 			}
 			}
 			traduccion+="}";
@@ -42,7 +42,7 @@ public class If implements Instruccion{
 		traduccion+="else {\n";
 		for(Instruccion ins:siNo) {
 			System.out.println("a");
-			traduccion+=ins.traducirGolang();
+			traduccion+=ins.traducirGolang()+"\n";
 		}
 		traduccion+="}";
 	}
@@ -50,9 +50,28 @@ public class If implements Instruccion{
 	}
 
 	@Override
-	public String traducirPython() {
-		// TODO Auto-generated method stub
-		return null;
+	public String traducirPython(int iden) {
+	
+	
+		String traduccion="";
+	
+		traduccion+=identacion(iden);
+		traduccion+="if "+condicion.traducirPython(0)+":\n";
+		if(bloque!=null) {
+			for(Instruccion ins:bloque) {
+				traduccion+=ins.traducirPython(iden+1)+"\n";
+			}
+		}
+		return traduccion;
+	}
+	
+	public String identacion(int ide) {
+		String id="";
+		String espacio="  ";
+		for(int i=0;i<ide;i++) {
+			id+=espacio;
+		}
+		return id;
 	}
 
 }

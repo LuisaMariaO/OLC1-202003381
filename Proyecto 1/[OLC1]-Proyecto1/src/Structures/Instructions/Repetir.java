@@ -17,7 +17,7 @@ public class Repetir implements Instruccion {
 		traduccion+="for true {\n";
 		if(instrucciones!=null) {
 			for(Instruccion ins:instrucciones) {
-				traduccion+=ins.traducirGolang();
+				traduccion+=ins.traducirGolang()+"\n";
 			}
 		}
 		traduccion+="if ("+condicion.traducirGolang()+") {\n";
@@ -28,7 +28,7 @@ public class Repetir implements Instruccion {
 	}
 
 	@Override
-	public String traducirPython() {
+	public String traducirPython(int identacion) {
 		// TODO Auto-generated method stub
 		return null;
 	}

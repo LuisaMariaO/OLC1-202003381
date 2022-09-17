@@ -23,7 +23,7 @@ public class ComentarioSimple implements Instruccion {
     }
 
 	@Override
-	public String traducirPython() {
+	public String traducirPython(int identacion) {
 	
 		String traduccion = this.comentario;
 		traduccion=traduccion.substring(2, traduccion.length());

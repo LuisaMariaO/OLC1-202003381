@@ -187,9 +187,106 @@ public class Operacion implements Instruccion {
     }
 
 	@Override
-	public String traducirPython() {
-		// TODO Auto-generated method stub
-		return null;
+	public String traducirPython(int identacion) {
+		/*TIPOS DE DATO*/
+    	if(tipo==Tipo_operacion.CADENA) {
+    		return  valor.toString();
+    	}
+    	else if(tipo==Tipo_operacion.CARACTER) {
+    		Pattern pattern = Pattern.compile("\'[ -~]\'");
+    		Matcher matcher = pattern.matcher(valor.toString());
+    		boolean matchFound = matcher.find();
+    		if(matchFound) {
+    			return valor.toString();
+    		}
+    		else {
+    			String traduccion = valor.toString();
+    			traduccion = traduccion.substring(3, traduccion.length()-2);
+    			int num = Integer.parseInt(traduccion);
+    			char character = (char)num;
+    			return "'"+Character.toString(character)+"'";
+    			
+    		}
+    
+    	}
+    	else if(tipo==Tipo_operacion.BOOLEAN) {
+    		if(valor.toString().toLowerCase().equals("verdadero")) {
+    			return "True";
+    		}
+    		else {
+    			return "False";
+    		}
+    	}
+    	else if(tipo==Tipo_operacion.ENTERO || tipo==Tipo_operacion.DECIMAL) {
+    		return valor.toString();
+    	}
+        /*OPERACIONES ARITMETICAS*/
+    	else if(tipo==Tipo_operacion.SUMA){
+            return operadorIzq.traducirPython(0) + "+" + operadorDer.traducirPython(0);
+        }
+        else if(tipo==Tipo_operacion.RESTA){
+            return operadorIzq.traducirPython(0) + "-" + operadorDer.traducirPython(0);
+        }
+        else if(tipo==Tipo_operacion.MULTIPLICACION){
+            return operadorIzq.traducirPython(0) + "*" + operadorDer.traducirPython(0);
+        }
+        else if(tipo==Tipo_operacion.DIVISION){
+            return operadorIzq.traducirPython(0) + "/" + operadorDer.traducirPython(0);
+        }
+        else if(tipo==Tipo_operacion.POTENCIA) {
+        	return operadorIzq.traducirPython(0) + "**" + operadorDer.traducirPython(0);
+        }
+        else if(tipo==Tipo_operacion.PARENTESIS) {
+        	return "("+operadorIzq.traducirPython(0)+")";
+        }
+        else if(tipo==Tipo_operacion.MODULO) {
+        	return operadorIzq.traducirPython(0) + "%" + operadorDer.traducirPython(0);
+        }
+        else if(tipo==Tipo_operacion.NEGATIVO) {
+        	return "-" +  operadorIzq.traducirPython(0);
+        }
+    	
+    	/*OPERACIONES RELACIONALES*/
+        else if(tipo==Tipo_operacion.MAYOR) {
+        	return operadorIzq.traducirPython(0) + ">" + operadorDer.traducirPython(0);
+        }
+        else if(tipo==Tipo_operacion.MENOR) {
+        	return operadorIzq.traducirPython(0) + "<" + operadorDer.traducirPython(0);
+        }
+        else if(tipo==Tipo_operacion.MAYOR_IGUAL) {
+        	return operadorIzq.traducirPython(0) + ">=" + operadorDer.traducirPython(0);
+        }
+        else if(tipo==Tipo_operacion.MENOR_IGUAL) {
+        	return operadorIzq.traducirPython(0) + "<=" + operadorDer.traducirPython(0);
+        }
+        else if(tipo==Tipo_operacion.IGUAL) {
+        	return operadorIzq.traducirPython(0) + "==" + operadorDer.traducirPython(0);
+        }
+        else if(tipo==Tipo_operacion.DIFERENTE) {
+        	return operadorIzq.traducirPython(0) + "!=" + operadorDer.traducirPython(0);
+        }
+    	
+    	/*OPERACIONES LOGICAS*/
+        else if(tipo==Tipo_operacion.OR) {
+        	return operadorIzq.traducirPython(0) + "or" + operadorDer.traducirPython(0);
+        }
+        else if(tipo==Tipo_operacion.AND) {
+        	return operadorIzq.traducirPython(0) + "and" + operadorDer.traducirPython(0);
+        }
+        else if(tipo==Tipo_operacion.NOT) {
+        	return "not" + operadorIzq.traducirPython(0);
+        }
+    	
+    	/*IDENTIFICADOR*/
+        else if(tipo==Tipo_operacion.IDENTIFICADOR) {
+        	return valor.toString();
+        }
+        else if(tipo==Tipo_operacion.LLAMADA) {
+        	return llamada.traducirGolang();
+        }
+        else{
+            return "";
+        }
 	}
     
 }

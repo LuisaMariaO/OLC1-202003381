@@ -63,15 +63,16 @@ terminal String umenos;
 non terminal INICIO, INSTRUCCIONESP;
 non terminal LinkedList<Instruccion> INSTRUCCIONES, BLOQUE, DELOCONTRARIO, BLOQUEP, DELOCONTRARIOSEGUN;
 non terminal Instruccion INSTRUCCION, DECLARACION, ASIGNACION, SI, SEGUN, PARA, MIENTRAS, REPETIR, LLAMADA, IMPRIMIR, IMPRIMIRNL;
-non terminal RETORNAR;
+non terminal Instruccion RETORNAR;
 non terminal String INCREMENTAL;
 non terminal Map.Entry<Operacion,LinkedList<Instruccion>> OSI,CONDICIONESEGUN;
 non terminal Operacion EXPRESION;
 non terminal LinkedList<Map.Entry<Operacion,LinkedList<Instruccion>>> LISTACONDICIONES,LISTASEGUN, CONDICIONES;
 non terminal LinkedList<String> LISTANOMBRES; 
-non terminal LISTAPARAMETROS;
 non terminal LinkedList<Operacion> LISTAEXPRESIONES, LISTAEXPRESIONESP;
-non terminal METODO, CONPARAMETROS, FUNCION;
+non terminal Instruccion METODO,FUNCION;
+non terminal LinkedList<Map.Entry<String,String>> CONPARAMETROS,LISTAPARAMETROS;
+non terminal Map.Entry<String,String> PARAMETRO;
 
 precedence right mas, menos, or;
 precedence right por, dividido, and;
@@ -85,8 +86,8 @@ INICIO::= INSTRUCCIONES:a {:System.out.println("Fin de analisis de entrada");:}
 INSTRUCCIONES::= t_inicio INSTRUCCIONESP:a t_fin {::}
 ;
 INSTRUCCIONESP::= INSTRUCCION:b INSTRUCCIONESP:a {:parser.AST.addFirst(b);:}
-| METODO INSTRUCCIONESP
-| FUNCION INSTRUCCIONESP
+| METODO:b INSTRUCCIONESP:a{:parser.AST.addFirst(b);:}
+| FUNCION:b INSTRUCCIONESP:a{:parser.AST.addFirst(b);:}
 | error INSTRUCCIONESP
 |{:RESULT=new LinkedList<>();:}
 ;
@@ -167,21 +168,22 @@ MIENTRAS::= mientras EXPRESION:a hacer BLOQUE:b finMientras{:RESULT=new Mientras
 REPETIR::= repetir BLOQUE:a hastaQue EXPRESION:b{:RESULT=new Repetir(a,b);:}
 ;
 
-RETORNAR::= retornar EXPRESION puntoycoma
+RETORNAR::= retornar EXPRESION:a puntoycoma{:RESULT=new Retorno(a);:}
 ;
 
-METODO::= metodo identificador CONPARAMETROS BLOQUE finMetodo
+METODO::= metodo identificador:a CONPARAMETROS:b BLOQUE:c finMetodo{:RESULT=new Metodo(a,b,c);:}
 ;
 
-CONPARAMETROS::= conParametros parentesisAbre identificador tipoDato LISTAPARAMETROS parentesisCierra
+CONPARAMETROS::= conParametros parentesisAbre LISTAPARAMETROS:a parentesisCierra{:RESULT=a;:}
 |
 ;
 
-LISTAPARAMETROS::= coma identificador tipoDato LISTAPARAMETROS
-|
+LISTAPARAMETROS::= LISTAPARAMETROS:a coma PARAMETRO:b{:RESULT=a; a.add(b);:}
+| PARAMETRO:a{:RESULT=new LinkedList<>(); RESULT.add(a);:}
 ;
-
-FUNCION::= funcion identificador tipoDato CONPARAMETROS BLOQUE RETORNAR finFuncion
+PARAMETRO::= identificador:a tipoDato:b{:RESULT=new  AbstractMap.SimpleEntry<String, String>(a, b);:}
+;
+FUNCION::= funcion identificador:a tipoDato:b CONPARAMETROS:c BLOQUE:d RETORNAR:e finFuncion{:RESULT=new Funcion(a,b,c,d,e);:}
 ;
 
 EXPRESION::= EXPRESION:a mas EXPRESION:b{:RESULT=new Operacion(a,b,Tipo_operacion.SUMA);:}

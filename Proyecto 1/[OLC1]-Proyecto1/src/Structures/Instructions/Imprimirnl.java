@@ -13,7 +13,7 @@ private Operacion valor;
 	}
 
 	@Override
-	public String traducirPython() {
+	public String traducirPython(int identacion) {
 		// TODO Auto-generated method stub
 		return null;
 	}

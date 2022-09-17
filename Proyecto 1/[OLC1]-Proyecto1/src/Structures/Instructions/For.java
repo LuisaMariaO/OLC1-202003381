@@ -30,7 +30,9 @@ public class For implements Instruccion  {
 		traduccion+=" {\n";
 		if(instrucciones!=null) {
 			for(Instruccion ins:instrucciones) {
-				traduccion+=ins.traducirGolang();
+				if(ins!=null) {
+				traduccion+=ins.traducirGolang()+"\n";
+				}
 			}
 		}
 		traduccion+="}";
@@ -38,7 +40,7 @@ public class For implements Instruccion  {
 	}
 
 	@Override
-	public String traducirPython() {
+	public String traducirPython(int identacion) {
 		// TODO Auto-generated method stub
 		return null;
 	}
