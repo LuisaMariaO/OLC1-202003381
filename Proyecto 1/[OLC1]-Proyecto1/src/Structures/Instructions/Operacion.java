@@ -282,7 +282,7 @@ public class Operacion implements Instruccion {
         	return valor.toString();
         }
         else if(tipo==Tipo_operacion.LLAMADA) {
-        	return llamada.traducirGolang();
+        	return llamada.traducirPython(0);
         }
         else{
             return "";

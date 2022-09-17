@@ -14,9 +14,19 @@ public class Retorno implements Instruccion {
 	}
 
 	@Override
-	public String traducirPython(int identacion) {
-		// TODO Auto-generated method stub
-		return null;
+	public String traducirPython(int iden) {
+		String traduccion="";
+		traduccion+=identacion(iden)+"return "+valor.traducirPython(0);
+		return traduccion;
+	}
+	
+	public String identacion(int ide) {
+		String id="";
+		String espacio="  ";
+		for(int i=0;i<ide;i++) {
+			id+=espacio;
+		}
+		return id;
 	}
 
 }

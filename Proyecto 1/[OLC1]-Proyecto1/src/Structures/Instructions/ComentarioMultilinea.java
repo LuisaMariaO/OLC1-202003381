@@ -23,10 +23,18 @@ public class ComentarioMultilinea implements Instruccion {
     }
 
 	@Override
-	public String traducirPython(int indentacion) {
+	public String traducirPython(int iden) {
 		String traduccion = this.comentario;
 		traduccion = traduccion.substring(2, traduccion.length()-2);
-		return "\"\"\""+traduccion+"\"\"\"\n";
+		return identacion(iden) + "\"\"\""+traduccion+"\"\"\"\n";
+	}
+	public String identacion(int ide) {
+		String id="";
+		String espacio="  ";
+		for(int i=0;i<ide;i++) {
+			id+=espacio;
+		}
+		return id;
 	}
     
 }

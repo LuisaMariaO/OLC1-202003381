@@ -25,9 +25,26 @@ public class Llamada implements Instruccion {
 	}
 
 	@Override
-	public String traducirPython(int identacion) {
-		// TODO Auto-generated method stub
-		return null;
+	public String traducirPython(int iden) {
+		String traduccion="";
+		traduccion+=identacion(iden)+identificador+"(";
+		if(parametros!=null) {
+			traduccion+=parametros.pop().traducirPython(0);
+			for(Operacion exp:parametros) {
+				traduccion+=","+exp.traducirPython(0);
+			}
+		}
+		traduccion+=")";
+		return traduccion;
+	}
+	
+	public String identacion(int ide) {
+		String id="";
+		String espacio="  ";
+		for(int i=0;i<ide;i++) {
+			id+=espacio;
+		}
+		return id;
 	}
 
 }

@@ -40,9 +40,28 @@ public class For implements Instruccion  {
 	}
 
 	@Override
-	public String traducirPython(int identacion) {
-		// TODO Auto-generated method stub
-		return null;
+	public String traducirPython(int iden) {
+		String traduccion= "";
+		traduccion+=identacion(iden)+"for"+ identificador+"in range("+inicio.traducirPython(0)+","+fin.traducirPython(0);
+		if(paso!=null) {
+			traduccion+=","+paso;
+		}
+		traduccion+="):\n";
+		
+		if(instrucciones!=null) {
+			for(Instruccion ins: instrucciones) {
+				traduccion+=ins.traducirPython(iden+1)+"\n";
+			}
+		}
+		return traduccion;
 	}
-
+	
+	public String identacion(int ide) {
+		String id="";
+		String espacio="  ";
+		for(int i=0;i<ide;i++) {
+			id+=espacio;
+		}
+		return id;
+	}
 }

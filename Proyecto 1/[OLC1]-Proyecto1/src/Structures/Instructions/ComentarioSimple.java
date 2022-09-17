@@ -23,11 +23,19 @@ public class ComentarioSimple implements Instruccion {
     }
 
 	@Override
-	public String traducirPython(int identacion) {
+	public String traducirPython(int ide) {
 	
 		String traduccion = this.comentario;
 		traduccion=traduccion.substring(2, traduccion.length());
-		return "#"+traduccion+"\n";
+		return identacion(ide)+"#"+traduccion+"\n";
+	}
+	public String identacion(int ide) {
+		String id="";
+		String espacio="  ";
+		for(int i=0;i<ide;i++) {
+			id+=espacio;
+		}
+		return id;
 	}
     
 }

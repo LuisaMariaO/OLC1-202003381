@@ -82,9 +82,35 @@ public class Funcion implements Instruccion{
 	}
 
 	@Override
-	public String traducirPython(int identacion) {
-		// TODO Auto-generated method stub
-		return null;
+	public String traducirPython(int iden) {
+		String traduccion="";
+		traduccion+=identacion(iden)+"def "+nombre+"(";
+		if(parametros!=null) {
+			Map.Entry<String, String> primero = parametros.pop();
+			traduccion+=primero.getKey();
+		for(Map.Entry<String, String> nombre:parametros) {
+			traduccion+=","+nombre.getKey();
+		}
+		}
+		traduccion+="):\n";
+		
+		if(instrucciones!=null) {
+			for(Instruccion ins: instrucciones) {
+				traduccion+=ins.traducirPython(iden+1)+"\n";
+			}
+		}
+		
+		traduccion+=retorno.traducirPython(iden+1);
+		return traduccion;
+	}
+	
+	public String identacion(int ide) {
+		String id="";
+		String espacio="  ";
+		for(int i=0;i<ide;i++) {
+			id+=espacio;
+		}
+		return id;
 	}
 
 }

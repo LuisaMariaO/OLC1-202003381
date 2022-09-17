@@ -41,7 +41,6 @@ public class If implements Instruccion{
 	if(siNo!=null) {//Si trae else
 		traduccion+="else {\n";
 		for(Instruccion ins:siNo) {
-			System.out.println("a");
 			traduccion+=ins.traducirGolang()+"\n";
 		}
 		traduccion+="}";
@@ -62,6 +61,26 @@ public class If implements Instruccion{
 				traduccion+=ins.traducirPython(iden+1)+"\n";
 			}
 		}
+		if(oSi!=null) {
+			for(Map.Entry<Operacion, LinkedList<Instruccion>> cond:oSi) {
+				traduccion+=identacion(iden)+"elif " + cond.getKey().traducirPython(0)+":\n";
+				if(cond.getValue()!=null) {
+				for(Instruccion ins:cond.getValue()) {
+					traduccion+=ins.traducirPython(iden+1)+"\n";
+				}
+				}
+				
+		}
+		}
+		
+		if(siNo!=null) {
+			traduccion+=identacion(iden)+"else:\n";
+			for(Instruccion ins:siNo) {
+				traduccion+=ins.traducirPython(iden+1)+"\n";
+			}
+		}
+		
+		
 		return traduccion;
 	}
 	

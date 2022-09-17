@@ -28,7 +28,7 @@ public class Switch implements Instruccion {
 		}
 		
 		if(contrario!=null) {//Si trae default
-			traduccion+="default:\n";
+			traduccion+="\ndefault:\n";
 			for(Instruccion ins: contrario) {
 				traduccion+=ins.traducirGolang()+"\n";
 			}
@@ -38,9 +38,42 @@ public class Switch implements Instruccion {
 	}
 
 	@Override
-	public String traducirPython(int identacion) {
-		// TODO Auto-generated method stub
-		return null;
+	public String traducirPython(int iden) {
+		String traduccion="";
+		if(condiciones!=null) {
+			Map.Entry<Operacion, LinkedList<Instruccion>> primero;
+			primero=condiciones.pop();
+			traduccion+=identacion(iden)+"if "+valor.traducirPython(0)+"=="+primero.getKey().traducirPython(0)+":\n";
+			if(primero.getValue()!=null) {
+				for(Instruccion ins: primero.getValue()) {
+					traduccion+=ins.traducirPython(iden+1)+"\n";
+				}
+			}
+			
+			for(Map.Entry<Operacion, LinkedList<Instruccion>> cond: condiciones) {
+				traduccion+=identacion(iden)+"elif "+valor.traducirPython(0)+"=="+cond.getKey().traducirPython(0)+":\n";
+				for(Instruccion ins: cond.getValue()) {
+					traduccion+=ins.traducirPython(iden+1)+"\n";
+				}
+			}
+		}
+		
+		if(contrario!=null) {
+			traduccion+=identacion(iden)+"else:\n";
+			traduccion+="#(default)#\n";
+			for(Instruccion ins: contrario) {
+				traduccion+=ins.traducirPython(iden+1)+"\n";
+			}
+		}
+		return traduccion;
 	}
 
+	public String identacion(int ide) {
+		String id="";
+		String espacio="  ";
+		for(int i=0;i<ide;i++) {
+			id+=espacio;
+		}
+		return id;
+	}
 }

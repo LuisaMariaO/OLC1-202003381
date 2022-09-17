@@ -13,9 +13,19 @@ public class Imprimir implements Instruccion {
 	}
 
 	@Override
-	public String traducirPython(int identacion) {
-		// TODO Auto-generated method stub
-		return null;
+	public String traducirPython(int iden) {
+		String traduccion="";
+		traduccion+=identacion(iden)+"print("+valor.traducirPython(0)+")";
+		return traduccion;
+	}
+	
+	public String identacion(int ide) {
+		String id="";
+		String espacio="  ";
+		for(int i=0;i<ide;i++) {
+			id+=espacio;
+		}
+		return id;
 	}
 
 }

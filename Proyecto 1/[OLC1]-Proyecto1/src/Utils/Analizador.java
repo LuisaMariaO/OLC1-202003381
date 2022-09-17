@@ -99,12 +99,16 @@ public class Analizador {
         for(Instruccion ins:ast){
   
             if(ins!=null) {
-            	if(!(ins instanceof Metodo) && !(ins instanceof Funcion))
+            	if(!(ins instanceof Metodo) && !(ins instanceof Funcion)) {
                 main += ins.traducirPython(1)+"\n";
+            	}
+            	else {
+            		traduccion+=ins.traducirPython(0)+"\n";
+            	}
             }
            
         }
         main+="if __name__=='__main__':\n  main()\n";
-        return main;
+        return main+traduccion;
     }
 }

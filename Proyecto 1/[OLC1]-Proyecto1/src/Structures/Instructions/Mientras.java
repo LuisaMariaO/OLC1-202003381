@@ -28,9 +28,24 @@ public class Mientras implements Instruccion {
 	}
 
 	@Override
-	public String traducirPython(int identacion) {
-		// TODO Auto-generated method stub
-		return null;
+	public String traducirPython(int iden) {
+		String traduccion="";
+		traduccion+=identacion(iden)+"while ("+condicion.traducirPython(0)+"):\n";
+		if(instrucciones!=null) {
+			for(Instruccion ins: instrucciones) {
+				traduccion+=ins.traducirPython(iden+1)+"\n";
+			}
+		}
+		return traduccion;
+	}
+	
+	public String identacion(int ide) {
+		String id="";
+		String espacio="  ";
+		for(int i=0;i<ide;i++) {
+			id+=espacio;
+		}
+		return id;
 	}
 
 }
