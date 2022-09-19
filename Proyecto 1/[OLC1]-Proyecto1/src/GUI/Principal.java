@@ -7,8 +7,13 @@ package GUI;
 
 import Utils.Analizador;
 import Utils.Files;
+
+import java.awt.Cursor;
+import java.awt.Desktop;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
+
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -286,7 +291,19 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem_errorsActionPerformed
 
     private void jMenuItem_astActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_astActionPerformed
-        analizador.generarArbol(this.jTextPane_code.getText());
+       if( analizador.generarArbol(this.jTextPane_code.getText())) {
+    	   try {
+    		this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+			Thread.sleep(3000);
+			this.setCursor(Cursor.DEFAULT_CURSOR);
+			Desktop.getDesktop().open(new File("ast.png"));
+		} catch (InterruptedException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+       }
+        
+        
         //TODO: Si es true, que lo muestre
     }//GEN-LAST:event_jMenuItem_astActionPerformed
 
