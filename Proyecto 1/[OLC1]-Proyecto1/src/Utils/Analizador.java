@@ -4,9 +4,11 @@
  * and open the template in the editor.
  */
 package Utils;
+import Analizadores.ArbolSintactico;
 import Analizadores.Lexico;
 
 import Analizadores.Sintactico;
+import Structures.Arbol;
 import Structures.Instructions.Funcion;
 import Structures.Instructions.Instruccion;
 import Structures.Instructions.Metodo;
@@ -24,8 +26,26 @@ public class Analizador {
 
     public Analizador() {
     }
+    
+    public boolean generarArbol(String text) {
+    	Arbol arbol;
+    	 try{
+         	
+             Lexico lexico = new Lexico(new BufferedReader(new StringReader(text)));
+            ArbolSintactico sintactico = new ArbolSintactico(lexico);
+             sintactico.parse();
+            arbol = sintactico.getArbol();
+           
+            arbol.graficar();
+         }catch(Exception e){
+             System.out.println(e);
+             System.out.println("Mega error");
+         }
+    return true;	
+    }
+    
     public String interpretar (String text, int lenguaje){
-    	System.out.println(lenguaje);
+    	
     	//Lenguaje=0 -> Golang
     	//Lenguaje=1 -> Python
     	LinkedList <Instruccion> AST = null;
@@ -109,6 +129,6 @@ public class Analizador {
            
         }
         main+="if __name__=='__main__':\n  main()\n";
-        return main+traduccion;
+        return traduccion+main;
     }
 }

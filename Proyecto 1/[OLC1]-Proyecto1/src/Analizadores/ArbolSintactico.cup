@@ -1,0 +1,769 @@
+package Analizadores;
+import java_cup.runtime.Symbol;
+import java.util.LinkedList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.AbstractMap;
+import Structures.Instructions.*;
+import Structures.Node;
+import Structures.Production;
+import Structures.Arbol;
+import Structures.Instructions.Operacion.Tipo_operacion;
+parser code {:
+	/**
+     * Variable en la que se almacena el arbol de sintaxis abstracta que se 
+     * genera luego del analisis sintáctico.
+     */
+    public LinkedList<Instruccion> AST = new LinkedList<Instruccion>();
+    public LinkedList<String> listaNombres = new LinkedList<String>();
+    public LinkedList<Instruccion> bloque = new LinkedList<Instruccion>();
+    public LinkedList<HashMap<Operacion,LinkedList<Instruccion>>> listaCondiciones = new LinkedList<HashMap<Operacion,LinkedList<Instruccion>>>();
+    public HashMap<Operacion,LinkedList<Instruccion>> mapAux = new HashMap<Operacion,LinkedList<Instruccion>>();
+    public LinkedList<Instruccion> bloqueContrario = new LinkedList<Instruccion>();
+    public Arbol arbol = new Arbol();
+   
+   /**
+     * Método al que se llama automáticamente ante algun error sintactico.
+     **/ 
+    public void syntax_error(Symbol s){ 
+        System.out.println("Error Sintáctico en la Línea " + (s.right) +
+        " Columna "+s.left+ ". No se esperaba este componente: " +s.value+"."); 
+    } 
+
+    /**
+     * Método al que se llama automáticamente ante algún error sintáctico 
+     * en el que ya no es posible una recuperación de errores.
+     **/ 
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+        System.out.println("Error síntactico irrecuperable en la Línea " + 
+        (s.right)+ " Columna "+s.left+". Componente " + s.value + 
+        " no reconocido."); 
+    } 
+    
+    public Arbol getArbol() {
+        return arbol;
+    }
+    
+    
+:}
+
+terminal String entero, decimal, cadena, booleano, caracter;
+terminal String mas, menos, por, dividido, potencia, modulo;
+terminal String parentesisAbre, parentesisCierra, corcheteAbre, corcheteCierra;
+terminal String mayor, menor, mayorIgual, menorIgual, esIgual, esDiferente;
+terminal String or, and, not;
+terminal String t_inicio, t_fin;
+terminal String comentarioSimple, comentarioMultiple;
+terminal String ingresar, identificador, como, tipoDato, conValor, puntoycoma, coma;
+terminal String flecha;
+terminal String si, entonces, finSi, deLoContrario, oSi;
+terminal String segun, hacer, interrogacionAbre, interrogacionCierra, finSegun;
+terminal String para, hasta, finPara, con, incremental;
+terminal String mientras, finMientras;
+terminal String repetir, hastaQue;
+terminal String retornar;
+terminal String metodo, finMetodo, conParametros;
+terminal String funcion, finFuncion, ejecutar;
+terminal String imprimir, imprimirNl;
+terminal String umenos;
+
+non terminal Node INICIO, INSTRUCCIONESP;
+non terminal Node INSTRUCCIONES;
+non terminal Node BLOQUE, DELOCONTRARIO, BLOQUEP, DELOCONTRARIOSEGUN;
+non terminal Node INSTRUCCION, DECLARACION, ASIGNACION, SI, SEGUN, PARA, MIENTRAS, REPETIR, LLAMADA, IMPRIMIR, IMPRIMIRNL;
+non terminal Node RETORNAR;
+non terminal Node INCREMENTAL;
+non terminal Node OSI,CONDICIONESEGUN;
+non terminal Node EXPRESION;
+non terminal Node LISTACONDICIONES,LISTASEGUN, CONDICIONES;
+non terminal Node LISTANOMBRES; 
+non terminal Node LISTAEXPRESIONES, LISTAEXPRESIONESP;
+non terminal Node METODO,FUNCION;
+non terminal Node CONPARAMETROS,LISTAPARAMETROS;
+non terminal Node PARAMETRO;
+
+precedence right mas, menos, or;
+precedence right por, dividido, and;
+precedence right modulo, potencia;
+precedence left not, umenos;
+precedence right mayor, menor, mayorIgual, menorIgual, esIgual, esDiferente;
+
+start with INICIO;
+INICIO::= INSTRUCCIONES:a {:
+	System.out.println("Fin de analisis de entrada"); 
+	parser.arbol.setRaiz(new Node("INICIO"));
+	parser.arbol.getRaiz().addSon(a);
+:}
+;
+INSTRUCCIONES::= t_inicio:w INSTRUCCIONESP:a t_fin:x{:
+	RESULT=new Node("INSTRUCCIONES");
+	Node t_ini = new Node("t_inicio");
+	t_ini.addSon(w);
+	RESULT.addSon(t_ini);
+	RESULT.addSon(a);
+	Node t_fn = new Node("t_fin");
+	t_fn.addSon(x);
+	RESULT.addSon(t_fn);
+:}
+;
+INSTRUCCIONESP::= INSTRUCCION:b INSTRUCCIONESP:a {:
+	RESULT=new Node("INSTRUCCIONESP");
+	RESULT.addSon(b);
+	RESULT.addSon(a);
+:}
+| METODO:b INSTRUCCIONESP:a{:
+	RESULT=new Node("INSTRUCCIONESP");
+	RESULT.addSon(b);
+	RESULT.addSon(a);
+:}
+| FUNCION:b INSTRUCCIONESP:a{:
+	RESULT=new Node("INSTRUCCIONESP");
+	RESULT.addSon(b);
+	RESULT.addSon(a);
+:}
+| error INSTRUCCIONESP:b{:
+	RESULT=new Node("INSTRUCCIONESP");
+	RESULT.addSon("<error>");
+	RESULT.addSon(b);
+:}
+|{::}
+;
+BLOQUEP::=BLOQUEP:a INSTRUCCION:b{:
+	RESULT=new Node("BLOQUEP");
+	RESULT.addSon(a);
+	RESULT.addSon(b);
+:}
+|INSTRUCCION:a{:
+	RESULT=new Node("BLOQUEP");
+	RESULT.addSon(a);
+:}
+;
+
+BLOQUE::=BLOQUEP:a{:
+	RESULT=new Node("BLOQUE");
+	RESULT.addSon(a);
+:}
+|
+;
+INSTRUCCION::= comentarioSimple:a {:
+	RESULT=new Node("INSTRUCCION");
+	Node cm = new Node("comentarioSimple");
+	cm.addSon(a);
+	RESULT.addSon(cm);
+:}
+| comentarioMultiple:a {:
+	RESULT=new Node("INSTRUCCION");
+	Node cm = new Node("comentarioMultiple");
+	cm.addSon(a);
+	RESULT.addSon(cm);
+:}
+| DECLARACION:a{:
+	RESULT=new Node("INSTRUCCION");
+	RESULT.addSon(a);
+:}
+| ASIGNACION:a{:
+	RESULT=new Node("INSTRUCCION");
+	RESULT.addSon(a);
+:}
+| SI:a{:
+	RESULT=new Node("INSTRUCCION");
+	RESULT.addSon(a);
+:}
+| SEGUN:a{:
+	RESULT=new Node("INSTRUCCION");
+	RESULT.addSon(a);
+:}
+| PARA:a{:
+	RESULT=new Node("INSTRUCCION");
+	RESULT.addSon(a);
+:}
+| MIENTRAS:a{:
+	RESULT=new Node("INSTRUCCION");
+	RESULT.addSon(a);
+:}
+| REPETIR:a{:
+	RESULT=new Node("INSTRUCCION");
+	RESULT.addSon(a);
+:}
+| LLAMADA:a puntoycoma{:
+	RESULT=new Node("INSTRUCCION");
+	RESULT.addSon(a);
+	Node pt = new Node("puntoycoma");
+	pt.addSon(";"); 
+	RESULT.addSon(pt);
+:}
+| IMPRIMIR:a{:
+	RESULT=new Node("INSTRUCCION");
+	RESULT.addSon(a);
+:}
+| IMPRIMIRNL:a{:
+	RESULT=new Node("INSTRUCCION");
+	RESULT.addSon(a);
+:}
+;
+
+DECLARACION::= ingresar LISTANOMBRES:a como tipoDato:b conValor:w EXPRESION:c puntoycoma{:
+	RESULT=new Node("DECLARACION");
+	RESULT.addSon("ingresar");
+	RESULT.addSon(a);
+	Node cm = new Node("t_como");
+	cm.addSon("como");
+	RESULT.addSon(cm);
+	Node tp = new Node("tipoDato");
+	tp.addSon(b);
+	RESULT.addSon(tp);
+	Node cv = new Node("conValor");
+	cv.addSon(w);
+	RESULT.addSon(c);
+	Node pt = new Node("puntoycoma");
+	pt.addSon(";");
+	RESULT.addSon(pt);
+:}
+;
+
+LISTANOMBRES::= LISTANOMBRES:a coma identificador:b{:
+	RESULT=new Node("LISTANOMBRES");
+	RESULT.addSon(a);
+	Node cm = new Node("coma");
+	cm.addSon(",");
+	Node id = new Node("identificador");
+	id.addSon(b);
+	RESULT.addSon(id);
+:}
+| identificador:a{:
+	RESULT=new Node("LISTANOMBRES");
+	Node id = new Node("identificador");
+	id.addSon(a);
+	RESULT.addSon(id);
+:}
+;
+
+ASIGNACION::= LISTANOMBRES:a flecha:x EXPRESION:b puntoycoma:y{:
+	RESULT=new Node("ASIGNACION");
+	RESULT.addSon(a);
+	Node fl = new Node("flecha");
+	fl.addSon(x);
+	RESULT.addSon(fl);
+	RESULT.addSon(b);
+	Node pt = new Node("puntoycoma");
+	pt.addSon(y);
+	RESULT.addSon(pt);
+	
+:}
+;
+
+SI::= si EXPRESION:a entonces:w BLOQUE:b CONDICIONES:c DELOCONTRARIO:d finSi:x{:
+	RESULT=new Node("SI");
+	RESULT.addSon(a);
+	Node ent = new Node("entonces");
+	ent.addSon(w);
+	RESULT.addSon(b);
+	RESULT.addSon(c);
+	RESULT.addSon(d);
+	Node fs = new Node("finSi");
+	fs.addSon(x);
+	RESULT.addSon(fs);
+:}
+;
+
+DELOCONTRARIO::= deLoContrario:x BLOQUE:a{:
+	RESULT= new Node("DELOCONTRARIO");
+	Node dc = new Node("deLoContrario");
+	dc.addSon(x);
+	RESULT.addSon(dc);
+	RESULT.addSon(a);
+:}
+|
+;
+
+
+OSI::=
+    oSi:w EXPRESION:a entonces:x BLOQUE:b{:
+    RESULT=new Node("OSI");
+    Node os = new Node("oSi");
+    os.addSon(w);
+    RESULT.addSon(os);
+    RESULT.addSon(a);
+    Node et = new Node("entonces");
+    et.addSon(x);
+    RESULT.addSon(et);
+    RESULT.addSon(b);
+    
+    :}
+;
+
+LISTACONDICIONES::= LISTACONDICIONES:a OSI:b{:
+	RESULT=new Node("LISTACONDICIONES");
+	RESULT.addSon(a);
+	RESULT.addSon(b);
+:}
+| OSI:a{:
+	RESULT=new Node("LISTACONDICIONES");
+	RESULT.addSon(a);
+:}
+;
+
+CONDICIONES::= LISTACONDICIONES:a{:
+	RESULT=new Node("CONDICIONES");
+	RESULT.addSon(a);
+:}
+|
+;
+SEGUN::= segun:w EXPRESION:a hacer:x LISTASEGUN:b DELOCONTRARIOSEGUN:c finSegun:y{:
+	RESULT=new Node("SEGUN");
+	Node sg = new Node("segun");
+	sg.addSon(w);
+	RESULT.addSon(sg);
+	RESULT.addSon(a);
+	Node hc = new Node("hacer");
+	hc.addSon(x);
+	RESULT.addSon(hc);
+	RESULT.addSon(b);
+	RESULT.addSon(c);
+	Node fs=new Node("finSegun");
+	fs.addSon(y);
+	RESULT.addSon(fs);
+:}
+;
+
+LISTASEGUN::= LISTASEGUN:a CONDICIONESEGUN:b{:
+	RESULT=new Node("LISTASEGUN");
+	RESULT.addSon(a);
+	RESULT.addSon(b);
+:}
+|CONDICIONESEGUN:a{:
+	RESULT=new Node("LISTASEGUN");
+	RESULT.addSon(a);
+:}
+;
+
+CONDICIONESEGUN::= interrogacionAbre:w EXPRESION:a interrogacionCierra:x entonces:y BLOQUE:b{:
+	RESULT=new Node("CONDICIONESEGUN");
+	Node ia = new Node("interrogacionAbre");
+	ia.addSon(w);
+	RESULT.addSon(ia);
+	RESULT.addSon(a);
+	Node ic = new Node("interrogacionCierra");
+	ic.addSon(x);
+	RESULT.addSon(ic);
+	Node ec = new Node("entonces");
+	ec.addSon(y);
+	RESULT.addSon(ec);
+	RESULT.addSon(b);
+	
+:}
+;
+
+DELOCONTRARIOSEGUN::= deLoContrario:w entonces:x BLOQUE:a{:
+	RESULT= new Node("DELOCONTRARIOSEGUN");
+	Node dlc = new Node("deLoContrario");
+	dlc.addSon(w);
+	RESULT.addSon(dlc);
+	Node ec = new Node("entonces");
+	ec.addSon(x);
+	RESULT.addSon(ec);
+	RESULT.addSon(a);
+:}
+|
+;
+
+PARA::= para:w identificador:a flecha:x EXPRESION:b hasta:y EXPRESION:c INCREMENTAL:d hacer:z BLOQUE:e finPara:v{:
+	RESULT=new Node("PARA");
+	Node pr = new Node("para");
+	pr.addSon(w);
+	RESULT.addSon(pr);
+	Node id = new Node("identificador");
+	id.addSon(a);
+	RESULT.addSon(id);
+	Node fl = new Node("fl");
+	fl.addSon(x);
+	RESULT.addSon(fl);
+	RESULT.addSon(b);
+	Node hst = new Node("hasta");
+	hst.addSon(y);
+	RESULT.addSon(hst);
+	RESULT.addSon(c);
+	RESULT.addSon(d);
+	Node hcr = new Node("hacer");
+	hcr.addSon(z);
+	RESULT.addSon(hcr);
+	RESULT.addSon(e);
+	Node fp = new Node("finPara");
+	fp.addSon(v);
+	RESULT.addSon(fp);
+:}
+;
+
+INCREMENTAL::= con:w incremental:x entero:a{:
+	RESULT= new Node("INCREMENTAL");
+	Node cn = new Node("con");
+	cn.addSon(w);
+	RESULT.addSon(cn);
+	Node inc = new Node("incremental");
+	inc.addSon(x);
+	RESULT.addSon(inc);
+	Node ent = new Node("entero");
+	ent.addSon(a);
+	RESULT.addSon(ent);
+:}
+|
+;
+
+MIENTRAS::= mientras:w EXPRESION:a hacer:x BLOQUE:b finMientras:y{:
+	RESULT=new Node("MIENTRAS");
+	Node mt = new Node("mientras");
+	mt.addSon(w);
+	RESULT.addSon(mt);
+	RESULT.addSon(a);
+	Node hc = new Node("hacer");
+	hc.addSon(x);
+	RESULT.addSon(hc);
+	RESULT.addSon(b);
+	Node fm = new Node("finMientras");
+	fm.addSon(y);
+	RESULT.addSon(fm);
+:}
+;
+
+REPETIR::= repetir:w BLOQUE:a hastaQue:x EXPRESION:b{:
+	RESULT=new Node("REPETIR");
+	Node rp = new Node("repetir");
+	rp.addSon(w);
+	RESULT.addSon(rp);
+	RESULT.addSon(a);
+	Node hq = new Node("hastaQue");
+	hq.addSon(x);
+	RESULT.addSon(hq);
+	RESULT.addSon(b);
+:}
+;
+
+RETORNAR::= retornar:w EXPRESION:a puntoycoma:x{:
+	RESULT=new Node("RETORNAR");
+	Node rt = new Node("retornar");
+	rt.addSon(w);
+	RESULT.addSon(rt);
+	RESULT.addSon(a);
+	Node pc = new Node("puntoycoma");
+	pc.addSon(x);
+	RESULT.addSon(pc);
+:}
+;
+
+METODO::= metodo:w identificador:a CONPARAMETROS:b BLOQUE:c finMetodo:x{:
+	RESULT=new Node("METODO");
+	Node mt = new Node("metodo");
+	mt.addSon(w);
+	RESULT.addSon(mt);
+	Node id = new Node("identificador");
+	id.addSon(a);
+	RESULT.addSon(id);
+	RESULT.addSon(b);
+	RESULT.addSon(c);
+	Node fm = new Node("finMetodo");
+	fm.addSon(x);
+	RESULT.addSon(fm);
+:}
+;
+
+CONPARAMETROS::= conParametros:w parentesisAbre:x LISTAPARAMETROS:a parentesisCierra:y{:
+	RESULT=new Node("CONPARAMETROS");
+	Node cp = new Node("conParametros");
+	cp.addSon(w);
+	RESULT.addSon(cp);
+	Node pa = new Node("parentesisAbre");
+	pa.addSon(x);
+	RESULT.addSon(pa); 
+	RESULT.addSon(a);
+	Node pc = new Node("parentesisCierra");
+	pc.addSon(y);
+	RESULT.addSon(pc);
+:}
+|
+;
+
+LISTAPARAMETROS::= LISTAPARAMETROS:a coma:w PARAMETRO:b{:
+	RESULT=new Node("LISTAPARAMETROS");
+	RESULT.addSon(a);
+	Node cm = new Node("coma");
+	cm.addSon(w);
+	RESULT.addSon(cm);
+	RESULT.addSon(b);
+:}
+| PARAMETRO:a{:
+	RESULT=new Node("LISTAPARAMETROS");
+	RESULT.addSon(a);
+:}
+;
+PARAMETRO::= identificador:a tipoDato:b{:
+	RESULT= new Node("PARAMETRO");
+	Node id = new Node("identificador");
+	id.addSon(a);
+	RESULT.addSon(id);
+	Node td = new Node("tipoDato");
+	td.addSon(b);
+	RESULT.addSon(td);
+:}
+;
+FUNCION::= funcion:w identificador:a tipoDato:b CONPARAMETROS:c BLOQUE:d RETORNAR:e finFuncion:x{:
+	RESULT=new Node("FUNCION");
+	Node fc = new Node("funcion");
+	fc.addSon(w);
+	RESULT.addSon(fc);
+	Node id = new Node("identificador");
+	id.addSon(a);
+	RESULT.addSon(id);
+	Node td = new Node("tipoDato");
+	td.addSon(b);
+	RESULT.addSon(td);
+	RESULT.addSon(c);
+	RESULT.addSon(d);
+	RESULT.addSon(e);
+	Node ff = new Node("finFuncion");
+	ff.addSon(x);
+	RESULT.addSon(ff);
+:}
+;
+
+EXPRESION::= EXPRESION:a mas:w EXPRESION:b{:
+	RESULT=new Node("EXPRESION");
+	RESULT.addSon(a);
+	Node ms = new Node("mas");
+	ms.addSon(w);
+	RESULT.addSon(ms);
+	RESULT.addSon(b);
+:}
+| menos:w EXPRESION:a{:
+	RESULT=new Node("EXPRESION");
+	Node ms = new Node("menos");
+	ms.addSon(w);
+	RESULT.addSon(ms);
+	RESULT.addSon(a);
+:} %prec umenos
+| EXPRESION:a menos:w EXPRESION:b{:
+	RESULT=new Node("EXPRESION");
+	RESULT.addSon(a);
+	Node ms = new Node("menos");
+	ms.addSon(w);
+	RESULT.addSon(ms);
+	RESULT.addSon(b);
+:}
+| EXPRESION:a por:w EXPRESION:b{:
+	RESULT=new Node("EXPRESION");
+	RESULT.addSon(a);
+	Node ms = new Node("por");
+	ms.addSon(w);
+	RESULT.addSon(ms);
+	RESULT.addSon(b);
+:}
+| EXPRESION:a dividido:w EXPRESION:b{:
+	RESULT=new Node("EXPRESION");
+	RESULT.addSon(a);
+	Node ms = new Node("dividido");
+	ms.addSon(w);
+	RESULT.addSon(ms);
+	RESULT.addSon(b);
+:}
+| EXPRESION:a potencia:w corcheteAbre:x EXPRESION:b corcheteCierra:y{:
+	RESULT=new Node("EXPRESION");
+	RESULT.addSon(a);
+	Node ms = new Node("potencia");
+	ms.addSon(w);
+	RESULT.addSon(ms);
+	Node ca = new Node("corcheteAbre");
+	ca.addSon(x);
+	RESULT.addSon(ca);
+	RESULT.addSon(b);
+	Node cc = new Node("corcheteCierra");
+	cc.addSon(y);
+	RESULT.addSon(cc);
+:}
+| EXPRESION:a modulo:w EXPRESION:b {:
+	RESULT=new Node("EXPRESION");
+	RESULT.addSon(a);
+	Node ms = new Node("modulo");
+	ms.addSon(w);
+	RESULT.addSon(ms);
+	RESULT.addSon(b);
+:}
+| parentesisAbre:w EXPRESION:a parentesisCierra:x {:
+	RESULT=new Node("EXPRESION");
+	Node pa = new Node("parentesisAbre");
+	pa.addSon(w);
+	RESULT.addSon(pa);
+	RESULT.addSon(a);
+	Node pc = new Node("parentesisCierra");
+	pc.addSon(x);
+	RESULT.addSon(pc);
+:}
+| EXPRESION:a mayor:w EXPRESION:b{:
+	RESULT=new Node("EXPRESION");
+	RESULT.addSon(a);
+	Node ms = new Node("mayor");
+	ms.addSon(w);
+	RESULT.addSon(ms);
+	RESULT.addSon(b);
+:}
+| EXPRESION:a menor:w EXPRESION:b{:
+	RESULT=new Node("EXPRESION");
+	RESULT.addSon(a);
+	Node ms = new Node("menor");
+	ms.addSon(w);
+	RESULT.addSon(ms);
+	RESULT.addSon(b);
+:}
+| EXPRESION:a menorIgual:w EXPRESION:b{:
+	RESULT=new Node("EXPRESION");
+	RESULT.addSon(a);
+	Node ms = new Node("menorIgual");
+	ms.addSon(w);
+	RESULT.addSon(ms);
+	RESULT.addSon(b);
+:}
+| EXPRESION:a mayorIgual:w EXPRESION:b{:
+	RESULT=new Node("EXPRESION");
+	RESULT.addSon(a);
+	Node ms = new Node("mayorIgual");
+	ms.addSon(w);
+	RESULT.addSon(ms);
+	RESULT.addSon(b);
+:}
+| EXPRESION:a esIgual:w EXPRESION:b{:
+	RESULT=new Node("EXPRESION");
+	RESULT.addSon(a);
+	Node ms = new Node("esIgual");
+	ms.addSon(w);
+	RESULT.addSon(ms);
+	RESULT.addSon(b);
+:}
+| EXPRESION:a esDiferente:w EXPRESION:b{:
+	RESULT=new Node("EXPRESION");
+	RESULT.addSon(a);
+	Node ms = new Node("esDiferente");
+	ms.addSon(w);
+	RESULT.addSon(ms);
+	RESULT.addSon(b);
+:}
+| EXPRESION:a or:w EXPRESION:b{:
+	RESULT=new Node("EXPRESION");
+	RESULT.addSon(a);
+	Node ms = new Node("or");
+	ms.addSon(w);
+	RESULT.addSon(ms);
+	RESULT.addSon(b);	
+:}
+| EXPRESION:a and:w EXPRESION:b{:
+	RESULT=new Node("EXPRESION");
+	RESULT.addSon(a);
+	Node ms = new Node("and");
+	ms.addSon(w);
+	RESULT.addSon(ms);
+	RESULT.addSon(b);
+:}
+| not:w EXPRESION:a{:
+	RESULT=new Node("EXPRESION");
+	Node nt = new Node("not");
+	nt.addSon(w);
+	RESULT.addSon(nt);
+	RESULT.addSon(a);
+:}
+| entero:a{:
+	RESULT=new Node("EXPRESION");
+	Node ex = new Node("entero");
+	ex.addSon(a);
+	RESULT.addSon(a);
+:}
+| decimal:a{:
+	RESULT=new Node("EXPRESION");
+	Node ex = new Node("decimal");
+	ex.addSon(a);
+	RESULT.addSon(a);
+:}
+| booleano:a{:
+	RESULT=new Node("EXPRESION");
+	Node ex = new Node("booleano");
+	ex.addSon(a);
+	RESULT.addSon(a);
+:}
+| cadena:a{:
+	RESULT=new Node("EXPRESION");
+	Node ex = new Node("cadena");
+	ex.addSon(a);
+	RESULT.addSon(a);
+:}
+| caracter:a{:
+	RESULT=new Node("EXPRESION");
+	Node ex = new Node("caracter");
+	ex.addSon(a);
+	RESULT.addSon(a);
+:}
+| identificador:a{:
+	RESULT=new Node("EXPRESION");
+	Node ex = new Node("identificador");
+	ex.addSon(a);
+	RESULT.addSon(a);
+:}
+| LLAMADA:a{:
+	RESULT=new Node("EXPRESION");
+	RESULT.addSon(a);
+:}
+;
+
+LLAMADA::= ejecutar:w identificador:a parentesisAbre:x LISTAEXPRESIONES:b parentesisCierra:y{:
+	RESULT=new Node("LLAMADA");
+	Node ej = new Node("ejecutar");
+	ej.addSon(w);
+	RESULT.addSon(ej);
+	Node id = new Node("identificador");
+	id.addSon(a);
+	RESULT.addSon(id);
+	Node pa = new Node("parentesisAbre");
+	pa.addSon(x);
+	RESULT.addSon(pa);
+	RESULT.addSon(b);
+	Node pc = new Node("parentesisCierra");
+	pc.addSon(y);
+	RESULT.addSon(pc);
+:}
+;
+LISTAEXPRESIONES::=LISTAEXPRESIONESP:a{:
+	RESULT=new Node("LISTAEXPRESIONES");
+	RESULT.addSon(a);
+:}
+|
+;
+LISTAEXPRESIONESP::= LISTAEXPRESIONESP:a coma:w EXPRESION:b{:
+	RESULT=new Node("LISTAEXPRESIONESP");
+	RESULT.addSon(a);
+	Node cm = new Node ("coma");
+	cm.addSon(w);
+	RESULT.addSon(cm);
+	RESULT.addSon(b);
+:}
+|EXPRESION:a{:
+	RESULT=new Node("LISTAEXPRESIONESP");
+	RESULT.addSon(a);
+:}
+;
+IMPRIMIR::= imprimir:w EXPRESION:a puntoycoma:x{:
+	RESULT=new Node("IMPRIMIR");
+	Node im = new Node("imprimir");
+	im.addSon(w);
+	RESULT.addSon(im);
+	RESULT.addSon(a);
+	Node pc = new Node("puntoycoma");
+	pc.addSon(x);
+	RESULT.addSon(pc);
+:}
+;
+IMPRIMIRNL::= imprimirNl:w EXPRESION:a puntoycoma:x{:
+	RESULT=new Node("IMPRIMIRNL");
+	Node im = new Node("imprimirNl");
+	im.addSon(w);
+	RESULT.addSon(im);
+	RESULT.addSon(a);
+	Node pc = new Node("puntoycoma");
+	pc.addSon(x);
+	RESULT.addSon(pc);
+:}
+;

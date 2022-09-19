@@ -59,6 +59,7 @@ public class Principal extends javax.swing.JFrame {
         jMenu_Report = new javax.swing.JMenu();
         jMenuItem_flowChart = new javax.swing.JMenuItem();
         jMenuItem_errors = new javax.swing.JMenuItem();
+        jMenuItem_ast = new javax.swing.JMenuItem();
         jMenu_View = new javax.swing.JMenu();
         jMenuItem_userManual = new javax.swing.JMenuItem();
         jMenuItem_technicalManual = new javax.swing.JMenuItem();
@@ -154,6 +155,11 @@ public class Principal extends javax.swing.JFrame {
         jMenuItem_saveAs.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem_saveAs.setFont(new java.awt.Font("Berlin Sans FB", 0, 16)); // NOI18N
         jMenuItem_saveAs.setText("Save As...");
+        jMenuItem_saveAs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem_saveAsActionPerformed(evt);
+            }
+        });
         jMenu_File.add(jMenuItem_saveAs);
 
         jMenuBar.add(jMenu_File);
@@ -163,11 +169,30 @@ public class Principal extends javax.swing.JFrame {
 
         jMenuItem_flowChart.setFont(new java.awt.Font("Berlin Sans FB", 0, 16)); // NOI18N
         jMenuItem_flowChart.setText("FlowChart");
+        jMenuItem_flowChart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem_flowChartActionPerformed(evt);
+            }
+        });
         jMenu_Report.add(jMenuItem_flowChart);
 
         jMenuItem_errors.setFont(new java.awt.Font("Berlin Sans FB", 0, 16)); // NOI18N
         jMenuItem_errors.setText("Errors");
+        jMenuItem_errors.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem_errorsActionPerformed(evt);
+            }
+        });
         jMenu_Report.add(jMenuItem_errors);
+
+        jMenuItem_ast.setFont(new java.awt.Font("Berlin Sans FB", 0, 16)); // NOI18N
+        jMenuItem_ast.setText("AST");
+        jMenuItem_ast.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem_astActionPerformed(evt);
+            }
+        });
+        jMenu_Report.add(jMenuItem_ast);
 
         jMenuBar.add(jMenu_Report);
 
@@ -176,10 +201,20 @@ public class Principal extends javax.swing.JFrame {
 
         jMenuItem_userManual.setFont(new java.awt.Font("Berlin Sans FB", 0, 16)); // NOI18N
         jMenuItem_userManual.setText("User manual");
+        jMenuItem_userManual.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem_userManualActionPerformed(evt);
+            }
+        });
         jMenu_View.add(jMenuItem_userManual);
 
         jMenuItem_technicalManual.setFont(new java.awt.Font("Berlin Sans FB", 0, 16)); // NOI18N
         jMenuItem_technicalManual.setText("Technical manual");
+        jMenuItem_technicalManual.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem_technicalManualActionPerformed(evt);
+            }
+        });
         jMenu_View.add(jMenuItem_technicalManual);
 
         jMenuBar.add(jMenu_View);
@@ -215,7 +250,7 @@ public class Principal extends javax.swing.JFrame {
         File archivo = selectArchivo.getSelectedFile();
         
         if(archivo==null || archivo.getName().equals("")){
-            JOptionPane.showMessageDialog(this, "Archivo inválido","Archivo inválido",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Archivo invï¿½lido","Archivo invï¿½lido",JOptionPane.ERROR_MESSAGE);
         }
         else{
             jTextPane_code.setText(fs.readFile(archivo));
@@ -238,6 +273,31 @@ public class Principal extends javax.swing.JFrame {
        traduccion.setVisible(true);
     }//GEN-LAST:event_jButton_runActionPerformed
 
+    private void jMenuItem_saveAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_saveAsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem_saveAsActionPerformed
+
+    private void jMenuItem_flowChartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_flowChartActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem_flowChartActionPerformed
+
+    private void jMenuItem_errorsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_errorsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem_errorsActionPerformed
+
+    private void jMenuItem_astActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_astActionPerformed
+        analizador.generarArbol(this.jTextPane_code.getText());
+        //TODO: Si es true, que lo muestre
+    }//GEN-LAST:event_jMenuItem_astActionPerformed
+
+    private void jMenuItem_userManualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_userManualActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem_userManualActionPerformed
+
+    private void jMenuItem_technicalManualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_technicalManualActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem_technicalManualActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -255,6 +315,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem_ast;
     private javax.swing.JMenuItem jMenuItem_errors;
     private javax.swing.JMenuItem jMenuItem_flowChart;
     private javax.swing.JMenuItem jMenuItem_openFile;

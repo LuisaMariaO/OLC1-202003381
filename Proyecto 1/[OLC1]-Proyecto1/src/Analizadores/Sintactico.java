@@ -11,6 +11,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.AbstractMap;
 import Structures.Instructions.*;
+import Structures.Node;
+import Structures.Production;
+import Structures.Arbol;
 import Structures.Instructions.Operacion.Tipo_operacion;
 import java_cup.runtime.XMLElement;
 
@@ -63,7 +66,7 @@ public class Sintactico extends java_cup.runtime.lr_parser {
     "\002\030\003\000\002\030\003\000\002\030\003\000\002" +
     "\030\003\000\002\030\003\000\002\021\007\000\002\035" +
     "\003\000\002\035\002\000\002\036\005\000\002\036\003" +
-    "\000\002\022\005\000\002\022\005" });
+    "\000\002\022\005\000\002\023\005" });
 
   /** Access to production table. */
   public short[][] production_table() {return _production_table;}
@@ -718,6 +721,7 @@ public class Sintactico extends java_cup.runtime.lr_parser {
     public LinkedList<HashMap<Operacion,LinkedList<Instruccion>>> listaCondiciones = new LinkedList<HashMap<Operacion,LinkedList<Instruccion>>>();
     public HashMap<Operacion,LinkedList<Instruccion>> mapAux = new HashMap<Operacion,LinkedList<Instruccion>>();
     public LinkedList<Instruccion> bloqueContrario = new LinkedList<Instruccion>();
+   
    /**
      * Método al que se llama automáticamente ante algun error sintactico.
      **/ 
@@ -738,7 +742,9 @@ public class Sintactico extends java_cup.runtime.lr_parser {
     
     public LinkedList<Instruccion> getAST() {
         return AST;
-    } 
+    }
+    
+    
 
 
 /** Cup generated class to encapsulate user supplied action code.*/
@@ -1902,14 +1908,14 @@ class CUP$Sintactico$actions {
           return CUP$Sintactico$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 85: // IMPRIMIR ::= imprimirNl EXPRESION puntoycoma 
+          case 85: // IMPRIMIRNL ::= imprimirNl EXPRESION puntoycoma 
             {
               Instruccion RESULT =null;
 		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).left;
 		int aright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).right;
 		Operacion a = (Operacion)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).value;
 		RESULT=new Imprimirnl(a);
-              CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("IMPRIMIR",16, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
+              CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("IMPRIMIRNL",17, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
 

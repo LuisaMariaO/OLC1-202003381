@@ -222,25 +222,25 @@ public class Operacion implements Instruccion {
     	}
         /*OPERACIONES ARITMETICAS*/
     	else if(tipo==Tipo_operacion.SUMA){
-            return operadorIzq.traducirPython(0) + "+" + operadorDer.traducirPython(0);
+            return operadorIzq.traducirPython(0) + " + " + operadorDer.traducirPython(0);
         }
         else if(tipo==Tipo_operacion.RESTA){
-            return operadorIzq.traducirPython(0) + "-" + operadorDer.traducirPython(0);
+            return operadorIzq.traducirPython(0) + " - " + operadorDer.traducirPython(0);
         }
         else if(tipo==Tipo_operacion.MULTIPLICACION){
-            return operadorIzq.traducirPython(0) + "*" + operadorDer.traducirPython(0);
+            return operadorIzq.traducirPython(0) + " * " + operadorDer.traducirPython(0);
         }
         else if(tipo==Tipo_operacion.DIVISION){
-            return operadorIzq.traducirPython(0) + "/" + operadorDer.traducirPython(0);
+            return operadorIzq.traducirPython(0) + " / " + operadorDer.traducirPython(0);
         }
         else if(tipo==Tipo_operacion.POTENCIA) {
-        	return operadorIzq.traducirPython(0) + "**" + operadorDer.traducirPython(0);
+        	return operadorIzq.traducirPython(0) + " ** " + operadorDer.traducirPython(0);
         }
         else if(tipo==Tipo_operacion.PARENTESIS) {
         	return "("+operadorIzq.traducirPython(0)+")";
         }
         else if(tipo==Tipo_operacion.MODULO) {
-        	return operadorIzq.traducirPython(0) + "%" + operadorDer.traducirPython(0);
+        	return operadorIzq.traducirPython(0) + " % " + operadorDer.traducirPython(0);
         }
         else if(tipo==Tipo_operacion.NEGATIVO) {
         	return "-" +  operadorIzq.traducirPython(0);
@@ -248,33 +248,33 @@ public class Operacion implements Instruccion {
     	
     	/*OPERACIONES RELACIONALES*/
         else if(tipo==Tipo_operacion.MAYOR) {
-        	return operadorIzq.traducirPython(0) + ">" + operadorDer.traducirPython(0);
+        	return operadorIzq.traducirPython(0) + " > " + operadorDer.traducirPython(0);
         }
         else if(tipo==Tipo_operacion.MENOR) {
-        	return operadorIzq.traducirPython(0) + "<" + operadorDer.traducirPython(0);
+        	return operadorIzq.traducirPython(0) + " < " + operadorDer.traducirPython(0);
         }
         else if(tipo==Tipo_operacion.MAYOR_IGUAL) {
-        	return operadorIzq.traducirPython(0) + ">=" + operadorDer.traducirPython(0);
+        	return operadorIzq.traducirPython(0) + " >= " + operadorDer.traducirPython(0);
         }
         else if(tipo==Tipo_operacion.MENOR_IGUAL) {
-        	return operadorIzq.traducirPython(0) + "<=" + operadorDer.traducirPython(0);
+        	return operadorIzq.traducirPython(0) + " <= " + operadorDer.traducirPython(0);
         }
         else if(tipo==Tipo_operacion.IGUAL) {
-        	return operadorIzq.traducirPython(0) + "==" + operadorDer.traducirPython(0);
+        	return operadorIzq.traducirPython(0) + " == " + operadorDer.traducirPython(0);
         }
         else if(tipo==Tipo_operacion.DIFERENTE) {
-        	return operadorIzq.traducirPython(0) + "!=" + operadorDer.traducirPython(0);
+        	return operadorIzq.traducirPython(0) + " != " + operadorDer.traducirPython(0);
         }
     	
     	/*OPERACIONES LOGICAS*/
         else if(tipo==Tipo_operacion.OR) {
-        	return operadorIzq.traducirPython(0) + "or" + operadorDer.traducirPython(0);
+        	return operadorIzq.traducirPython(0) + " or " + operadorDer.traducirPython(0);
         }
         else if(tipo==Tipo_operacion.AND) {
-        	return operadorIzq.traducirPython(0) + "and" + operadorDer.traducirPython(0);
+        	return operadorIzq.traducirPython(0) + " and " + operadorDer.traducirPython(0);
         }
         else if(tipo==Tipo_operacion.NOT) {
-        	return "not" + operadorIzq.traducirPython(0);
+        	return " not " + operadorIzq.traducirPython(0);
         }
     	
     	/*IDENTIFICADOR*/

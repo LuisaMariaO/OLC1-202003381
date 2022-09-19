@@ -26,7 +26,7 @@ public class ComentarioMultilinea implements Instruccion {
 	public String traducirPython(int iden) {
 		String traduccion = this.comentario;
 		traduccion = traduccion.substring(2, traduccion.length()-2);
-		return identacion(iden) + "\"\"\""+traduccion+"\"\"\"\n";
+		return  "\"\"\""+traduccion+"\"\"\"\n";
 	}
 	public String identacion(int ide) {
 		String id="";

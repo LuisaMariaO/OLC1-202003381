@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.AbstractMap;
 import Structures.Instructions.*;
+import Structures.Node;
+import Structures.Production;
+import Structures.Arbol;
 import Structures.Instructions.Operacion.Tipo_operacion;
 parser code {:
 	/**
@@ -17,6 +20,7 @@ parser code {:
     public LinkedList<HashMap<Operacion,LinkedList<Instruccion>>> listaCondiciones = new LinkedList<HashMap<Operacion,LinkedList<Instruccion>>>();
     public HashMap<Operacion,LinkedList<Instruccion>> mapAux = new HashMap<Operacion,LinkedList<Instruccion>>();
     public LinkedList<Instruccion> bloqueContrario = new LinkedList<Instruccion>();
+   
    /**
      * Método al que se llama automáticamente ante algun error sintactico.
      **/ 
@@ -37,7 +41,9 @@ parser code {:
     
     public LinkedList<Instruccion> getAST() {
         return AST;
-    } 
+    }
+    
+    
 :}
 
 terminal String entero, decimal, cadena, booleano, caracter;
@@ -83,7 +89,7 @@ precedence right mayor, menor, mayorIgual, menorIgual, esIgual, esDiferente;
 start with INICIO;
 INICIO::= INSTRUCCIONES:a {:System.out.println("Fin de analisis de entrada");:}
 ;
-INSTRUCCIONES::= t_inicio INSTRUCCIONESP:a t_fin {::}
+INSTRUCCIONES::= t_inicio INSTRUCCIONESP:a t_fin{::}
 ;
 INSTRUCCIONESP::= INSTRUCCION:b INSTRUCCIONESP:a {:parser.AST.addFirst(b);:}
 | METODO:b INSTRUCCIONESP:a{:parser.AST.addFirst(b);:}
@@ -222,5 +228,5 @@ LISTAEXPRESIONESP::= LISTAEXPRESIONESP:a coma EXPRESION:b{:RESULT=a; a.add(b);:}
 ;
 IMPRIMIR::= imprimir EXPRESION:a puntoycoma{:RESULT=new Imprimir(a);:}
 ;
-IMPRIMIR::= imprimirNl EXPRESION:a puntoycoma{:RESULT=new Imprimirnl(a);:}
+IMPRIMIRNL::= imprimirNl EXPRESION:a puntoycoma{:RESULT=new Imprimirnl(a);:}
 ;

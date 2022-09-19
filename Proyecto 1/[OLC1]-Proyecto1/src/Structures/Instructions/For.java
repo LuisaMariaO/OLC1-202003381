@@ -42,7 +42,7 @@ public class For implements Instruccion  {
 	@Override
 	public String traducirPython(int iden) {
 		String traduccion= "";
-		traduccion+=identacion(iden)+"for"+ identificador+"in range("+inicio.traducirPython(0)+","+fin.traducirPython(0);
+		traduccion+=identacion(iden)+"for "+ identificador+" in range("+inicio.traducirPython(0)+","+fin.traducirPython(0);
 		if(paso!=null) {
 			traduccion+=","+paso;
 		}

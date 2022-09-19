@@ -22,7 +22,7 @@ public class Switch implements Instruccion {
 			traduccion+="case "+cond.getKey().traducirGolang()+":\n";
 			if(cond.getValue()!=null) {
 			for(Instruccion ins: cond.getValue()) {
-				traduccion+=ins.traducirGolang();
+				traduccion+=ins.traducirGolang()+"\n";
 			}
 			}
 		}
