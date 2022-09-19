@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.AbstractMap;
 import Structures.Instructions.*;
 import Structures.Node;
+import Structures.Instructions.Errorr;
 import Structures.Production;
 import Structures.Arbol;
 import Structures.Instructions.Operacion.Tipo_operacion;
@@ -716,6 +717,7 @@ public class Sintactico extends java_cup.runtime.lr_parser {
      * genera luego del analisis sintáctico.
      */
     public LinkedList<Instruccion> AST = new LinkedList<Instruccion>();
+    public LinkedList<Errorr> errores = new LinkedList<Errorr>();
     public LinkedList<String> listaNombres = new LinkedList<String>();
     public LinkedList<Instruccion> bloque = new LinkedList<Instruccion>();
     public LinkedList<HashMap<Operacion,LinkedList<Instruccion>>> listaCondiciones = new LinkedList<HashMap<Operacion,LinkedList<Instruccion>>>();
@@ -728,6 +730,7 @@ public class Sintactico extends java_cup.runtime.lr_parser {
     public void syntax_error(Symbol s){ 
         System.out.println("Error Sintáctico en la Línea " + (s.right) +
         " Columna "+s.left+ ". No se esperaba este componente: " +s.value+"."); 
+        errores.add(new Errorr("Sintactico",s.value.toString(), s.right, s.left));
     } 
 
     /**
@@ -738,13 +741,16 @@ public class Sintactico extends java_cup.runtime.lr_parser {
         System.out.println("Error síntactico irrecuperable en la Línea " + 
         (s.right)+ " Columna "+s.left+". Componente " + s.value + 
         " no reconocido."); 
+        errores.add(new Errorr("Sintactico",s.value.toString(), s.right, s.left));
     } 
     
     public LinkedList<Instruccion> getAST() {
         return AST;
     }
     
-    
+    public LinkedList<Errorr> getErrors(){
+    	return errores;
+    }
 
 
 /** Cup generated class to encapsulate user supplied action code.*/

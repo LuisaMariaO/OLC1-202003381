@@ -10,8 +10,10 @@ import Utils.Files;
 
 import java.awt.Cursor;
 import java.awt.Desktop;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import javax.swing.JFileChooser;
@@ -255,7 +257,7 @@ public class Principal extends javax.swing.JFrame {
         File archivo = selectArchivo.getSelectedFile();
         
         if(archivo==null || archivo.getName().equals("")){
-            JOptionPane.showMessageDialog(this, "Archivo inv�lido","Archivo inv�lido",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Archivo invalido","Archivo invalido",JOptionPane.ERROR_MESSAGE);
         }
         else{
             jTextPane_code.setText(fs.readFile(archivo));
@@ -264,7 +266,7 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem_openFileActionPerformed
 
     private void jButton_cleanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_cleanActionPerformed
-        // TODO add your handling code here:
+        this.jTextPane_code.setText("");
     }//GEN-LAST:event_jButton_cleanActionPerformed
 
     private void jButton_runActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_runActionPerformed
@@ -274,12 +276,50 @@ public class Principal extends javax.swing.JFrame {
        // System.out.println( analizador.interpretar(jTextPane_code.getText()));
     	
        String trad = analizador.interpretar(jTextPane_code.getText(),(int)jComboBox.getSelectedIndex());
+       this.jLabel_errors.setText(String.valueOf(analizador.noErrores));
        Traduccion traduccion = new Traduccion ((int)jComboBox.getSelectedIndex(),trad);
        traduccion.setVisible(true);
     }//GEN-LAST:event_jButton_runActionPerformed
 
     private void jMenuItem_saveAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_saveAsActionPerformed
-        // TODO add your handling code here:
+        
+    	try { 
+
+        	JFileChooser selectArchivo = new JFileChooser();
+          //  selectArchivo.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        	FileNameExtensionFilter filter;
+        	String extension=".olc";
+        
+                filter = new FileNameExtensionFilter("OLC FILE","olc");
+                
+            selectArchivo.setFileFilter(filter);
+            int result = selectArchivo.showOpenDialog(this);
+            File file = selectArchivo.getSelectedFile();
+            
+            
+            if(file==null || file.getName().equals("")){
+                JOptionPane.showMessageDialog(this, "Ruta no valida","Ruta no valida",JOptionPane.ERROR_MESSAGE);
+            }
+            
+                
+            File fin = new File(file.getAbsoluteFile()+extension);
+          
+             // Si el archivo no existe es creado
+             if (!fin.exists()) {
+                 fin.createNewFile();
+             }
+             FileWriter fw = new FileWriter(fin);
+             BufferedWriter bw = new BufferedWriter(fw);
+             
+             
+    			bw.write(this.jTextPane_code.getText());
+    			bw.close();
+    			 JOptionPane.showMessageDialog(this, "Archivo guardado","Archivo guardado",JOptionPane.INFORMATION_MESSAGE);
+    		} catch (IOException e) {
+    			 JOptionPane.showMessageDialog(this, "Error al guardar archivo","Error al guardar archivo",JOptionPane.ERROR_MESSAGE);
+    			
+    			e.printStackTrace();
+    		}
     }//GEN-LAST:event_jMenuItem_saveAsActionPerformed
 
     private void jMenuItem_flowChartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_flowChartActionPerformed
@@ -287,7 +327,12 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem_flowChartActionPerformed
 
     private void jMenuItem_errorsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_errorsActionPerformed
-        // TODO add your handling code here:
+      try {
+		Desktop.getDesktop().open(new File("reportes/errores.html"));
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
     }//GEN-LAST:event_jMenuItem_errorsActionPerformed
 
     private void jMenuItem_astActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_astActionPerformed
@@ -296,7 +341,7 @@ public class Principal extends javax.swing.JFrame {
     		this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 			Thread.sleep(3000);
 			this.setCursor(Cursor.DEFAULT_CURSOR);
-			Desktop.getDesktop().open(new File("ast.png"));
+			Desktop.getDesktop().open(new File("reportes/ast.png"));
 		} catch (InterruptedException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

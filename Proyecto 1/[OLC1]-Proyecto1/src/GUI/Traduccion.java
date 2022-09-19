@@ -6,6 +6,14 @@
 package GUI;
 
 import java.awt.event.FocusListener;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -49,7 +57,7 @@ public class Traduccion extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea_traduccion = new javax.swing.JTextArea();
         jButton_guardar = new javax.swing.JButton();
-      
+     
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Traduccion");
@@ -60,7 +68,7 @@ public class Traduccion extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Berlin Sans FB", 0, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(51, 51, 51));
-        jLabel1.setText("Traducción: ");
+        jLabel1.setText("Traduccion: ");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, -1, -1));
 
         jLabel_lenguaje.setFont(new java.awt.Font("Berlin Sans FB", 0, 18)); // NOI18N
@@ -85,10 +93,14 @@ public class Traduccion extends javax.swing.JFrame {
         jButton_guardar.setFont(new java.awt.Font("Berlin Sans FB", 0, 14)); // NOI18N
         jButton_guardar.setForeground(new java.awt.Color(255, 255, 255));
         jButton_guardar.setText("Guardar");
+        jButton_guardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_guardarActionPerformed(evt);
+            }
+        });
         jPanel1.add(jButton_guardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 60, 150, 40));
 
-        
-      
+  
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -109,7 +121,56 @@ public class Traduccion extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton_guardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_guardarActionPerformed
 
+    	try { 
+
+    	JFileChooser selectArchivo = new JFileChooser();
+      //  selectArchivo.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    	FileNameExtensionFilter filter;
+    	String extension="";
+    	if(this.lenguaje==0) {
+            filter = new FileNameExtensionFilter("GOLANG FILE","go");
+            extension=".go";
+            }
+            else {
+            	 filter = new FileNameExtensionFilter("PYTHON FILE","py");
+            	 extension=".py";
+            }
+            selectArchivo.setFileFilter(filter);
+        int result = selectArchivo.showOpenDialog(this);
+        File file = selectArchivo.getSelectedFile();
+        
+        
+        if(file==null || file.getName().equals("")){
+            JOptionPane.showMessageDialog(this, "Ruta no valida","Ruta no valida",JOptionPane.ERROR_MESSAGE);
+        }
+        
+            
+        File fin = new File(file.getAbsoluteFile()+extension);
+      
+         // Si el archivo no existe es creado
+         if (!fin.exists()) {
+             fin.createNewFile();
+         }
+         FileWriter fw = new FileWriter(fin);
+         BufferedWriter bw = new BufferedWriter(fw);
+         
+         
+			bw.write(this.jTextArea_traduccion.getText());
+			bw.close();
+			 JOptionPane.showMessageDialog(this, "Archivo guardado","Archivo guardado",JOptionPane.INFORMATION_MESSAGE);
+		} catch (IOException e) {
+			 JOptionPane.showMessageDialog(this, "Error al guardar archivo","Error al guardar archivo",JOptionPane.ERROR_MESSAGE);
+			
+			e.printStackTrace();
+		}
+         
+    
+    }//GEN-LAST:event_jButton_guardarActionPerformed
+
+   
+	
 
     /**
      * @param args the command line arguments
@@ -117,7 +178,7 @@ public class Traduccion extends javax.swing.JFrame {
    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
- //   private javax.swing.JButton jButton_copiar;
+
     private javax.swing.JButton jButton_guardar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel_lenguaje;

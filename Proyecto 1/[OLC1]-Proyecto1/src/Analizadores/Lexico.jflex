@@ -1,6 +1,13 @@
 package Analizadores;
 import java_cup.runtime.*;
+import Structures.Instructions.Errorr;
+import java.util.LinkedList;
+
 %%
+
+%{
+	public LinkedList<Errorr> errores = new LinkedList<Errorr>();
+%}
 %public
 %class Lexico
 %cupsym Simbolos
@@ -17,19 +24,21 @@ cadena=\"[^\"]+\"
 booleano=(verdadero|falso)
 caracter=\'([ -~]|\$\{[0-9]+\})\'
 comentariosimple=\/\/.+
-comentariomultiple=\/\*[^]+\*\/
+comentariomultiple=\/\*[^\/]+\*\/
 identificador=_[a-zA-Z0-9]+_
 tipodedato="numero"|"cadena"|"boolean"|"caracter"
 interrogacionabre=[\¿]
+
 %%
-<YYINITIAL> {comentariosimple} {
-System.out.println("Reconocio token:<comentarioSimple> lexema:"+yytext());
-return new Symbol(Simbolos.comentarioSimple, yycolumn, yyline, yytext());
-}
 <YYINITIAL> {comentariomultiple} {
 System.out.println("Reconocio token:<comentarioMultiple> lexema:"+yytext());
 return new Symbol(Simbolos.comentarioMultiple, yycolumn, yyline, yytext());
 }
+<YYINITIAL> {comentariosimple} {
+System.out.println("Reconocio token:<comentarioSimple> lexema:"+yytext());
+return new Symbol(Simbolos.comentarioSimple, yycolumn, yyline, yytext());
+}
+
 
 <YYINITIAL> {entero} {
 System.out.println("Reconocio token:<entero> lexema:"+yytext());
@@ -301,5 +310,6 @@ return new Symbol(Simbolos.imprimir, yycolumn, yyline, yytext());
 {
 System.out.println("Error Lexico : "+yytext()+
 "Linea "+yyline+" Columna "+yycolumn);
+errores.add(new Errorr("Lexico",yytext(),yyline,yycolumn));
 }
 

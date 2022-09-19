@@ -30,7 +30,7 @@ public class Arbol {
 	        s.append("}");
 	        
 	        try {
-	            String ruta = "ast.dot";
+	            String ruta = "reportes/ast.dot";
 	            String contenido = s.toString();
 	            File file = new File(ruta);
 	            // Si el archivo no existe es creado
@@ -44,7 +44,7 @@ public class Arbol {
 	            
 	          
 	            String arg1 = file.getAbsolutePath(); 
-	            String arg2 = "ast.png"; 
+	            String arg2 = "reportes/ast.png"; 
 	            String[] c = {"dot", "-Tpng", arg1, "-o", arg2};
 	            Process p = Runtime.getRuntime().exec(c); 
 	            int err = p.waitFor(); 
