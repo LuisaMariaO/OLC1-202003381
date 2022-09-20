@@ -57,7 +57,6 @@ public class Traduccion extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea_traduccion = new javax.swing.JTextArea();
         jButton_guardar = new javax.swing.JButton();
-     
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Traduccion");
@@ -68,7 +67,7 @@ public class Traduccion extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Berlin Sans FB", 0, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(51, 51, 51));
-        jLabel1.setText("Traduccion: ");
+        jLabel1.setText("Traducción: ");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, -1, -1));
 
         jLabel_lenguaje.setFont(new java.awt.Font("Berlin Sans FB", 0, 18)); // NOI18N
@@ -99,8 +98,6 @@ public class Traduccion extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButton_guardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 60, 150, 40));
-
-  
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -178,7 +175,6 @@ public class Traduccion extends javax.swing.JFrame {
    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-
     private javax.swing.JButton jButton_guardar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel_lenguaje;

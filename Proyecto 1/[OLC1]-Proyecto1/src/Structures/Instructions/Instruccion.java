@@ -7,7 +7,7 @@ package Structures.Instructions;
 
 /**
  *
- * @author Luisa MarÃ­a Ortiz
+ * @author Luisa María Ortiz
  */
 public interface Instruccion {
     public String traducirGolang();

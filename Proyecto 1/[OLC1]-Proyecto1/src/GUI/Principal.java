@@ -70,6 +70,7 @@ public class Principal extends javax.swing.JFrame {
         jMenu_View = new javax.swing.JMenu();
         jMenuItem_userManual = new javax.swing.JMenuItem();
         jMenuItem_technicalManual = new javax.swing.JMenuItem();
+        jMenuItem_gramar = new javax.swing.JMenuItem();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -224,6 +225,15 @@ public class Principal extends javax.swing.JFrame {
         });
         jMenu_View.add(jMenuItem_technicalManual);
 
+        jMenuItem_gramar.setFont(new java.awt.Font("Berlin Sans FB", 0, 16)); // NOI18N
+        jMenuItem_gramar.setText("Grammar");
+        jMenuItem_gramar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem_gramarActionPerformed(evt);
+            }
+        });
+        jMenu_View.add(jMenuItem_gramar);
+
         jMenuBar.add(jMenu_View);
 
         setJMenuBar(jMenuBar);
@@ -353,12 +363,31 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem_astActionPerformed
 
     private void jMenuItem_userManualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_userManualActionPerformed
-        // TODO add your handling code here:
+        try {
+    		Desktop.getDesktop().open(new File("Manuales/Manual de usuario.pdf"));
+    	} catch (IOException e) {
+    		
+    		e.printStackTrace();
+    	}
     }//GEN-LAST:event_jMenuItem_userManualActionPerformed
 
     private void jMenuItem_technicalManualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_technicalManualActionPerformed
-        // TODO add your handling code here:
+    	try {
+    		Desktop.getDesktop().open(new File("Manuales/Manual tecnico.pdf"));
+    	} catch (IOException e) {
+    	
+    		e.printStackTrace();
+    	}
     }//GEN-LAST:event_jMenuItem_technicalManualActionPerformed
+
+    private void jMenuItem_gramarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_gramarActionPerformed
+    	try {
+    		Desktop.getDesktop().open(new File("Manuales/Gramatica.pdf"));
+    	} catch (IOException e) {
+    		
+    		e.printStackTrace();
+    	}
+    }//GEN-LAST:event_jMenuItem_gramarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -380,6 +409,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem_ast;
     private javax.swing.JMenuItem jMenuItem_errors;
     private javax.swing.JMenuItem jMenuItem_flowChart;
+    private javax.swing.JMenuItem jMenuItem_gramar;
     private javax.swing.JMenuItem jMenuItem_openFile;
     private javax.swing.JMenuItem jMenuItem_saveAs;
     private javax.swing.JMenuItem jMenuItem_technicalManual;
