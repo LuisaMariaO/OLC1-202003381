@@ -15,7 +15,7 @@ private Operacion valor;
 	@Override
 	public String traducirPython(int iden) {
 		String traduccion="";
-		traduccion+=identacion(iden)+"print("+valor.traducirPython(0)+"+\"\\n\")";
+		traduccion+=identacion(iden)+"print("+valor.traducirPython(0)+")";
 		return traduccion;
 	}
 	
