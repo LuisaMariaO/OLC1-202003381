@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useRef } from "react";
 import CodeMirror from '@uiw/react-codemirror';
 import {darcula} from '@uiw/codemirror-theme-darcula'
 
 function Consola(){
+    
     return(
         <>
         <div class="col">
