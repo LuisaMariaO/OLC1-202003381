@@ -19,17 +19,19 @@ Los comentarios son ignorados*/
 
 /*TIPOS DE DATO*/
 //Palabras reservadas
+
 "int"                                                       return 'int';
 "double"                                                    return 'double';
 "boolean"                                                   return 'boolean';
 "char"                                                      return 'char';
 "string"                                                    return 'string';
 //Definicion de los tipos de dato
-[0-9]+                                                      return 'entero';
 [0-9]+\.[0-9]+                                              return 'decimal';
+[0-9]+                                                      return 'entero';
+
 true|false                                                  return 'logico';
-'([ -&(-/0-9:-@A-ZÑ\[\]-`{-~]|\\'|\\\\'|\\n|\\t|\\r|\\\")'  { yytext=yytext.substr(1,yyleng-2); return 'caracter';}
-\"(\\\"|[^\"])*\"                                           { yytext=yytext.substr(1,yyleng-2);  return 'cadena'; }
+\'([ -&(-/0-9:-@A-ZÑ\[\]-`{-~]|\\\'|\\\\|\\n|\\t|\\r|\\\")\'  { yytext=yytext.substr(1,yyleng-2); return 'caracter';}
+\"(\\\"|\\\\|[^\"])*\"                                           { yytext=yytext.substr(1,yyleng-2);  return 'cadena'; }
 
 ";"                                                         { return 'puntoycoma';}
 
@@ -161,12 +163,21 @@ INSTRUCCIONES: INSTRUCCIONES INSTRUCCION {$1.push($2); $$=$1;}
 
 INSTRUCCION : PRINT                 {$$=$1;}
             | INVALID               {console.log("Un error lexico");$$=new errorr.default("->Error Lexico<-", $1, @1.first_line, @1.first_column); } //Errores lexicos
+            | SUMA                  {}
             | error                 {console.log("Un error sintactico"); $$=new errorr.default("->Error Sintactico<-", $1, @1.first_line, @1.first_column);} //Errores sintacticos, recuperacion con ;
 ;
+
+
 
 PRINT : print parentesisAbre EXPRESION parentesisCierra puntoycoma { $$=new print.default($3,@1.first_line,@1.first_column);}
 ;
 
 EXPRESION : entero {$$= new nativo.default(new Tipo.default(Tipo.DataType.ENTERO),$1, @1.first_line, @1.first_column);}
-          | cadena {$$= new nativo.default(new Tipo.default(Tipo.DataType.CADENA),$1, @1.first_line, @1.first_column);}
+        | decimal {$$= new nativo.default(new Tipo.default(Tipo.DataType.DECIMAL),$1, @1.first_line, @1.first_column);}  
+        | logico {$$= new nativo.default(new Tipo.default(Tipo.DataType.LOGICO),$1, @1.first_line, @1.first_column);}
+        | caracter {$$= new nativo.default(new Tipo.default(Tipo.DataType.CARACTER),$1, @1.first_line, @1.first_column);}
+        | cadena {$$= new nativo.default(new Tipo.default(Tipo.DataType.CADENA),$1, @1.first_line, @1.first_column);}
+;
+
+EXPREIONARITMETICA: EXPRESION mas EXPRESION
 ;

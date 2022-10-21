@@ -13,9 +13,50 @@ export default class Nativo extends Instruccion {
 
   interpretar(arbol: Three, tabla: SymbolTable) {
     if(this.tipoDato.getTipo() === DataType.ENTERO){
-        return this.valor;
-    }else if(this.tipoDato.getTipo() === DataType.CADENA){
-        return this.valor.toString();
+        return parseInt(this.valor);
+    }
+    else if(this.tipoDato.getTipo() == DataType.DECIMAL){
+      return parseFloat(this.valor);
+    }
+    else if(this.tipoDato.getTipo()== DataType.LOGICO){
+      //Verifico si es true o false
+      if(this.valor.toLowerCase()=="true"){
+        return true
+      }
+      else{
+        return false
+      }
+    }
+    else if(this.tipoDato.getTipo() == DataType.CARACTER){
+      if(this.valor=="\\'"){
+        return "'"
+      }
+      else if(this.valor=="\\\\"){
+        return "\\"
+      }
+      else if(this.valor=="\\n"){
+        return '\n'
+      }
+      else if(this.valor=="\\t"){
+        return '\t'
+      }
+      else if(this.valor=="\\r"){
+        return '\r'
+      }
+      else if(this.valor=="\\\""){
+        return '"'
+      }
+      return this.valor.toString()
+    }
+    else if(this.tipoDato.getTipo() === DataType.CADENA){
+      let text = this.valor.toString()
+       text= text.replaceAll("\\n",'\n')
+       text=text.replaceAll("\\\"","\"")
+       text=text.replaceAll("\\\\","\\")
+       text= text.replaceAll("\\r",'\r')
+       text= text.replaceAll("\\t",'\t')
+       text=text.replaceAll("\\\'","\'")
+        return text;
     }
     
   }
