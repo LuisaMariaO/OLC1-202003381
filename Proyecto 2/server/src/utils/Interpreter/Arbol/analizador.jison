@@ -3,6 +3,8 @@
     const nativo = require('./Expresions/Native');
     const Tipo = require('./Symbol/Type');
     const print = require('./Instructions/Print');
+
+    const errorr = require('./Exceptions/Error')
     
 %}
 %lex
@@ -158,8 +160,8 @@ INSTRUCCIONES: INSTRUCCIONES INSTRUCCION {$1.push($2); $$=$1;}
 ;
 
 INSTRUCCION : PRINT                 {$$=$1;}
-            | INVALID               {console.log("Un error lexico");} //Errores lexicos
-            | error  puntoycoma     {console.log("Un error sintactico"+$1);} //Errores sintacticos, recuperacion con ;
+            | INVALID               {console.log("Un error lexico");$$=new errorr.default("->Error Lexico<-", $1, @1.first_line, @1.first_column); } //Errores lexicos
+            | error                 {console.log("Un error sintactico"); $$=new errorr.default("->Error Sintactico<-", $1, @1.first_line, @1.first_column);} //Errores sintacticos, recuperacion con ;
 ;
 
 PRINT : print parentesisAbre EXPRESION parentesisCierra puntoycoma { $$=new print.default($3,@1.first_line,@1.first_column);}

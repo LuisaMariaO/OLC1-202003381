@@ -19,12 +19,15 @@ export const parse = (req: Request & unknown, res: Response): void => {
           listaErrores.push(i);
           ast.actualizaConsola((<Errores>i).returnError());
         }
-
+        try{
         var resultador = i.interpretar(ast, tabla);
+        }catch(err){}
+        /* Esto es para cuando tenga errores sintácticos
         if (resultador instanceof Errores) {
           listaErrores.push(resultador);
           ast.actualizaConsola((<Errores>resultador).returnError());
-        }        
+        }  
+        */      
       }
       res.json({ consola: ast.getconsola(), errores: listaErrores, simbolos: [] });
     } catch (err) {
