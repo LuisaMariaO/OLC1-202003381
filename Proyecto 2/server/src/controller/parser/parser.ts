@@ -22,12 +22,12 @@ export const parse = (req: Request & unknown, res: Response): void => {
         try{
         var resultador = i.interpretar(ast, tabla);
         }catch(err){}
-        /* Esto es para cuando tenga errores sintácticos
+        //Agregando los errores semanticos encontrados
         if (resultador instanceof Errores) {
           listaErrores.push(resultador);
           ast.actualizaConsola((<Errores>resultador).returnError());
         }  
-        */      
+        
       }
       res.json({ consola: ast.getconsola(), errores: listaErrores, simbolos: [] });
     } catch (err) {

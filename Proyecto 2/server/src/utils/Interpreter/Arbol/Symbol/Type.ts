@@ -16,7 +16,7 @@ export enum DataType {
     /*TIPOS DE DATOS*/
     ENTERO,
     DECIMAL,
-    LOGICO,
+    BOOLEANO,
     CARACTER,
     CADENA,
     IDENTIFICADOR,

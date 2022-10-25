@@ -18,7 +18,7 @@ export default class Nativo extends Instruccion {
     else if(this.tipoDato.getTipo() == DataType.DECIMAL){
       return parseFloat(this.valor);
     }
-    else if(this.tipoDato.getTipo()== DataType.LOGICO){
+    else if(this.tipoDato.getTipo()== DataType.BOOLEANO){
       //Verifico si es true o false
       if(this.valor.toLowerCase()=="true"){
         return true

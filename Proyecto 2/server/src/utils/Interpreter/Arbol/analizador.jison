@@ -1,10 +1,14 @@
 %{
     //codigo js
     const nativo = require('./Expresions/Native');
+    const aritmetica = require('./Expresions/Aritmetica')
+
     const Tipo = require('./Symbol/Type');
     const print = require('./Instructions/Print');
 
     const errorr = require('./Exceptions/Error')
+
+    
     
 %}
 %lex
@@ -149,6 +153,13 @@ true|false                                                  return 'logico';
 
 /lex
 
+//Precedencias
+
+%left 'mas' 'menos'
+%left 'por' 'dividido'
+%left 'potencia' 'modulo'
+
+
 %start INIT
 //Inicio
 //Definicion de gramatica
@@ -172,12 +183,19 @@ INSTRUCCION : PRINT                 {$$=$1;}
 PRINT : print parentesisAbre EXPRESION parentesisCierra puntoycoma { $$=new print.default($3,@1.first_line,@1.first_column);}
 ;
 
-EXPRESION : entero {$$= new nativo.default(new Tipo.default(Tipo.DataType.ENTERO),$1, @1.first_line, @1.first_column);}
+
+
+EXPRESION : EXPRESION OPERACIONESARITMETICAS EXPRESION {$$ = new aritmetica.default($2,$1,$3,@1.first_line,@1.first_column);} 
+        |entero {$$= new nativo.default(new Tipo.default(Tipo.DataType.ENTERO),$1, @1.first_line, @1.first_column);}
         | decimal {$$= new nativo.default(new Tipo.default(Tipo.DataType.DECIMAL),$1, @1.first_line, @1.first_column);}  
-        | logico {$$= new nativo.default(new Tipo.default(Tipo.DataType.LOGICO),$1, @1.first_line, @1.first_column);}
+        | logico {$$= new nativo.default(new Tipo.default(Tipo.DataType.BOOLEANO),$1, @1.first_line, @1.first_column);}
         | caracter {$$= new nativo.default(new Tipo.default(Tipo.DataType.CARACTER),$1, @1.first_line, @1.first_column);}
         | cadena {$$= new nativo.default(new Tipo.default(Tipo.DataType.CADENA),$1, @1.first_line, @1.first_column);}
 ;
 
-EXPREIONARITMETICA: EXPRESION mas EXPRESION
+OPERACIONESARITMETICAS: mas {$$=aritmetica.tipoOp.SUMA;}
+                    |   menos {$$=aritmetica.tipoOp.RESTA;}
+                    |   por {$$=aritmetica.tipoOp.MULTIPLICACION;}
+                    |   dividido{$$=aritmetica.tipoOp.DIVISION;}
+                    |   potencia{$$=aritmetica.tipoOp.POTENCIA;}
 ;
