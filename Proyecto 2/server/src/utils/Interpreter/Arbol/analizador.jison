@@ -3,6 +3,7 @@
     const nativo = require('./Expresions/Native');
     const aritmetica = require('./Expresions/Aritmetica')
     const relacional = require('./Expresions/Relacional')
+    const logica = require('./Expresions/Logica')
 
     const Tipo = require('./Symbol/Type');
     const print = require('./Instructions/Print');
@@ -160,6 +161,9 @@ true|false                                                  return 'logico';
 /lex
 
 //Precedencias
+%left 'or'
+%left 'and'
+%left 'not'
 %left 'igualIgual' 'diferente' 'menor' 'menorIgual' 'mayor' 'mayorIgual'
 %left 'mas' 'menos'
 %left 'por' 'dividido'
@@ -211,6 +215,9 @@ EXPRESION :
         | EXPRESION 'igualIgual' EXPRESION {$$ = new relacional.default(relacional.tipoOp.IGUAL,$1,$3,null,@1.first_line,@1.first_column)}
         | EXPRESION 'diferente' EXPRESION {$$ = new relacional.default(relacional.tipoOp.DIFERENTE,$1,$3,null,@1.first_line,@1.first_column)}
 
+        | EXPRESION 'or' EXPRESION{$$ = new logica.default(logica.tipoOp.OR,$1,$3,@1.first_line,@1.first_column);}
+        | EXPRESION 'and' EXPRESION{$$ = new logica.default(logica.tipoOp.AND,$1,$3,@1.first_line,@1.first_column);}
+        | 'not' EXPRESION{$$ = new logica.default(logica.tipoOp.NOT,$2,$2,@1.first_line,@1.first_column);}
 
         | NATIVA{$$=$1}
 ;        

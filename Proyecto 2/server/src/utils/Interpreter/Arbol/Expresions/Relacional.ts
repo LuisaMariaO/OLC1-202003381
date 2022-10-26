@@ -901,7 +901,7 @@ export default class Relacional extends Instruccion {
                 }
             }
         }
-        /**************************************NEGACION************************************************/
+        /**************************************TERNARIO************************************************/
         else if(this.tipo == tipoOp.TERNARIO){
             /**TODO: PROGRAMAR PARA SER INSTRUCCION PARA ASIGNACION DE VARIABLE*/
             let valueIzq = this.operacionIzq.interpretar(arbol, tabla); //Esta operacion no necesita dos valores
@@ -923,7 +923,7 @@ export default class Relacional extends Instruccion {
         }
         }
         this.tipoDato.setTipo(DataType.INDEFINIDO)
-        return new Errorr("->Error Semántico<-","OPERACION ARITMETICA INDEFINIDA",this.linea,this.columna)
+        return new Errorr("->Error Semántico<-","OPERACION RELACIONAL INDEFINIDA",this.linea,this.columna)
   }
 }
 
