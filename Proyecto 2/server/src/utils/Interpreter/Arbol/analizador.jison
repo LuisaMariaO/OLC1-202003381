@@ -169,6 +169,7 @@ true|false                                                  return 'logico';
 %left 'por' 'dividido'
 %left 'potencia' 'modulo'
 %left 'menos'
+%left 'parentesisAbre' //Para agrupacion
 
 
 %start INIT
@@ -218,6 +219,8 @@ EXPRESION :
         | EXPRESION 'or' EXPRESION{$$ = new logica.default(logica.tipoOp.OR,$1,$3,@1.first_line,@1.first_column);}
         | EXPRESION 'and' EXPRESION{$$ = new logica.default(logica.tipoOp.AND,$1,$3,@1.first_line,@1.first_column);}
         | 'not' EXPRESION{$$ = new logica.default(logica.tipoOp.NOT,$2,$2,@1.first_line,@1.first_column);}
+
+        | 'parentesisAbre' EXPRESION 'parentesisCierra' {$$ = $2}
 
         | NATIVA{$$=$1}
 ;        
