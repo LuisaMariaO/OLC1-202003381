@@ -6,6 +6,8 @@ import Errorr from '../Exceptions/Error'
 import { isGeneratorFunction } from 'util/types';
 import Error from '../Exceptions/Error';
 import { timeThursdays } from 'd3';
+import { timingSafeEqual } from 'crypto';
+import { identity } from 'lodash';
 
 export default class Aritmetico extends Instruccion {
   operacionIzq: Instruccion;
@@ -735,8 +737,269 @@ export default class Aritmetico extends Instruccion {
                     return new Errorr("->Error Semántico<-","DECIMAL ^ INDEFINIDO",this.linea,this.columna)
                 }
             }
+            /**TERCERA FILA DE LA TABLA**/
+            else if(this.operacionIzq.tipoDato.getTipo() == DataType.BOOLEANO){
+                if(this.operacionDer.tipoDato.getTipo() == DataType.ENTERO){
+                    this.tipoDato.setTipo(DataType.ENTERO)
+                    if(valueIzq){
+                        return(Math.pow(1,Number(valueDer)))
+                    }
+                    else{
+                        return(Math.pow(0,Number(valueDer)))
+                    }
+                }
+                else if(this.operacionDer.tipoDato.getTipo() == DataType.DECIMAL){
+                    this.tipoDato.setTipo(DataType.DECIMAL)
+                    if(valueIzq){
+                        return(Math.pow(1,Number(valueDer)))
+                    }
+                    else{
+                        return(Math.pow(0,Number(valueDer)))
+                    }
+                }
+                else if(this.operacionDer.tipoDato.getTipo() == DataType.BOOLEANO){
+                    this.tipoDato.setTipo(DataType.ENTERO)
+                    if(valueIzq){
+                        if(valueDer){
+                            return (Math.pow(1,1))
+                        }
+                        else{
+                            return(Math.pow(1,0))
+                        }
+                    }
+                    else{
+                        if(valueDer){
+                            return(Math.pow(0,1))
+                        }
+                        else{
+                            return(Math.pow(0,0))
+                        }
+                    }
+                }
+                else if(this.operacionDer.tipoDato.getTipo() == DataType.CARACTER){
+                    this.tipoDato.setTipo(DataType.INDEFINIDO)
+                    return new Errorr("->Error Semántico<-","BOOLEAN ^ CARACTER",this.linea,this.columna)
+                }
+                else if(this.operacionDer.tipoDato.getTipo() == DataType.CADENA){
+                    this.tipoDato.setTipo(DataType.INDEFINIDO)
+                    return new Errorr("->Error Semántico<-","BOOLEAN ^ CADENA",this.linea,this.columna)
+                }
+                else{
+                    this.tipoDato.setTipo(DataType.INDEFINIDO)
+                    return new Errorr("->Error Semántico<-","BOOLEAN ^ INDEFINIDO",this.linea,this.columna)
+                }
+            }
+            /**CUARTA FILA DE LA TABLA**/
+            else if(this.operacionIzq.tipoDato.getTipo() == DataType.CARACTER){
+                this.tipoDato.setTipo(DataType.INDEFINIDO)
+                if(this.operacionDer.tipoDato.getTipo() == DataType.ENTERO){
+                    return new Errorr("->Error Semántico<-","CARACTER ^ ENTERO",this.linea,this.columna)
+                }
+                else if(this.operacionDer.tipoDato.getTipo() == DataType.DECIMAL){
+                    return new Errorr("->Error Semántico<-","CARACTER ^ DECIMAL",this.linea,this.columna)
+                }
+                else if(this.operacionDer.tipoDato.getTipo() == DataType.BOOLEANO){
+                    return new Errorr("->Error Semántico<-","CARACTER ^ BOOLEAN",this.linea,this.columna)
+                }
+                else if(this.operacionDer.tipoDato.getTipo() == DataType.CARACTER){
+                    return new Errorr("->Error Semántico<-","CARACTER ^ CARACTER",this.linea,this.columna)
+                }
+                else if(this.operacionDer.tipoDato.getTipo() == DataType.CADENA){
+                    return new Errorr("->Error Semántico<-","CARACTER ^ CADENA",this.linea,this.columna)
+                }
+                else{
+                    return new Errorr("->Error Semántico<-","CARACTER ^ INDEFINIDO",this.linea,this.columna)
+                }
+            }
+            /**QUINTA FILA DE LA TABLA**/
+            else if(this.operacionIzq.tipoDato.getTipo() == DataType.CADENA){
+                this.tipoDato.setTipo(DataType.INDEFINIDO)
+                if(this.operacionDer.tipoDato.getTipo() == DataType.ENTERO){
+                    return new Error("->Error Semántico<-","CADENA ^ ENTERO",this.linea,this.columna)
+                }
+                else if(this.operacionDer.tipoDato.getTipo() == DataType.DECIMAL){
+                    return new Error("->Error Semántico<-","CADENA ^ DECIMAL",this.linea,this.columna)
+                }
+                else if(this.operacionDer.tipoDato.getTipo() == DataType.BOOLEANO){
+                    return new Error("->Error Semántico<-","CADENA ^ BOOLEAN",this.linea,this.columna)
+                }
+                else if(this.operacionDer.tipoDato.getTipo() == DataType.CARACTER){
+                    return new Error("->Error Semántico<-","CADENA ^ CARACTER",this.linea,this.columna)
+                }
+                else if(this.operacionDer.tipoDato.getTipo() == DataType.CADENA){
+                    return new Error("->Error Semántico<-","CADENA ^ CADENA",this.linea,this.columna)
+                }
+                else{
+                    return new Error("->Error Semántico<-","CADENA ^ INDEFINIDO",this.linea,this.columna)
+                }
+            
+            }
+            /***************************************MODULO***************************************/
+        
         }
-        return null;
+        else if(this.tipo == tipoOp.MODULO){
+            let valueIzq = this.operacionIzq.interpretar(arbol, tabla);
+            let valueDer = this.operacionDer.interpretar(arbol, tabla);
+            if(this.operacionIzq.tipoDato.getTipo() == DataType.ENTERO){
+                if(this.operacionDer.tipoDato.getTipo() == DataType.ENTERO || this.operacionDer.tipoDato.getTipo() == DataType.DECIMAL){
+                    this.tipoDato.setTipo(DataType.DECIMAL)
+                    return(Number(valueIzq) % Number(valueDer))
+                }
+                else if(this.operacionDer.tipoDato.getTipo() == DataType.BOOLEANO){
+                    this.tipoDato.setTipo(DataType.INDEFINIDO)
+                    return new Errorr("->Error Semántico<-","ENTERO % BOOLEAN",this.linea,this.columna)
+                }
+                else if(this.operacionDer.tipoDato.getTipo() == DataType.CARACTER){
+                    this.tipoDato.setTipo(DataType.INDEFINIDO)
+                    return new Errorr("->Error Semántico<-","ENTERO % CARACTER",this.linea,this.columna)
+                }
+                else if(this.operacionDer.tipoDato.getTipo() == DataType.CADENA){
+                    this.tipoDato.setTipo(DataType.INDEFINIDO)
+                    return new Errorr("->Error Semántico<-","ENTERO % CADENA",this.linea,this.columna)
+                }
+                else{
+                    this.tipoDato.setTipo(DataType.INDEFINIDO)
+                    return new Errorr("->Error Semántico<-","ENTERO % INDEFINIDO",this.linea,this.columna)
+                }
+
+            }
+            /**SEGUNDA FILA DE LA TABLA**/
+            else if(this.operacionIzq.tipoDato.getTipo() == DataType.DECIMAL){
+                if(this.operacionDer.tipoDato.getTipo() == DataType.ENTERO || this.operacionDer.tipoDato.getTipo() == DataType.DECIMAL){
+                    this.tipoDato.setTipo(DataType.DECIMAL)
+                    return(Number(valueIzq) % Number(valueDer))
+                }
+                else if(this.operacionDer.tipoDato.getTipo() == DataType.BOOLEANO){
+                    this.tipoDato.setTipo(DataType.INDEFINIDO)
+                    return new Errorr("->Error Semántico<-","DECIMAL % BOOLEAN",this.linea,this.columna)
+                }
+                else if(this.operacionDer.tipoDato.getTipo() == DataType.CARACTER){
+                    this.tipoDato.setTipo(DataType.INDEFINIDO)
+                    return new Errorr("->Error Semántico<-","DECIMAL % CARACTER",this.linea,this.columna)
+                }
+                else if(this.operacionDer.tipoDato.getTipo() == DataType.CADENA){
+                    this.tipoDato.setTipo(DataType.INDEFINIDO)
+                    return new Errorr("->Error Semántico<-","DECIMAL % CADENA",this.linea,this.columna)
+                }
+                else{
+                    this.tipoDato.setTipo(DataType.INDEFINIDO)
+                    return new Errorr("->Error Semántico<-","DECIMAL % INDEFINIDO",this.linea,this.columna)
+                }
+
+            }
+            /**TERCER FILA DE LA TABLA**/
+            else if(this.operacionIzq.tipoDato.getTipo() == DataType.BOOLEANO){
+                if(this.operacionDer.tipoDato.getTipo() == DataType.ENTERO){
+                    this.tipoDato.setTipo(DataType.INDEFINIDO)
+                    return new Errorr("->Error Semántico<-","BOOLEAN % ENTERO",this.linea,this.columna)
+                }
+                else if(this.operacionDer.tipoDato.getTipo() == DataType.DECIMAL){
+                    this.tipoDato.setTipo(DataType.INDEFINIDO)
+                    return new Errorr("->Error Semántico<-","BOOLEAN % DECIMAL",this.linea,this.columna)
+                }
+                else if(this.operacionDer.tipoDato.getTipo() == DataType.BOOLEANO){
+                    this.tipoDato.setTipo(DataType.INDEFINIDO)
+                    return new Errorr("->Error Semántico<-","BOOLEAN % BOOLEAN",this.linea,this.columna)
+                }
+                else if(this.operacionDer.tipoDato.getTipo() == DataType.CARACTER){
+                    this.tipoDato.setTipo(DataType.INDEFINIDO)
+                    return new Errorr("->Error Semántico<-","BOOLEAN % CARACTER",this.linea,this.columna)
+                }
+                else if(this.operacionDer.tipoDato.getTipo() == DataType.CADENA){
+                    this.tipoDato.setTipo(DataType.INDEFINIDO)
+                    return new Errorr("->Error Semántico<-","BOOLEAN % CADENA",this.linea,this.columna)
+                }
+                else{
+                    this.tipoDato.setTipo(DataType.INDEFINIDO)
+                    return new Errorr("->Error Semántico<-","BOOLEAN % INDEFINIDO",this.linea,this.columna)
+                }
+            }
+            /**CUARTA FILA DE LA TABLA**/
+            else if(this.operacionIzq.tipoDato.getTipo() == DataType.CARACTER){
+                if(this.operacionDer.tipoDato.getTipo() == DataType.ENTERO){
+                    this.tipoDato.setTipo(DataType.INDEFINIDO)
+                    return new Errorr("->Error Semántico<-","CARACTER % ENTERO",this.linea,this.columna)
+                }
+                else if(this.operacionDer.tipoDato.getTipo() == DataType.DECIMAL){
+                    this.tipoDato.setTipo(DataType.INDEFINIDO)
+                    return new Errorr("->Error Semántico<-","CARACTER % DECIMAL",this.linea,this.columna)
+                }
+                else if(this.operacionDer.tipoDato.getTipo() == DataType.BOOLEANO){
+                    this.tipoDato.setTipo(DataType.INDEFINIDO)
+                    return new Errorr("->Error Semántico<-","CARACTER % BOOLEAN",this.linea,this.columna)
+                }
+                else if(this.operacionDer.tipoDato.getTipo() == DataType.CARACTER){
+                    this.tipoDato.setTipo(DataType.INDEFINIDO)
+                    return new Errorr("->Error Semántico<-","CARACTER % CARACTER",this.linea,this.columna)
+                }
+                else if(this.operacionDer.tipoDato.getTipo() == DataType.CADENA){
+                    this.tipoDato.setTipo(DataType.INDEFINIDO)
+                    return new Errorr("->Error Semántico<-","CARACTER % CADENA",this.linea,this.columna)
+                }
+                else{
+                    this.tipoDato.setTipo(DataType.INDEFINIDO)
+                    return new Errorr("->Error Semántico<-","CARACTER % INDEFINIDO",this.linea,this.columna)
+                }
+            }
+            /**QUINTA FILA DE LA TABLA**/
+            else if(this.operacionIzq.tipoDato.getTipo() == DataType.CADENA){
+                if(this.operacionDer.tipoDato.getTipo() == DataType.ENTERO){
+                    this.tipoDato.setTipo(DataType.INDEFINIDO)
+                    return new Errorr("->Error Semántico<-","CADENA % ENTERO",this.linea,this.columna)
+                }
+                else if(this.operacionDer.tipoDato.getTipo() == DataType.DECIMAL){
+                    this.tipoDato.setTipo(DataType.INDEFINIDO)
+                    return new Errorr("->Error Semántico<-","CADENA % DECIMAL",this.linea,this.columna)
+                }
+                else if(this.operacionDer.tipoDato.getTipo() == DataType.BOOLEANO){
+                    this.tipoDato.setTipo(DataType.INDEFINIDO)
+                    return new Errorr("->Error Semántico<-","CADENA % BOOLEAN",this.linea,this.columna)
+                }
+                else if(this.operacionDer.tipoDato.getTipo() == DataType.CARACTER){
+                    this.tipoDato.setTipo(DataType.INDEFINIDO)
+                    return new Errorr("->Error Semántico<-","CADENA % CARACTER",this.linea,this.columna)
+                }
+                else if(this.operacionDer.tipoDato.getTipo() == DataType.CADENA){
+                    this.tipoDato.setTipo(DataType.INDEFINIDO)
+                    return new Errorr("->Error Semántico<-","CADENA % CADENA",this.linea,this.columna)
+                }
+                else{
+                    this.tipoDato.setTipo(DataType.INDEFINIDO)
+                    return new Errorr("->Error Semántico<-","CADENA % INDEFINIDO",this.linea,this.columna)
+                }
+            }
+        }
+        /**************************************NEGACION************************************************/
+        else if(this.tipo == tipoOp.NEGACION){
+            let valueIzq = this.operacionIzq.interpretar(arbol, tabla); //Esta operacion no necesita dos valores
+            if(this.operacionIzq.tipoDato.getTipo() == DataType.ENTERO){
+                this.tipoDato.setTipo(DataType.ENTERO)
+                return (Number(valueIzq) * -1)
+
+            }
+            else if(this.operacionIzq.tipoDato.getTipo() == DataType.DECIMAL){
+                this.tipoDato.setTipo(DataType.DECIMAL)
+                return (Number(valueIzq) * -1)
+            }
+            else if(this.operacionIzq.tipoDato.getTipo() == DataType.BOOLEANO){
+                this.tipoDato.setTipo(DataType.INDEFINIDO)
+                return new Errorr("->Error Semántico<-","- BOOLEAN",this.linea,this.columna)
+            }
+            else if(this.operacionIzq.tipoDato.getTipo() == DataType.CARACTER){
+                this.tipoDato.setTipo(DataType.INDEFINIDO)
+                return new Errorr("->Error Semántico<-","- CARACTER",this.linea,this.columna)
+            }
+            else if(this.operacionIzq.tipoDato.getTipo() == DataType.CADENA){
+                this.tipoDato.setTipo(DataType.INDEFINIDO)
+                return new Errorr("->Error Semántico<-","- CADENA",this.linea,this.columna)
+            }
+            else{
+                this.tipoDato.setTipo(DataType.INDEFINIDO)
+                return new Errorr("->Error Semántico<-","- INDEFINIDO",this.linea,this.columna)
+            }
+        }
+        this.tipoDato.setTipo(DataType.INDEFINIDO)
+        return new Errorr("->Error Semántico<-","OPERACION ARITMETICA INDEFINIDA",this.linea,this.columna)
   }
 }
 

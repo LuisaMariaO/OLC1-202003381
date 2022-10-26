@@ -2,6 +2,7 @@
     //codigo js
     const nativo = require('./Expresions/Native');
     const aritmetica = require('./Expresions/Aritmetica')
+    const relacional = require('./Expresions/Relacional')
 
     const Tipo = require('./Symbol/Type');
     const print = require('./Instructions/Print');
@@ -41,7 +42,7 @@ true|false                                                  return 'logico';
 
 /*IMPRIMIR*/
 "println"                                                   { return 'println';}
-"print"                                                     { return 'print';}
+"print"                                                     { return 't_print';}
 
 /*OPERADORES ARITMETICOS*/
 "+"                                                         return 'mas';
@@ -50,18 +51,23 @@ true|false                                                  return 'logico';
 "/"                                                         return 'dividido';
 "^"                                                         return 'potencia';
 "%"                                                         return 'modulo';
+
+
+
+
+/*OPERADORES RELACIONALES*/
+">="                                                        return 'mayorIgual';
+"<="                                                        return 'menorIgual';
+"=="                                                        return 'igualIgual';
+">"                                                         return 'mayor';
+"<"                                                         return 'menor';
+
+"!="                                                        return 'diferente';
+
 "="                                                         return 'igual'
 
 /*OPERADOR LOGICO UNARIO*/
 "!"                                                         return 'not';
-
-/*OPERADORES RELACIONALES*/
-">"                                                         return 'mayor';
-"<"                                                         return 'menor';
-">="                                                        return 'mayorIgual';
-"<="                                                        return 'menorIgual';
-"=="                                                        return 'igualIgual';
-"!="                                                        return 'diferente';
 
 /*OPERADOR TERNARIO*/
 
@@ -154,10 +160,11 @@ true|false                                                  return 'logico';
 /lex
 
 //Precedencias
-
+%left 'igualIgual' 'diferente' 'menor' 'menorIgual' 'mayor' 'mayorIgual'
 %left 'mas' 'menos'
 %left 'por' 'dividido'
 %left 'potencia' 'modulo'
+%left 'menos'
 
 
 %start INIT
@@ -174,28 +181,48 @@ INSTRUCCIONES: INSTRUCCIONES INSTRUCCION {$1.push($2); $$=$1;}
 
 INSTRUCCION : PRINT                 {$$=$1;}
             | INVALID               {console.log("Un error lexico");$$=new errorr.default("->Error Lexico<-", $1, @1.first_line, @1.first_column); } //Errores lexicos
-            | SUMA                  {}
             | error                 {console.log("Un error sintactico"); $$=new errorr.default("->Error Sintactico<-", $1, @1.first_line, @1.first_column);} //Errores sintacticos, recuperacion con ;
 ;
 
 
 
-PRINT : print parentesisAbre EXPRESION parentesisCierra puntoycoma { $$=new print.default($3,@1.first_line,@1.first_column);}
+PRINT : t_print parentesisAbre IMPRIMIBLE parentesisCierra puntoycoma { $$=new print.default($3,@1.first_line,@1.first_column);}
+;
+
+IMPRIMIBLE: EXPRESION {$$=$1}
+    | TERNARIO {$$=$1}
 ;
 
 
 
-EXPRESION : EXPRESION OPERACIONESARITMETICAS EXPRESION {$$ = new aritmetica.default($2,$1,$3,@1.first_line,@1.first_column);} 
-        |entero {$$= new nativo.default(new Tipo.default(Tipo.DataType.ENTERO),$1, @1.first_line, @1.first_column);}
-        | decimal {$$= new nativo.default(new Tipo.default(Tipo.DataType.DECIMAL),$1, @1.first_line, @1.first_column);}  
-        | logico {$$= new nativo.default(new Tipo.default(Tipo.DataType.BOOLEANO),$1, @1.first_line, @1.first_column);}
-        | caracter {$$= new nativo.default(new Tipo.default(Tipo.DataType.CARACTER),$1, @1.first_line, @1.first_column);}
-        | cadena {$$= new nativo.default(new Tipo.default(Tipo.DataType.CADENA),$1, @1.first_line, @1.first_column);}
+EXPRESION :
+        'menos' EXPRESION %prec UMENOS {$$ = new aritmetica.default(aritmetica.tipoOp.NEGACION,$2,$2,@1.first_line,@1.first_column);}
+        |EXPRESION 'mas' EXPRESION {$$ = new aritmetica.default(aritmetica.tipoOp.SUMA,$1,$3,@1.first_line,@1.first_column);}
+        | EXPRESION 'menos' EXPRESION {$$ = new aritmetica.default(aritmetica.tipoOp.RESTA,$1,$3,@1.first_line,@1.first_column);}
+        | EXPRESION 'por' EXPRESION {$$ = new aritmetica.default(aritmetica.tipoOp.MULTIPLICACION,$1,$3,@1.first_line,@1.first_column);}
+        | EXPRESION 'dividido' EXPRESION {$$ = new aritmetica.default(aritmetica.tipoOp.DIVISION,$1,$3,@1.first_line,@1.first_column);}
+        | EXPRESION 'potencia' EXPRESION {$$ = new aritmetica.default(aritmetica.tipoOp.POTENCIA,$1,$3,@1.first_line,@1.first_column);}
+        | EXPRESION 'modulo' EXPRESION {$$ = new aritmetica.default(aritmetica.tipoOp.MODULO,$1,$3,@1.first_line,@1.first_column);}
+
+        | EXPRESION 'mayor' EXPRESION {$$ = new relacional.default(relacional.tipoOp.MAYOR,$1,$3,null,@1.first_line,@1.first_column)}
+        | EXPRESION 'menor' EXPRESION {$$ = new relacional.default(relacional.tipoOp.MENOR,$1,$3,null,@1.first_line,@1.first_column)}
+        | EXPRESION 'mayorIgual' EXPRESION {$$ = new relacional.default(relacional.tipoOp.MAYOR_IGUAL,$1,$3,null,@1.first_line,@1.first_column)}
+        | EXPRESION 'menorIgual' EXPRESION {$$ = new relacional.default(relacional.tipoOp.MENOR_IGUAL,$1,$3,null,@1.first_line,@1.first_column)}
+        | EXPRESION 'igualIgual' EXPRESION {$$ = new relacional.default(relacional.tipoOp.IGUAL,$1,$3,null,@1.first_line,@1.first_column)}
+        | EXPRESION 'diferente' EXPRESION {$$ = new relacional.default(relacional.tipoOp.DIFERENTE,$1,$3,null,@1.first_line,@1.first_column)}
+
+
+        | NATIVA{$$=$1}
+;        
+
+NATIVA :
+    'entero' {$$= new nativo.default(new Tipo.default(Tipo.DataType.ENTERO),$1, @1.first_line, @1.first_column);}
+    | 'decimal' {$$= new nativo.default(new Tipo.default(Tipo.DataType.DECIMAL),$1, @1.first_line, @1.first_column);}  
+    | 'logico' {$$= new nativo.default(new Tipo.default(Tipo.DataType.BOOLEANO),$1, @1.first_line, @1.first_column);}
+    | 'caracter' {$$= new nativo.default(new Tipo.default(Tipo.DataType.CARACTER),$1, @1.first_line, @1.first_column);}
+    | 'cadena' {$$= new nativo.default(new Tipo.default(Tipo.DataType.CADENA),$1, @1.first_line, @1.first_column);}
 ;
 
-OPERACIONESARITMETICAS: mas {$$=aritmetica.tipoOp.SUMA;}
-                    |   menos {$$=aritmetica.tipoOp.RESTA;}
-                    |   por {$$=aritmetica.tipoOp.MULTIPLICACION;}
-                    |   dividido{$$=aritmetica.tipoOp.DIVISION;}
-                    |   potencia{$$=aritmetica.tipoOp.POTENCIA;}
+TERNARIO: EXPRESION 'interrogacionCierra' EXPRESION 'dosPuntos' EXPRESION {$$ = new relacional.default(relacional.tipoOp.TERNARIO,$3,$5,$1,@1.first_line,@1.first_column)}
 ;
+
