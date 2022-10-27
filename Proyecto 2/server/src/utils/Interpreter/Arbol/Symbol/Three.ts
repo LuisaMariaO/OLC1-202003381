@@ -21,7 +21,7 @@ export default class Three {
     this.consola = value;
   }
   public actualizaConsola(uptodate: String) {
-    this.consola = `${this.consola}${uptodate}\n`;
+    this.consola = `${this.consola}${uptodate}\n`; //TODO: Quitar el salto de linea para diferenciar print y println
   }
   public getinstrucciones(): Array<Instruccion> {
     return this.instrucciones;
@@ -35,6 +35,9 @@ export default class Three {
 
   public seterrores(value: Array<Errores>) {
     this.errores = value;
+  }
+  public adderror(value: Errores){
+    this.errores.push(value)
   }
   public gettablaGlobal(): tablaSimbolo {
     return this.tablaGlobal;

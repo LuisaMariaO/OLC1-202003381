@@ -910,9 +910,11 @@ export default class Relacional extends Instruccion {
             if(this.condicion!=null){
             if(this.condicion?.tipoDato.getTipo() == DataType.BOOLEANO){
                 if(cond){
+                    this.tipoDato.setTipo(this.operacionIzq.tipoDato.getTipo())
                     return valueIzq
                 }
                 else{
+                    this.tipoDato.setTipo(this.operacionIzq.tipoDato.getTipo())
                     return valueDer
                 }
             }

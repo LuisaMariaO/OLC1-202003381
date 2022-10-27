@@ -6,7 +6,9 @@
     const logica = require('./Expresions/Logica')
 
     const Tipo = require('./Symbol/Type');
+
     const print = require('./Instructions/Print');
+    const declaracion = require('./Instructions/Declaracion')
 
     const errorr = require('./Exceptions/Error')
 
@@ -185,6 +187,7 @@ INSTRUCCIONES: INSTRUCCIONES INSTRUCCION {$1.push($2); $$=$1;}
 ;
 
 INSTRUCCION : PRINT                 {$$=$1;}
+            | DECLARACION           {$$=$1;}
             | INVALID               {console.log("Un error lexico");$$=new errorr.default("->Error Lexico<-", $1, @1.first_line, @1.first_column); } //Errores lexicos
             | error                 {console.log("Un error sintactico"); $$=new errorr.default("->Error Sintactico<-", $1, @1.first_line, @1.first_column);} //Errores sintacticos, recuperacion con ;
 ;
@@ -231,8 +234,24 @@ NATIVA :
     | 'logico' {$$= new nativo.default(new Tipo.default(Tipo.DataType.BOOLEANO),$1, @1.first_line, @1.first_column);}
     | 'caracter' {$$= new nativo.default(new Tipo.default(Tipo.DataType.CARACTER),$1, @1.first_line, @1.first_column);}
     | 'cadena' {$$= new nativo.default(new Tipo.default(Tipo.DataType.CADENA),$1, @1.first_line, @1.first_column);}
+    | 'identificador' {$$ = new nativo.default(new Tipo.default(Tipo.DataType.IDENTIFICADOR),$1, @1.first_line, $1.first_column)}
 ;
 
 TERNARIO: EXPRESION 'interrogacionCierra' EXPRESION 'dosPuntos' EXPRESION {$$ = new relacional.default(relacional.tipoOp.TERNARIO,$3,$5,$1,@1.first_line,@1.first_column)}
+;
+
+DECLARACION: TIPO 'identificador' VALOR 'puntoycoma' {$$ = new declaracion.default($2,$1,$3, @1.first_line,@1.first_column)}
+;
+
+VALOR: 'igual' EXPRESION {$$ = $2}
+| 
+;
+
+TIPO: 
+    'int' {$$=new Tipo.default(Tipo.DataType.ENTERO);}
+    | 'double' {$$=new Tipo.default(Tipo.DataType.DECIMAL);}
+    | 'boolean' {$$=new Tipo.default(Tipo.DataType.BOOLEANO);}
+    | 'char' {$$=new Tipo.default(Tipo.DataType.CARACTER);}
+    | 'string' {$$=new Tipo.default(Tipo.DataType.CADENA);}
 ;
 

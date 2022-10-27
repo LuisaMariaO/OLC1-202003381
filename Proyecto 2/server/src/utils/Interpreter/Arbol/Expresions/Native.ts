@@ -2,6 +2,8 @@ import { Instruccion } from '../Abstract/Instruccion';
 import Three from '../Symbol/Three';
 import SymbolTable from '../Symbol/SymbolTable';
 import Type, { DataType } from '../Symbol/Type';
+import get from 'lodash/get'
+import Errorr from '../Exceptions/Error';
 
 export default class Nativo extends Instruccion {
   valor: any;
@@ -57,6 +59,16 @@ export default class Nativo extends Instruccion {
        text= text.replaceAll("\\t",'\t')
        text=text.replaceAll("\\\'","\'")
         return text;
+    }
+
+    else if(this.tipoDato.getTipo() == DataType.IDENTIFICADOR){
+      let value = tabla.getValor(this.valor)
+      if(value!=null){
+      return get(value,'valor')
+      }
+      else{
+        return new Errorr("->Error Semántico<-","Variable no definida",this.linea,this.columna)
+      }
     }
     
   }

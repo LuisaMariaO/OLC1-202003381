@@ -1,4 +1,5 @@
 import Simbolo from './Symbol';
+import Tipo, {DataType} from '../Symbol/Type';
 
 export default class SymbolTable {
   private tablaAnterior: SymbolTable | any;
@@ -15,6 +16,7 @@ export default class SymbolTable {
   }
 
   public setValor(id: String, valor: Simbolo): any{
+   
     this.tablaActual.set(id, valor);
 
     console.log(id+"="+this.tablaActual.get(id)?.getvalor())

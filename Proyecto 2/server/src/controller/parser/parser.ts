@@ -16,7 +16,7 @@ export const parse = (req: Request & unknown, res: Response): void => {
       ast.settablaGlobal(tabla);
       for (let i of ast.getinstrucciones()) {
         if (i instanceof Errores) {
-          listaErrores.push(i);
+          ast.adderror(i);
           ast.actualizaConsola((<Errores>i).returnError());
         }
         try{
@@ -24,11 +24,12 @@ export const parse = (req: Request & unknown, res: Response): void => {
         }catch(err){}
         //Agregando los errores semanticos encontrados
         if (resultador instanceof Errores) {
-          listaErrores.push(resultador);
+          ast.adderror(resultador);
           ast.actualizaConsola((<Errores>resultador).returnError());
         }  
         
       }
+      listaErrores = ast.getErrores()
       res.json({ consola: ast.getconsola(), errores: listaErrores, simbolos: [] });
     } catch (err) {
         console.log(err)
