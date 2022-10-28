@@ -14,12 +14,32 @@ export default class SymbolTable {
     let valor = this.tablaActual.get(id);
     return valor;
   }
+  public getSimbolo(id: String):Simbolo | any{
+    let valor: Simbolo |any = this.tablaActual.get(id)
+    return valor;
+  }
 
-  public setValor(id: String, valor: Simbolo): any{
-   
+  public setValor(id: String, valor: Simbolo, declaracion:boolean): any{
+    
+    id = id.toLowerCase()
+    if(declaracion){
     this.tablaActual.set(id, valor);
-
-    console.log(id+"="+this.tablaActual.get(id)?.getvalor())
+    }
+    else {
+      let actual: SymbolTable = this
+      let oldValue = null //Para buscar si ya existe la variable
+      while(actual){
+        if(actual.getTabla().get(id)){
+          oldValue = actual.getTabla().get(id);
+          actual.getTabla().delete(id);
+          actual.getTabla().set(id, valor);
+          break;
+        }
+        actual = actual.getAnterior();
+      }
+      if(!oldValue) console.log('Error la variable no existe')
+    }
+   
     return null;
   }
 

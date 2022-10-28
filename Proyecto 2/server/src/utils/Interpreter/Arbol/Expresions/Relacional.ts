@@ -24,10 +24,43 @@ export default class Relacional extends Instruccion {
   }
 
   interpretar(arbol: Arbol, tabla: tablaSimbolo) {
+
+    let valueIzq
+    let valueDer
+    let flag1:boolean = false
+    let flag2: boolean = false
+    
+    /**Si alguno de las dos expresiones es un identificador, primero obtengo el valor y verifico los tipos */
+    if(this.operacionIzq.tipoDato.getTipo() == DataType.IDENTIFICADOR){
+        flag1 = true
+        let jsonaux = JSON.stringify(this.operacionIzq).toString()
+        let objjson = JSON.parse(jsonaux)
+        valueIzq = this.operacionIzq.interpretar(arbol,tabla)
+       
+    
+        this.operacionIzq.tipoDato.setTipo(tabla.getSimbolo(objjson.valor).gettipo().getTipo())
+    }
+
+    if(this.operacionDer.tipoDato.getTipo() == DataType.IDENTIFICADOR){
+        flag2 = true
+        let jsonaux = JSON.stringify(this.operacionDer).toString()
+        let objjson = JSON.parse(jsonaux)
+        valueDer = this.operacionDer.interpretar(arbol,tabla)
+ 
+        this.operacionDer.tipoDato.setTipo(tabla.getSimbolo(objjson.valor).gettipo().getTipo())
+    }
+    
+    if(!flag1){
+    valueIzq = this.operacionIzq.interpretar(arbol, tabla);
+    
+    }
+    if(!flag2){
+        valueDer = this.operacionDer.interpretar(arbol, tabla); 
+    }
     /*******************************************MAYOR*******************************************************/
         if(this.tipo== tipoOp.MAYOR){
-            let valueIzq = this.operacionIzq.interpretar(arbol, tabla);
-            let valueDer = this.operacionDer.interpretar(arbol, tabla);
+            
+            
             /*FILA 1 DE LA TABLA DE SUMA INDICADA EN EL ENUNCIADO*/ 
             if(this.operacionIzq.tipoDato.getTipo() ==  DataType.ENTERO){
                 if(this.operacionDer.tipoDato.getTipo() ==  DataType.ENTERO){
@@ -174,8 +207,8 @@ export default class Relacional extends Instruccion {
 
         /*********************************************MENOR***********************************************/
         } else if(this.tipo== tipoOp.MENOR){    
-            let valueIzq = this.operacionIzq.interpretar(arbol, tabla);
-            let valueDer = this.operacionDer.interpretar(arbol, tabla);
+            
+            
             if(this.operacionIzq.tipoDato.getTipo() ==  DataType.ENTERO){
                 if(this.operacionDer.tipoDato.getTipo() ==  DataType.ENTERO){
                     this.tipoDato.setTipo(DataType.BOOLEANO);
@@ -320,8 +353,8 @@ export default class Relacional extends Instruccion {
         } 
         /********************************************MAYOR IGUAL****************************************/
         else if(this.tipo==tipoOp.MAYOR_IGUAL){
-            let valueIzq = this.operacionIzq.interpretar(arbol, tabla);
-            let valueDer = this.operacionDer.interpretar(arbol, tabla);
+            
+            
             
             if(this.operacionIzq.tipoDato.getTipo() ==  DataType.ENTERO){
                 if(this.operacionDer.tipoDato.getTipo() ==  DataType.ENTERO){
@@ -467,8 +500,8 @@ export default class Relacional extends Instruccion {
         }
         /*********************************************MENOR IGUAL***************************************/
         if(this.tipo==tipoOp.MENOR_IGUAL){
-            let valueIzq = this.operacionIzq.interpretar(arbol, tabla);
-            let valueDer = this.operacionDer.interpretar(arbol, tabla);
+            
+            
              /*FILA 1 DE LA TABLA DE SUMA INDICADA EN EL ENUNCIADO*/ 
              if(this.operacionIzq.tipoDato.getTipo() ==  DataType.ENTERO){
                 if(this.operacionDer.tipoDato.getTipo() ==  DataType.ENTERO){
@@ -616,8 +649,8 @@ export default class Relacional extends Instruccion {
         }
         /**************************************IGUAL*********************************************/
         else if(this.tipo==tipoOp.IGUAL){
-            let valueIzq = this.operacionIzq.interpretar(arbol, tabla);
-            let valueDer = this.operacionDer.interpretar(arbol, tabla);
+            
+            
              /*FILA 1 DE LA TABLA DE SUMA INDICADA EN EL ENUNCIADO*/ 
              if(this.operacionIzq.tipoDato.getTipo() ==  DataType.ENTERO){
                 if(this.operacionDer.tipoDato.getTipo() ==  DataType.ENTERO){
@@ -761,8 +794,8 @@ export default class Relacional extends Instruccion {
         
         }
         else if(this.tipo == tipoOp.DIFERENTE){
-            let valueIzq = this.operacionIzq.interpretar(arbol, tabla);
-            let valueDer = this.operacionDer.interpretar(arbol, tabla);
+            
+            
             /*FILA 1 DE LA TABLA DE SUMA INDICADA EN EL ENUNCIADO*/ 
             if(this.operacionIzq.tipoDato.getTipo() == DataType.ENTERO){
                 if(this.operacionDer.tipoDato.getTipo() ==  DataType.ENTERO){
@@ -904,7 +937,7 @@ export default class Relacional extends Instruccion {
         /**************************************TERNARIO************************************************/
         else if(this.tipo == tipoOp.TERNARIO){
             /**TODO: PROGRAMAR PARA SER INSTRUCCION PARA ASIGNACION DE VARIABLE*/
-            let valueIzq = this.operacionIzq.interpretar(arbol, tabla); //Esta operacion no necesita dos valores
+             //Esta operacion no necesita dos valores
             let valueDer = this.operacionDer.interpretar(arbol,tabla);
             let cond = this.condicion?.interpretar(arbol,tabla)
             if(this.condicion!=null){

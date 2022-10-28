@@ -8,30 +8,73 @@ import Error from '../Exceptions/Error';
 import { timeThursdays } from 'd3';
 import { timingSafeEqual } from 'crypto';
 import { identity } from 'lodash';
+import Nativo from './Native';
 
 export default class Aritmetico extends Instruccion {
   operacionIzq: Instruccion;
   operacionDer: Instruccion;
   tipo: tipoOp;
+ 
   
 
   constructor(tipo: tipoOp, opIzq: Instruccion, opDer: Instruccion, fila: number, columna: number) {
     super(new Tipo(DataType.INDEFINIDO), fila, columna);
     this.tipo = tipo;
+    
     this.operacionIzq = opIzq;
     this.operacionDer = opDer;
   }
 
   interpretar(arbol: Arbol, tabla: tablaSimbolo) {
+
+    let valueIzq
+    let valueDer
+    let flag1:boolean = false
+    let flag2: boolean = false
+    
+    /**Si alguno de las dos expresiones es un identificador, primero obtengo el valor y verifico los tipos */
+    if(this.operacionIzq.tipoDato.getTipo() == DataType.IDENTIFICADOR){
+        flag1 = true
+        let jsonaux = JSON.stringify(this.operacionIzq).toString()
+        let objjson = JSON.parse(jsonaux)
+        valueIzq = this.operacionIzq.interpretar(arbol,tabla)
+       
+    
+        this.operacionIzq.tipoDato.setTipo(tabla.getSimbolo(objjson.valor).gettipo().getTipo())
+    }
+
+    if(this.operacionDer.tipoDato.getTipo() == DataType.IDENTIFICADOR){
+        flag2 = true
+        let jsonaux = JSON.stringify(this.operacionDer).toString()
+        let objjson = JSON.parse(jsonaux)
+        valueDer = this.operacionDer.interpretar(arbol,tabla)
+ 
+        this.operacionDer.tipoDato.setTipo(tabla.getSimbolo(objjson.valor).gettipo().getTipo())
+    }
+    
+    if(!flag1){
+    valueIzq = this.operacionIzq.interpretar(arbol, tabla);
+    
+    }
+    if(!flag2){
+        valueDer = this.operacionDer.interpretar(arbol, tabla); 
+    }
+    
     /*********************************SUMA*******************************************************/
         if(this.tipo===tipoOp.SUMA){
-            let valueIzq = this.operacionIzq.interpretar(arbol, tabla);
-            let valueDer = this.operacionDer.interpretar(arbol, tabla);
+       
             /*FILA 1 DE LA TABLA DE SUMA INDICADA EN EL ENUNCIADO*/ 
+          
             if(this.operacionIzq.tipoDato.getTipo() === DataType.ENTERO){
+        
                 if(this.operacionDer.tipoDato.getTipo() === DataType.ENTERO){
+                    
+                    
                     this.tipoDato.setTipo(DataType.ENTERO);
-                    return (Number(valueIzq)+Number(valueDer));}
+                    let result = Number(valueIzq)+Number(valueDer)
+                    
+                    return (Number(valueIzq)+Number(valueDer));
+                }
                 else if(this.operacionDer.tipoDato.getTipo() == DataType.DECIMAL){
                     this.tipoDato.setTipo(DataType.DECIMAL);
                     return (Number(valueIzq)+Number(valueDer));
@@ -172,15 +215,12 @@ export default class Aritmetico extends Instruccion {
                     return (`${valueIzq.toString()}${valueDer.toString()}`);
                 }
             }
-            else{
-                this.tipoDato.setTipo(DataType.INDEFINIDO)
-                return new Errorr("->Error Semántico<-","INDEFINIDO+VALOR",this.linea,this.columna) 
-            }
+            
 
         /*************************************RESTA********************************************/
         } else if(this.tipo===tipoOp.RESTA){    
-            let valueIzq = this.operacionIzq.interpretar(arbol, tabla);
-            let valueDer = this.operacionDer.interpretar(arbol, tabla);
+             
+            
             /**PRIMERA FILA DE LA TABLA DE RESTA DEL ENUNCIADO */
             if(this.operacionIzq.tipoDato.getTipo() === DataType.ENTERO){
                 if(this.operacionDer.tipoDato.getTipo() === DataType.ENTERO){
@@ -343,10 +383,14 @@ export default class Aritmetico extends Instruccion {
         } 
         /************************************MULTIPLICACION *********************************/
         else if(this.tipo==tipoOp.MULTIPLICACION){
-            let valueIzq = this.operacionIzq.interpretar(arbol, tabla);
-            let valueDer = this.operacionDer.interpretar(arbol, tabla);
+            
+            
             if(this.operacionIzq.tipoDato.getTipo() == DataType.ENTERO){
+                console.log("Hola0")
+                console.log(valueIzq)
+                console.log(valueDer)
                 if(this.operacionDer.tipoDato.getTipo() == DataType.ENTERO){
+                    console.log("Hola1")
                     this.tipoDato.setTipo(DataType.ENTERO)
                     return (Number(valueIzq) * Number(valueDer))
                 }
@@ -505,8 +549,8 @@ export default class Aritmetico extends Instruccion {
         }
         /*********************************************DIVISION***************************************/
         if(this.tipo==tipoOp.DIVISION){
-            let valueIzq = this.operacionIzq.interpretar(arbol, tabla);
-            let valueDer = this.operacionDer.interpretar(arbol, tabla);
+            
+            
             if(this.operacionIzq.tipoDato.getTipo() == DataType.ENTERO){
                 if(this.operacionDer.tipoDato.getTipo() == DataType.ENTERO){
                     this.tipoDato.setTipo(DataType.DECIMAL)
@@ -676,8 +720,8 @@ export default class Aritmetico extends Instruccion {
         }
         /**************************************POTENCIA*********************************************/
         else if(this.tipo==tipoOp.POTENCIA){
-            let valueIzq = this.operacionIzq.interpretar(arbol, tabla);
-            let valueDer = this.operacionDer.interpretar(arbol, tabla);
+            
+            
             if(this.operacionIzq.tipoDato.getTipo()==DataType.ENTERO){
                 if(this.operacionDer.tipoDato.getTipo()==DataType.ENTERO){
                 this.tipoDato.setTipo(DataType.ENTERO)
@@ -838,8 +882,8 @@ export default class Aritmetico extends Instruccion {
         
         }
         else if(this.tipo == tipoOp.MODULO){
-            let valueIzq = this.operacionIzq.interpretar(arbol, tabla);
-            let valueDer = this.operacionDer.interpretar(arbol, tabla);
+            
+            
             if(this.operacionIzq.tipoDato.getTipo() == DataType.ENTERO){
                 if(this.operacionDer.tipoDato.getTipo() == DataType.ENTERO || this.operacionDer.tipoDato.getTipo() == DataType.DECIMAL){
                     this.tipoDato.setTipo(DataType.DECIMAL)
@@ -971,7 +1015,7 @@ export default class Aritmetico extends Instruccion {
         }
         /**************************************NEGACION************************************************/
         else if(this.tipo == tipoOp.NEGACION){
-            let valueIzq = this.operacionIzq.interpretar(arbol, tabla); //Esta operacion no necesita dos valores
+             //Esta operacion no necesita dos valores
             if(this.operacionIzq.tipoDato.getTipo() == DataType.ENTERO){
                 this.tipoDato.setTipo(DataType.ENTERO)
                 return (Number(valueIzq) * -1)

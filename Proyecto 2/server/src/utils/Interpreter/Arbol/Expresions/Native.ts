@@ -5,12 +5,17 @@ import Type, { DataType } from '../Symbol/Type';
 import get from 'lodash/get'
 import Errorr from '../Exceptions/Error';
 
+
 export default class Nativo extends Instruccion {
   valor: any;
 
   constructor(tipo: Type, valor: any, fila: number, columna: number) {
     super(tipo, fila, columna);
     this.valor = valor;
+  }
+
+  getValor():any{
+    return this.valor
   }
 
   interpretar(arbol: Three, tabla: SymbolTable) {
@@ -62,12 +67,22 @@ export default class Nativo extends Instruccion {
     }
 
     else if(this.tipoDato.getTipo() == DataType.IDENTIFICADOR){
-      let value = tabla.getValor(this.valor)
+      this.valor = this.valor.toLowerCase()
+      let tablaActual = tabla
+      let value;
+      while(tablaActual!=null){ //Recorro los entornos anteriores también
+        value = tabla.getValor(this.valor)
+        if(value!=null){
+          break;
+        }
+        tablaActual=tablaActual.getAnterior()
+      }
+      
       if(value!=null){
       return get(value,'valor')
       }
       else{
-        return new Errorr("->Error Semántico<-","Variable no definida",this.linea,this.columna)
+        return new Errorr("->Error Semántico<-","Variable -" +this.valor+"- no encontrada",this.linea,this.columna)
       }
     }
     

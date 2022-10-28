@@ -9,6 +9,8 @@
 
     const print = require('./Instructions/Print');
     const declaracion = require('./Instructions/Declaracion')
+    const asignacion = require('./Instructions/Asignacion')
+    const casteo = require('./Expresions/Casteo')
 
     const errorr = require('./Exceptions/Error')
 
@@ -188,6 +190,7 @@ INSTRUCCIONES: INSTRUCCIONES INSTRUCCION {$1.push($2); $$=$1;}
 
 INSTRUCCION : PRINT                 {$$=$1;}
             | DECLARACION           {$$=$1;}
+            | ASIGNACION            {$$=$1;}
             | INVALID               {console.log("Un error lexico");$$=new errorr.default("->Error Lexico<-", $1, @1.first_line, @1.first_column); } //Errores lexicos
             | error                 {console.log("Un error sintactico"); $$=new errorr.default("->Error Sintactico<-", $1, @1.first_line, @1.first_column);} //Errores sintacticos, recuperacion con ;
 ;
@@ -226,6 +229,8 @@ EXPRESION :
         | 'parentesisAbre' EXPRESION 'parentesisCierra' {$$ = $2}
 
         | NATIVA{$$=$1}
+
+        | 'parentesisAbre' TIPO 'parentesisCierra' EXPRESION {$$ = new casteo.default($2,$4,@1.first_line,@1.first_column);}
 ;        
 
 NATIVA :
@@ -234,18 +239,27 @@ NATIVA :
     | 'logico' {$$= new nativo.default(new Tipo.default(Tipo.DataType.BOOLEANO),$1, @1.first_line, @1.first_column);}
     | 'caracter' {$$= new nativo.default(new Tipo.default(Tipo.DataType.CARACTER),$1, @1.first_line, @1.first_column);}
     | 'cadena' {$$= new nativo.default(new Tipo.default(Tipo.DataType.CADENA),$1, @1.first_line, @1.first_column);}
-    | 'identificador' {$$ = new nativo.default(new Tipo.default(Tipo.DataType.IDENTIFICADOR),$1, @1.first_line, $1.first_column)}
+    | 'identificador' {$$ = new nativo.default(new Tipo.default(Tipo.DataType.IDENTIFICADOR),$1, @1.first_line, @1.first_column)}
 ;
 
 TERNARIO: EXPRESION 'interrogacionCierra' EXPRESION 'dosPuntos' EXPRESION {$$ = new relacional.default(relacional.tipoOp.TERNARIO,$3,$5,$1,@1.first_line,@1.first_column)}
 ;
 
-DECLARACION: TIPO 'identificador' VALOR 'puntoycoma' {$$ = new declaracion.default($2,$1,$3, @1.first_line,@1.first_column)}
+DECLARACION: TIPO IDENTIFICADORES VALOR 'puntoycoma' {$$ = new declaracion.default($2,$1,$3, @1.first_line,@1.first_column)}
 ;
 
 VALOR: 'igual' EXPRESION {$$ = $2}
 | 
 ;
+
+IDENTIFICADORES: IDENTIFICADORES 'coma' 'identificador' {$1.push($3); $$=$1}
+| 'identificador' {$$=[$1];}
+;
+
+ASIGNACION: 'identificador' 'igual' EXPRESION 'puntoycoma' {$$=new asignacion.default($1,$3,@1.first_line, @1.first_column);}
+;
+
+
 
 TIPO: 
     'int' {$$=new Tipo.default(Tipo.DataType.ENTERO);}

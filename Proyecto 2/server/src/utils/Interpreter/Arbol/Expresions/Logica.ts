@@ -23,10 +23,42 @@ export default class Logica extends Instruccion {
   }
 
   interpretar(arbol: Arbol, tabla: tablaSimbolo) {
+    let valueIzq
+    let valueDer
+    let flag1:boolean = false
+    let flag2: boolean = false
+    
+    /**Si alguno de las dos expresiones es un identificador, primero obtengo el valor y verifico los tipos */
+    if(this.operacionIzq.tipoDato.getTipo() == DataType.IDENTIFICADOR){
+        flag1 = true
+        let jsonaux = JSON.stringify(this.operacionIzq).toString()
+        let objjson = JSON.parse(jsonaux)
+        valueIzq = this.operacionIzq.interpretar(arbol,tabla)
+       
+    
+        this.operacionIzq.tipoDato.setTipo(tabla.getSimbolo(objjson.valor).gettipo().getTipo())
+    }
+
+    if(this.operacionDer.tipoDato.getTipo() == DataType.IDENTIFICADOR){
+        flag2 = true
+        let jsonaux = JSON.stringify(this.operacionDer).toString()
+        let objjson = JSON.parse(jsonaux)
+        valueDer = this.operacionDer.interpretar(arbol,tabla)
+ 
+        this.operacionDer.tipoDato.setTipo(tabla.getSimbolo(objjson.valor).gettipo().getTipo())
+    }
+    
+    if(!flag1){
+    valueIzq = this.operacionIzq.interpretar(arbol, tabla);
+    
+    }
+    if(!flag2){
+        valueDer = this.operacionDer.interpretar(arbol, tabla); 
+    }
     /*******************************************OR*******************************************************/
         if(this.tipo== tipoOp.OR){
-            let valueIzq = this.operacionIzq.interpretar(arbol,tabla);
-            let valueDer = this.operacionDer.interpretar(arbol,tabla);
+            
+            
             if(this.operacionIzq.tipoDato.getTipo() == DataType.BOOLEANO && this.operacionDer.tipoDato.getTipo() == DataType.BOOLEANO){
                 this.tipoDato.setTipo(DataType.BOOLEANO)
                 return(valueIzq || valueDer);
@@ -38,8 +70,8 @@ export default class Logica extends Instruccion {
 
         }
         else if(this.tipo== tipoOp.AND){
-            let valueIzq = this.operacionIzq.interpretar(arbol,tabla);
-            let valueDer = this.operacionDer.interpretar(arbol,tabla);
+            
+            
             if(this.operacionIzq.tipoDato.getTipo() == DataType.BOOLEANO && this.operacionDer.tipoDato.getTipo() == DataType.BOOLEANO){
                 this.tipoDato.setTipo(DataType.BOOLEANO)
                 return(valueIzq && valueDer);
@@ -51,7 +83,7 @@ export default class Logica extends Instruccion {
 
         }
         else if(this.tipo == tipoOp.NOT){
-            let valueIzq = this.operacionIzq.interpretar(arbol,tabla); //Solo es necesario un valor
+             //Solo es necesario un valor
             if(this.operacionIzq.tipoDato.getTipo() == DataType.BOOLEANO){
                 this.tipoDato.setTipo(DataType.BOOLEANO)
                 return(!valueIzq)
