@@ -37,7 +37,10 @@ export default class Asignacion extends Instruccion {
        if(this.valor instanceof(Aritmetico) || this.valor instanceof(Logica) || this.valor instanceof(Relacional) || this.valor instanceof(Casteo)){
         valorr = this.valor.interpretar(arbol,tabla)
            console.log(valorr)
-           // console.log(valorr)
+           if(valorr instanceof Errorr){
+           
+            return valorr
+           }
             this.tipoDato = this.valor.tipoDato
     }
  

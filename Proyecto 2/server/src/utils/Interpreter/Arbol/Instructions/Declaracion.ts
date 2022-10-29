@@ -49,6 +49,10 @@ export default class Declaracion extends Instruccion {
         if(this.valor instanceof(Aritmetico) || this.valor instanceof(Logica) || this.valor instanceof(Relacional) || this.valor instanceof(Casteo)){
            
            valorr = this.valor.interpretar(arbol,tabla)
+           if(valorr instanceof Errorr){
+           
+            return valorr
+           }
            console.log(valorr)
            // console.log(valorr)
             this.tipoDato = this.valor.tipoDato
