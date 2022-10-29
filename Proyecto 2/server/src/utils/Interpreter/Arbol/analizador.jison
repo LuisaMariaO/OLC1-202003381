@@ -11,6 +11,7 @@
     const declaracion = require('./Instructions/Declaracion')
     const asignacion = require('./Instructions/Asignacion')
     const casteo = require('./Expresions/Casteo')
+    const incredecre = require('./Instructions/IncreDecre')
 
     const errorr = require('./Exceptions/Error')
 
@@ -48,6 +49,10 @@ true|false                                                  return 'logico';
 /*IMPRIMIR*/
 "println"                                                   { return 'println';}
 "print"                                                     { return 't_print';}
+
+/*INCREMENTOS Y DECREMENTOS*/
+"++"                                                        return 'incremento'
+"--"                                                        return 'decremento'
 
 /*OPERADORES ARITMETICOS*/
 "+"                                                         return 'mas';
@@ -96,9 +101,7 @@ true|false                                                  return 'logico';
 ([A-Z0-9_])+                                                return 'identificador';
 ","                                                         return 'coma'
 
-/*INCREMENTOS Y DECREMENTOS*/
-"++"                                                        return 'incremento'
-"--"                                                        return 'decremento'
+
 
 /*ESTRUCTURAS DE DATOS*/
 //Vector
@@ -165,6 +168,7 @@ true|false                                                  return 'logico';
 /lex
 
 //Precedencias
+%right 'incremento' 'decremento'
 %left 'or'
 %left 'and'
 %left 'not'
@@ -191,6 +195,7 @@ INSTRUCCIONES: INSTRUCCIONES INSTRUCCION {$1.push($2); $$=$1;}
 INSTRUCCION : PRINT                 {$$=$1;}
             | DECLARACION           {$$=$1;}
             | ASIGNACION            {$$=$1;}
+            | INCREDECRE            {$$=$1;}
             | INVALID               {console.log("Un error lexico");$$=new errorr.default("->Error Lexico<-", $1, @1.first_line, @1.first_column); } //Errores lexicos
             | error                 {console.log("Un error sintactico"); $$=new errorr.default("->Error Sintactico<-", $1, @1.first_line, @1.first_column);} //Errores sintacticos, recuperacion con ;
 ;
@@ -208,6 +213,10 @@ IMPRIMIBLE: EXPRESION {$$=$1}
 
 EXPRESION :
         'menos' EXPRESION %prec UMENOS {$$ = new aritmetica.default(aritmetica.tipoOp.NEGACION,$2,$2,@1.first_line,@1.first_column);}
+        
+        | EXPRESION incremento  {$$ = new incredecre.default(incredecre.tipoOp.INCREMENTO,$1,@1.first_line,@1.first_column);}
+        | EXPRESION decremento  {$$ = new incredecre.default(incredecre.tipoOp.DECREMENTO,$1,@1.first_line,@1.first_column);}
+       
         |EXPRESION 'mas' EXPRESION {$$ = new aritmetica.default(aritmetica.tipoOp.SUMA,$1,$3,@1.first_line,@1.first_column);}
         | EXPRESION 'menos' EXPRESION {$$ = new aritmetica.default(aritmetica.tipoOp.RESTA,$1,$3,@1.first_line,@1.first_column);}
         | EXPRESION 'por' EXPRESION {$$ = new aritmetica.default(aritmetica.tipoOp.MULTIPLICACION,$1,$3,@1.first_line,@1.first_column);}
@@ -231,6 +240,8 @@ EXPRESION :
         | NATIVA{$$=$1}
 
         | 'parentesisAbre' TIPO 'parentesisCierra' EXPRESION {$$ = new casteo.default($2,$4,@1.first_line,@1.first_column);}
+
+      
 ;        
 
 NATIVA :
@@ -248,7 +259,7 @@ TERNARIO: EXPRESION 'interrogacionCierra' EXPRESION 'dosPuntos' EXPRESION {$$ = 
 DECLARACION: TIPO IDENTIFICADORES VALOR 'puntoycoma' {$$ = new declaracion.default($2,$1,$3, @1.first_line,@1.first_column)}
 ;
 
-VALOR: 'igual' EXPRESION {$$ = $2}
+VALOR: 'igual' IMPRIMIBLE {$$ = $2}
 | 
 ;
 
@@ -256,9 +267,13 @@ IDENTIFICADORES: IDENTIFICADORES 'coma' 'identificador' {$1.push($3); $$=$1}
 | 'identificador' {$$=[$1];}
 ;
 
-ASIGNACION: 'identificador' 'igual' EXPRESION 'puntoycoma' {$$=new asignacion.default($1,$3,@1.first_line, @1.first_column);}
+ASIGNACION: 'identificador' 'igual' IMPRIMIBLE 'puntoycoma' {$$=new asignacion.default($1,$3,@1.first_line, @1.first_column);}
 ;
 
+
+INCREDECRE: EXPRESION 'incremento' 'puntoycoma' {$$ = new incredecre.default(incredecre.tipoOp.INCREMENTO,$1,@1.first_line,@1.first_column);}
+| EXPRESION 'decremento' 'puntoycoma' {$$ = new incredecre.default(incredecre.tipoOp.DECREMENTO,$1,@1.first_line,@1.first_column);}
+;
 
 
 TIPO: 

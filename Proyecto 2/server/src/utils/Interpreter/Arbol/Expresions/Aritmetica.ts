@@ -9,6 +9,7 @@ import { timeThursdays } from 'd3';
 import { timingSafeEqual } from 'crypto';
 import { identity } from 'lodash';
 import Nativo from './Native';
+import IncreDecre from '../Instructions/IncreDecre';
 
 export default class Aritmetico extends Instruccion {
   operacionIzq: Instruccion;
@@ -26,7 +27,8 @@ export default class Aritmetico extends Instruccion {
   }
 
   interpretar(arbol: Arbol, tabla: tablaSimbolo) {
-
+    console.log(this.operacionIzq)
+    console.log(this.operacionDer)
     let valueIzq
     let valueDer
     let flag1:boolean = false
@@ -50,6 +52,10 @@ export default class Aritmetico extends Instruccion {
         valueDer = this.operacionDer.interpretar(arbol,tabla)
  
         this.operacionDer.tipoDato.setTipo(tabla.getSimbolo(objjson.valor).gettipo().getTipo())
+    }
+    if(this.operacionDer instanceof IncreDecre){
+        console.log("Hiiiiiiiiiiiii")
+        valueDer = this.operacionDer.interpretar(arbol,tabla)
     }
     
     if(!flag1){

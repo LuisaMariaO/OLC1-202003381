@@ -8,6 +8,7 @@ import Aritmetico from '../Expresions/Aritmetica';
 import Logica from '../Expresions/Logica';
 import Relacional from '../Expresions/Relacional';
 import Casteo from '../Expresions/Casteo';
+import IncreDecre from './IncreDecre';
 
 export default class Asignacion extends Instruccion {
     private id: String;
@@ -34,7 +35,7 @@ export default class Asignacion extends Instruccion {
         if(busqueda!=null){
        // console.log(busqueda.tipo.gettipo())
        // console.log(this.valor.tipoDato.getTipo())
-       if(this.valor instanceof(Aritmetico) || this.valor instanceof(Logica) || this.valor instanceof(Relacional) || this.valor instanceof(Casteo)){
+       if(this.valor instanceof(Aritmetico) || this.valor instanceof(Logica) || this.valor instanceof(Relacional) || this.valor instanceof(Casteo) || this.valor instanceof(IncreDecre)){
         valorr = this.valor.interpretar(arbol,tabla)
            console.log(valorr)
            if(valorr instanceof Errorr){

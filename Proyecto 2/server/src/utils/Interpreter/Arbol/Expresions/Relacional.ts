@@ -29,6 +29,8 @@ export default class Relacional extends Instruccion {
     let valueDer
     let flag1:boolean = false
     let flag2: boolean = false
+    let flag3: boolean = false
+    let condicion
     
     /**Si alguno de las dos expresiones es un identificador, primero obtengo el valor y verifico los tipos */
     if(this.operacionIzq.tipoDato.getTipo() == DataType.IDENTIFICADOR){
@@ -49,13 +51,28 @@ export default class Relacional extends Instruccion {
  
         this.operacionDer.tipoDato.setTipo(tabla.getSimbolo(objjson.valor).gettipo().getTipo())
     }
-    
+
+    if(this.condicion!=null){
+    if(this.condicion.tipoDato.getTipo() == DataType.IDENTIFICADOR){
+        flag3 = true
+        let jsonaux = JSON.stringify(this.condicion).toString()
+        let objjson = JSON.parse(jsonaux)
+        condicion = this.condicion.interpretar(arbol,tabla)
+ 
+        this.condicion.tipoDato.setTipo(tabla.getSimbolo(objjson.valor).gettipo().getTipo())
+    }
+
+    }
+
     if(!flag1){
     valueIzq = this.operacionIzq.interpretar(arbol, tabla);
     
     }
     if(!flag2){
         valueDer = this.operacionDer.interpretar(arbol, tabla); 
+    }
+    if(!flag3){
+        condicion = this.condicion?.interpretar(arbol,tabla)
     }
     /*******************************************MAYOR*******************************************************/
         if(this.tipo== tipoOp.MAYOR){
@@ -938,11 +955,11 @@ export default class Relacional extends Instruccion {
         else if(this.tipo == tipoOp.TERNARIO){
             /**TODO: PROGRAMAR PARA SER INSTRUCCION PARA ASIGNACION DE VARIABLE*/
              //Esta operacion no necesita dos valores
-            let valueDer = this.operacionDer.interpretar(arbol,tabla);
-            let cond = this.condicion?.interpretar(arbol,tabla)
+           
+            
             if(this.condicion!=null){
             if(this.condicion?.tipoDato.getTipo() == DataType.BOOLEANO){
-                if(cond){
+                if(condicion){
                     this.tipoDato.setTipo(this.operacionIzq.tipoDato.getTipo())
                     return valueIzq
                 }

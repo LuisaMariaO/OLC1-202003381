@@ -11,11 +11,11 @@ export default class SymbolTable {
   }
 
   public getValor(id: String): any{
-    let valor = this.tablaActual.get(id);
+    let valor = this.tablaActual.get(id.toLowerCase());
     return valor;
   }
   public getSimbolo(id: String):Simbolo | any{
-    let valor: Simbolo |any = this.tablaActual.get(id)
+    let valor: Simbolo |any = this.tablaActual.get(id.toLowerCase())
     return valor;
   }
 
@@ -33,7 +33,7 @@ export default class SymbolTable {
           oldValue = actual.getTabla().get(id);
           actual.getTabla().delete(id);
           actual.getTabla().set(id, valor);
-          break;
+          break
         }
         actual = actual.getAnterior();
       }
