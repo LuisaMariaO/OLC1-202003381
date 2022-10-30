@@ -12,6 +12,7 @@
     const asignacion = require('./Instructions/Asignacion')
     const casteo = require('./Expresions/Casteo')
     const incredecre = require('./Instructions/IncreDecre')
+    const declaracionvec = require ('./Instructions/DeclaracionVector')
 
     const errorr = require('./Exceptions/Error')
 
@@ -97,6 +98,8 @@ true|false                                                  return 'logico';
 "{"                                                         return 'llaveAbre';
 "}"                                                         return 'llaveCierra';
 
+"new"                                                       return 'new'
+
 /*IDENTIFICADORES*/
 ([A-Z0-9_])+                                                return 'identificador';
 ","                                                         return 'coma'
@@ -107,7 +110,7 @@ true|false                                                  return 'logico';
 //Vector
 "["                                                         return 'corcheteAbre'
 "]"                                                         return 'corcheteCierra'
-"new"                                                       return 'new'
+
 
 /*SENTENCIAS DE CONTROL*/
 //If
@@ -196,6 +199,7 @@ INSTRUCCION : PRINT                 {$$=$1;}
             | DECLARACION           {$$=$1;}
             | ASIGNACION            {$$=$1;}
             | INCREDECRE            {$$=$1;}
+            | DECLARACIONVECTOR     {$$=$1;}
             | INVALID               {console.log("Un error lexico");$$=new errorr.default("->Error Lexico<-", $1, @1.first_line, @1.first_column); } //Errores lexicos
             | error                 {console.log("Un error sintactico"); $$=new errorr.default("->Error Sintactico<-", $1, @1.first_line, @1.first_column);} //Errores sintacticos, recuperacion con ;
 ;
@@ -283,4 +287,42 @@ TIPO:
     | 'char' {$$=new Tipo.default(Tipo.DataType.CARACTER);}
     | 'string' {$$=new Tipo.default(Tipo.DataType.CADENA);}
 ;
+/*VECTORES*/
+DECLARACIONVECTOR: TIPO 'corcheteAbre' 'corcheteCierra'  DIMENSION2 'identificador' 'igual' 'new' TIPO 'corcheteAbre' EXPRESION 'corcheteCierra' DIMENSION2EXPRESION puntoycoma {
+   let dimen
+   if($4==null && $12==null ){
+    dimen = 1
+   }
+   else{
+   dimen = 2
+   }
+    $$=new declaracionvec.default($5,$1,dimen,$8,$10,$12,null,@1.first_line,@1.first_column);}
+| TIPO 'corcheteAbre' 'corcheteCierra' DIMENSION2 'identificador' 'igual' 'llaveAbre' LISTA 'llaveCierra' puntoycoma {
+    let dimen2
+    if($4==null){
+       dimen2=1 
+    }
+    else{
+        dimen2 = 2
+    }
+    $$=new declaracionvec.default($5,$1,dimen2,$1,null,null,$8,@1.first_line,@1.first_column);}
+;
 
+LISTA:LISTA1 {$$=$1}
+| LISTA2 {$$=$1}
+;
+
+LISTA1: LISTA1 'coma' EXPRESION {$1.push($3); $$=$1}
+| EXPRESION {$$=[$1]}
+;
+
+LISTA2: 'llaveAbre' LISTA1 'llaveCierra' 'coma' 'llaveAbre' LISTA1 llaveCierra {$$=[$2,$6]}
+;
+
+DIMENSION2: 'corcheteAbre' 'corcheteCierra' {$$=2}
+|
+;
+
+DIMENSION2EXPRESION: 'corcheteAbre' EXPRESION 'corcheteCierra' {$$=$2;}
+|
+;
