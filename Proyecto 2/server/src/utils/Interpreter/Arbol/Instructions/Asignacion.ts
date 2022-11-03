@@ -31,7 +31,10 @@ export default class Asignacion extends Instruccion {
             }
             tablaActual = tablaActual.getAnterior()
         }
-
+        if(this.valor instanceof Errorr){
+           
+            return this.valor
+           }
         if(busqueda!=null){
        // console.log(busqueda.tipo.gettipo())
        // console.log(this.valor.tipoDato.getTipo())

@@ -11,10 +11,12 @@ export const parse = (req: Request & unknown, res: Response): void => {
     const { peticion } = req.body;
 
     try { 
-      let ast = new Three(parser.parse(peticion));
+      const returnThree = parser.parse(peticion)
+      let ast = new Three(returnThree);
       var tabla = new SymbolTable();
       ast.settablaGlobal(tabla);
       for (let i of ast.getinstrucciones()) {
+       
         if (i instanceof Errores) {
           ast.adderror(i);
           ast.actualizaConsola((<Errores>i).returnError());
@@ -30,7 +32,10 @@ export const parse = (req: Request & unknown, res: Response): void => {
         
       }
       listaErrores = ast.getErrores()
-      res.json({ consola: ast.getconsola(), errores: listaErrores, simbolos: [] });
+      const arbolGrafo = ast.getTree("AST")
+      console.log(arbolGrafo)
+
+      res.json({ consola: ast.getconsola(), arbol:arbolGrafo, errores: listaErrores, simbolos: [] });
     } catch (err) {
         console.log(err)
         res.json({ consola: '', error: err, errores: listaErrores, simbolos: [] });

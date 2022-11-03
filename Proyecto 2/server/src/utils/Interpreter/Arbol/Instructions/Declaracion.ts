@@ -75,7 +75,10 @@ export default class Declaracion extends Instruccion {
         if(busqueda==null){ //Si no encuentra la variable, la puede declarar, de lo contrario es un eror
         let value = this.valor
       
-        
+        if(this.valor instanceof Errorr){
+           
+            return this.valor
+           }
 
         if(value.tipoDato.getTipo() == this.tipo.getTipo()  ||value.tipoDato.getTipo() == DataType.IDENTIFICADOR){//Verificando que el tipo de variable concuerde con la expresion
             if(value.tipoDato.getTipo() == DataType.IDENTIFICADOR){
