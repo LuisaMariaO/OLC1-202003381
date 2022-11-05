@@ -98,7 +98,7 @@ export default class DeclaracionVector extends Instruccion {
                     let dimension2 = this.valor2?.interpretar(arbol,tabla)
                     
                   
-                    if(!isNaN(dimension1) && !isNaN(dimension2)){
+                    if(!isNaN(dimension1) || !isNaN(dimension2)){
                         let dim1 =[]
                         let dim2 = []
                         for(let i = 0; i<dimension1; i++){

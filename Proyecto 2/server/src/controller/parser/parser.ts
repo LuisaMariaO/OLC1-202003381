@@ -31,9 +31,12 @@ export const parse = (req: Request & unknown, res: Response): void => {
         }  
         
       }
+      ast.errorsTable() //Generando la tabla de errores
+      ast.symbolsTable()
+      //ast.generatePdf()
       listaErrores = ast.getErrores()
       const arbolGrafo = ast.getTree("AST")
-      console.log(arbolGrafo)
+      //console.log(arbolGrafo)
 
       res.json({ consola: ast.getconsola(), arbol:arbolGrafo, errores: listaErrores, simbolos: [] });
     } catch (err) {

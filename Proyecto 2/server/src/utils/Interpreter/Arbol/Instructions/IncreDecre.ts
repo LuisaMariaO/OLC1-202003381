@@ -36,7 +36,7 @@ export default class IncreDecre extends Instruccion {
         if(this.valor instanceof Aritmetico){
            this.valor.interpretar(arbol,tabla)
         }
-        console.log(this.valor)
+        //console.log(this.valor)
         return new Errorr("->Error Semántico<-","INCREMENTO o DECREMENTO inválido",this.linea,this.columna)
     }
         let jsonaux = JSON.stringify(this.valor).toString()
@@ -53,9 +53,9 @@ export default class IncreDecre extends Instruccion {
             }
             tablaActual = tablaActual.getAnterior()
         }
-        console.log(busqueda)
+        //console.log(busqueda)
         if(busqueda!=null){
-            valorr = Number(busqueda.getvalor())
+            //valorr = Number(busqueda.getvalor())
             
             if(!isNaN(valorr)){
                 this.tipoDato.setTipo(busqueda.gettipo().getTipo()) //Le doy el tipo de dato de la variable, suponiendo que voy a usar esto como instrucción y expresión

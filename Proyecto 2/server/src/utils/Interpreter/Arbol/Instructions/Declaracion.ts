@@ -53,7 +53,7 @@ export default class Declaracion extends Instruccion {
            
             return valorr
            }
-           console.log(valorr)
+           //console.log(valorr)
            // console.log(valorr)
             this.tipoDato = this.valor.tipoDato
 

@@ -27,8 +27,8 @@ export default class Aritmetico extends Instruccion {
   }
 
   interpretar(arbol: Arbol, tabla: tablaSimbolo) {
-    console.log(this.operacionIzq)
-    console.log(this.operacionDer)
+    //console.log(this.operacionIzq)
+    //console.log(this.operacionDer)
     let valueIzq
     let valueDer
     let flag1:boolean = false
@@ -54,7 +54,7 @@ export default class Aritmetico extends Instruccion {
         this.operacionDer.tipoDato.setTipo(tabla.getSimbolo(objjson.valor).gettipo().getTipo())
     }
     if(this.operacionDer instanceof IncreDecre){
-        console.log("Hiiiiiiiiiiiii")
+      //  console.log("Hiiiiiiiiiiiii")
         valueDer = this.operacionDer.interpretar(arbol,tabla)
     }
     
@@ -392,11 +392,11 @@ export default class Aritmetico extends Instruccion {
             
             
             if(this.operacionIzq.tipoDato.getTipo() == DataType.ENTERO){
-                console.log("Hola0")
-                console.log(valueIzq)
-                console.log(valueDer)
+               // console.log("Hola0")
+                //console.log(valueIzq)
+                //console.log(valueDer)
                 if(this.operacionDer.tipoDato.getTipo() == DataType.ENTERO){
-                    console.log("Hola1")
+                  //  console.log("Hola1")
                     this.tipoDato.setTipo(DataType.ENTERO)
                     return (Number(valueIzq) * Number(valueDer))
                 }

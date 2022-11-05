@@ -1,5 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Index from "./Pages";
+import Errores from "./Pages/errores";
+
 import './App.css'
 
 function App() {
@@ -9,6 +11,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Index/>}></Route>
         <Route path="*" element={<Navigate to="/" replace={true}></Navigate>} exact={true}></Route>
+        <Route path="/errores" element={<Errores/>}> </Route>
       </Routes>
     </BrowserRouter>
  

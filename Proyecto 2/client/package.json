@@ -11,6 +11,8 @@
     "@uiw/react-codemirror": "^4.12.4",
     "ace-builds": "^1.12.3",
     "axios": "^1.1.3",
+    "babel-preset-es2015": "^6.24.1",
+    "file-saver": "^2.0.5",
     "react": "^18.2.0",
     "react-ace": "^10.1.0",
     "react-dom": "^18.2.0",

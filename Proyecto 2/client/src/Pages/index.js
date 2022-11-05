@@ -15,13 +15,41 @@ import "ace-builds/src-noconflict/theme-github";
 import "ace-builds/src-noconflict/theme-dracula"
 import "ace-builds/src-noconflict/ext-language_tools";
 
+import { saveAs } from 'file-saver';
+
 function Index(){
     const {response, setResponse} = useState("Hola")
     const { value, setValue } = useState("")
+
+    
     
     const miEditor = useRef();
     const miConsola = useRef();
    
+    const [file, setFile] = useState()
+    let fileReader
+
+    function handleChange(event) {
+      setFile(event.target.files[0])
+     
+    }
+
+    
+    const handleFileRead =(e) =>{
+        const content = fileReader.result
+        
+       
+        miEditor.current.editor.setValue(content)
+        miEditor.current.editor.clearSelection()
+    };
+   
+    const handleSubmit = (event) =>{
+        event.preventDefault()
+        fileReader = new FileReader()
+        fileReader.onloadend = handleFileRead;
+        fileReader.readAsText(file)
+
+    };
     
     const changeEditor = (valueA) => {
         alert("hola")
@@ -38,11 +66,74 @@ function Index(){
         //alert(this.refs.ace.editor.getValue())
        // alert(editor)
     }
+    const clean = () =>{
+        miEditor.current.editor.setValue("")
+        miConsola.current.editor.setValue("")
+    }
+
+    const saveFile=()=>{
+        var FileSaver = require('file-saver');
+        var file = new File([miEditor.current.editor.getValue()], "MFMScript.olc", {type: "text/plain;charset=utf-8"});
+        FileSaver.saveAs(file);
+    }
+
+    const downloadErrors=()=>{
+        
+    }
+
+  
     
     return(
         <>
         
-        <Header></Header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+            <a class="navbar-brand" href="#">MFM Script &nbsp;
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#239B56" class="bi bi-code-square" viewBox="0 0 16 16">
+            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+            <path d="M6.854 4.646a.5.5 0 0 1 0 .708L4.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0zm2.292 0a.5.5 0 0 0 0 .708L11.793 8l-2.647 2.646a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708 0z"/>
+            </svg>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+                </li>
+
+                <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Archivo</a>
+                <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#" onClick={clean}>Nuevo</a></li>
+                <li><a class="dropdown-item" href="#">Abrir</a></li>
+                <li><a class="dropdown-item" href="#" onClick={saveFile}>Guardar</a></li>
+                </ul>
+                </li>
+
+                <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Reportes</a>
+                <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#" onClick={downloadErrors}>Errores</a></li>
+                <li><a class="dropdown-item" href="#">AST</a></li>
+                <li><a class="dropdown-item" href="#">Tabla de Símbolos</a></li>
+                </ul>
+                </li>
+                
+            </div>
+            </div>
+        </div>  
+            </nav>
+      
+
+  
+        <form onSubmit={handleSubmit}>
+          <input type="file" accept=".olc" onChange={handleChange}  />
+          <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
+
+        <br></br>
         <div class="container-fluid">
         <div class="row">
         
@@ -59,7 +150,7 @@ function Index(){
         fontSize={17}
         editorProps={{ $blockScrolling: true}}
         
-         />,
+         />
         </div>
 
         <div class="col" >
@@ -75,7 +166,7 @@ function Index(){
         editorProps={{ $blockScrolling: true }}
         readOnly={true}
         showGutter={false}
-         />,
+         />
         </div>
         
 
@@ -84,7 +175,7 @@ function Index(){
 
         </div>
         </div>
-        <br></br>
+       
             &nbsp; &nbsp;
             <button type="button" class="btn btn-success" onClick={postParse}>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play" viewBox="0 0 16 16">
@@ -93,7 +184,7 @@ function Index(){
                 Ejecutar
             </button>
                 &nbsp; &nbsp;
-            <button type="button" class="btn btn-secondary">
+            <button type="button" class="btn btn-secondary" onClick={clean}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-stars" viewBox="0 0 16 16">
                 <path d="M7.657 6.247c.11-.33.576-.33.686 0l.645 1.937a2.89 2.89 0 0 0 1.829 1.828l1.936.645c.33.11.33.576 0 .686l-1.937.645a2.89 2.89 0 0 0-1.828 1.829l-.645 1.936a.361.361 0 0 1-.686 0l-.645-1.937a2.89 2.89 0 0 0-1.828-1.828l-1.937-.645a.361.361 0 0 1 0-.686l1.937-.645a2.89 2.89 0 0 0 1.828-1.828l.645-1.937zM3.794 1.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387A1.734 1.734 0 0 0 4.593 5.69l-.387 1.162a.217.217 0 0 1-.412 0L3.407 5.69A1.734 1.734 0 0 0 2.31 4.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387A1.734 1.734 0 0 0 3.407 2.31l.387-1.162zM10.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732L9.1 2.137a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L10.863.1z"/>
                 </svg>

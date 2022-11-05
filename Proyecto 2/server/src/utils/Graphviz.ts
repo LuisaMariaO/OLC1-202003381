@@ -9,7 +9,7 @@ export class CDigraph extends Digraph {
   }
 
   public async generate(){
-    const render = CliRenderer({ outputFile: "./example.png", format: "png" });
+    const render = CliRenderer({ outputFile: "./reports/AST.svg", format: "svg" });
     await (async () => {
         try {
           await render(

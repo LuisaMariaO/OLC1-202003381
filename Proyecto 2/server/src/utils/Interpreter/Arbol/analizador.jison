@@ -27,8 +27,8 @@
 %%
 /*COMENTARIOS. 
 Los comentarios son ignorados*/
-\/\*[^\/]+\*\/              {}
-\/\/.+                      {}
+\/\*[^\/]+\*\/              {console.log(yytext)}
+\/\/.+                      {console.log(yytext)}
 
 /*TIPOS DE DATO*/
 //Palabras reservadas
@@ -64,7 +64,7 @@ true|false                                                  return 'logico';
 "^"                                                         return 'potencia';
 "%"                                                         return 'modulo';
 
-
+"&&"                                                        {return 'and';}
 
 
 /*OPERADORES RELACIONALES*/
@@ -88,7 +88,7 @@ true|false                                                  return 'logico';
 
 /*OPERADORES LOGICOS*/
 "||"                                                        return 'or';
-"&&"                                                        return 'and';
+
 
 /*SIGNOS DE AGRUPACION*/
 "("                                                         { return 'parentesisAbre';}
@@ -108,23 +108,9 @@ true|false                                                  return 'logico';
 "elif"                                                      return 'elif'
 
 //Switch case
-"switch"                                                    return 'else'
+"switch"                                                    return 'switch'
 "case"                                                      return 'case'
 "default"                                                   return 'default'
-
-/*IDENTIFICADORES*/
-([A-Z0-9_])+                                                return 'identificador';
-","                                                         return 'coma'
-
-
-
-/*ESTRUCTURAS DE DATOS*/
-//Vector
-"["                                                         return 'corcheteAbre'
-"]"                                                         return 'corcheteCierra'
-
-
-
 
 //While
 "while"                                                     return 'while';
@@ -143,8 +129,7 @@ true|false                                                  return 'logico';
 "continue"                                                  return 'continue'
 "return"                                                    return 'return';
 
-
-
+"void"                                                      return 'void'
 
 /*FUNCIONES VARIAS*/
 "toLower"                                                   return 'toLower';
@@ -161,10 +146,31 @@ true|false                                                  return 'logico';
 "pop"                                                       return 'pop';
 "run"                                                       return 'run';
 
+/*IDENTIFICADORES*/
+([A-Z0-9_])+                                                return 'identificador';
+","                                                         return 'coma'
+
+
+
+/*ESTRUCTURAS DE DATOS*/
+//Vector
+"["                                                         return 'corcheteAbre'
+"]"                                                         return 'corcheteCierra'
+
+
+
+
+
+
+
+
+
+
+
 
 
 [ \r\t]+ { }
-\n {}
+[\n]+ {}
 
 
 
@@ -257,25 +263,101 @@ INSTRUCCION : PRINT   {
                     nodeInstruction: (new Nodo("INSTRUCCION")).generateProduction([$1.nodeInstruction]) 
                 }
             }
+            | SWITCH {
+                $$={
+                    returnInstruction: $1.returnInstruction, 
+                    nodeInstruction: (new Nodo("INSTRUCCION")).generateProduction([$1.nodeInstruction]) 
+                }
+            }
+            | WHILE {
+                    $$={
+                    returnInstruction: $1.returnInstruction, 
+                    nodeInstruction: (new Nodo("INSTRUCCION")).generateProduction([$1.nodeInstruction]) 
+                }
+            }
+            | FOR {
+                    $$={
+                    returnInstruction: $1.returnInstruction, 
+                    nodeInstruction: (new Nodo("INSTRUCCION")).generateProduction([$1.nodeInstruction]) 
+                }
+            }
+            | DOWHILE {
+                    $$={
+                    returnInstruction: $1.returnInstruction, 
+                    nodeInstruction: (new Nodo("INSTRUCCION")).generateProduction([$1.nodeInstruction]) 
+                }
+            }
+            | DOUNTIL{
+                    $$={
+                    returnInstruction: $1.returnInstruction, 
+                    nodeInstruction: (new Nodo("INSTRUCCION")).generateProduction([$1.nodeInstruction]) 
+                }
+            }
+            | FUNCION{
+                    $$={
+                    returnInstruction: $1.returnInstruction, 
+                    nodeInstruction: (new Nodo("INSTRUCCION")).generateProduction([$1.nodeInstruction]) 
+                }
+            }
+            | METODO{
+                    $$={
+                    returnInstruction: $1.returnInstruction, 
+                    nodeInstruction: (new Nodo("INSTRUCCION")).generateProduction([$1.nodeInstruction]) 
+                }
+            }
+
+            | LLAMADA {
+                    $$={
+                    returnInstruction: $1.returnInstruction, 
+                    nodeInstruction: (new Nodo("INSTRUCCIONBLOQUE")).generateProduction([$1.nodeInstruction]) 
+                }
+            }
+            | PUSH {
+                    $$={
+                    returnInstruction: $1.returnInstruction, 
+                    nodeInstruction: (new Nodo("INSTRUCCION")).generateProduction([$1.nodeInstruction]) 
+                }
+            }
+
+            | POP {
+                    $$={
+                    returnInstruction: $1.returnInstruction, 
+                    nodeInstruction: (new Nodo("INSTRUCCION")).generateProduction([$1.nodeInstruction]) 
+                }
+            }
+
+            | RUN {
+                    $$={
+                    returnInstruction: $1.returnInstruction, 
+                    nodeInstruction: (new Nodo("INSTRUCCION")).generateProduction([$1.nodeInstruction]) 
+                }
+            }
+            
+            | PRINTLN{
+                    $$={
+                    returnInstruction: $1.returnInstruction, 
+                    nodeInstruction: (new Nodo("INSTRUCCION")).generateProduction([$1.nodeInstruction]) 
+                }
+            }
             | INVALID {
                 console.log("Un error lexico");
                 $$={
                    returnInstruction: new errorr.default("->Error Lexico<-", $1, @1.first_line, @1.first_column), 
-                   nodeInstruction: new Nodo("ERROR LEXICO")
+                   nodeInstruction: null
                    
                 }
                 } //Errores lexicos
             | error  {console.log("Un error sintactico"); 
             $$={
                returnInstruction: new errorr.default("->Error Sintactico<-", $1, @1.first_line, @1.first_column),
-               nodeInstruction: new Nodo("ERROR SEMANTICO")
+               nodeInstruction: null
 
             }} //Errores sintacticos
 ;
 
 
 
-PRINT : t_print parentesisAbre IMPRIMIBLE parentesisCierra puntoycoma { 
+PRINT : 't_print' 'parentesisAbre' IMPRIMIBLE 'parentesisCierra' 'puntoycoma' { 
     nodoprint0 = new Nodo("t_print")
     nodoprint0.setHijos([new Nodo($1)])
 
@@ -290,6 +372,25 @@ PRINT : t_print parentesisAbre IMPRIMIBLE parentesisCierra puntoycoma {
     $$={
     returnInstruction: new print.default($3.returnInstruction,@1.first_line,@1.first_column),
      nodeInstruction: (new Nodo('PRINT')).generateProduction([nodoprint0, nodoprint1, $3.nodeInstruction, nodoprint2, nodoprint3])
+    }
+    }
+;
+
+PRINTLN : 'println' 'parentesisAbre' IMPRIMIBLE 'parentesisCierra' 'puntoycoma' { 
+    nodoprintl0 = new Nodo("println")
+    nodoprintl0.setHijos([new Nodo($1)])
+
+    nodoprintl1 = new Nodo("parentesisAbre")
+    nodoprintl1.setHijos([new Nodo($2)])
+
+    nodoprintl2 = new Nodo("parentesisCierra")
+    nodoprintl2.setHijos([new Nodo($4)])
+
+    nodoprintl3 = new Nodo("puntoycoma")
+    nodoprintl3.setHijos([new Nodo($5)])
+    $$={
+    returnInstruction: new errorr.default("->Error Semántico<-","Instrucción no codificada",@1.first_line,@1.first_column),
+     nodeInstruction: (new Nodo('PRINTLN')).generateProduction([nodoprintl0, nodoprintl1, $3.nodeInstruction, nodoprintl2, nodoprintl3])
     }
     }
 ;
@@ -325,15 +426,15 @@ EXPRESION :
              nodoincremento= new Nodo("incremento")
              nodoincremento.setHijos([new Nodo($2)])
             $$ = {
-               returnInstruction: new incredecre.default(incredecre.tipoOp.INCREMENTO,$1.returnInstruction,@1.first_line,@1.first_column),
+               returnInstruction: new incredecre.default(incredecre.tipoOp.INCREMENTO,$1.returnInstruction,$1.returnInstruction,@1.first_line,@1.first_column),
                nodeInstruction: new Nodo("EXPRESION").generateProduction([$1.nodeInstruction,nodoincremento])
             }}
         | EXPRESION decremento  {
             nododecremento= new Nodo("decremento")
             nododecremento.setHijos([new Nodo($2)])
             $$ = {
-               returnInstruction: new incredecre.default(incredecre.tipoOp.DECREMENTO,$1.returnInstruction,@1.first_line,@1.first_column),
-                nodeInstruction: new Nodo("decremento").generateProduction([$1.nodeInstruction,nododecremento])
+               returnInstruction: new incredecre.default(incredecre.tipoOp.DECREMENTO,$1.returnInstruction,$1.returnInstruction,@1.first_line,@1.first_column),
+                nodeInstruction: new Nodo("EXPRESION").generateProduction([$1.nodeInstruction,nododecremento])
         }}
 
         | 'identificador' 'corcheteAbre' EXPRESION 'corcheteCierra'{
@@ -346,6 +447,8 @@ EXPRESION :
                 nodeInstruction: new Nodo("EXPRESION").generateProduction([nodoacceso0,nodoacceso1,$3.nodeInstruction,nodoacceso2])
             }
         }
+
+        
        
         |EXPRESION 'mas' EXPRESION {
             nodomas= new Nodo("mas")
@@ -403,7 +506,7 @@ EXPRESION :
                nodeInstruction: new Nodo("EXPRESION").generateProduction([$1.nodeInstruction,nodomayor,$3.nodeInstruction])
             }}
         | EXPRESION 'menor' EXPRESION {
-            nodomenor= new Nodo("decremento")
+            nodomenor= new Nodo("menor")
             nodomenor.setHijos([new Nodo($2)])
             $$ = {
                returnInstruction: new relacional.default(relacional.tipoOp.MENOR,$1.returnInstruction,$3.returnInstruction,null,@1.first_line,@1.first_column),
@@ -445,14 +548,16 @@ EXPRESION :
             $$ = {
                returnInstruction: new logica.default(logica.tipoOp.OR,$1.returnInstruction,$3.returnInstruction,@1.first_line,@1.first_column),
                nodeInstruction: new Nodo("EXPRESION").generateProduction([$1.nodeInstruction,nodoor,$3.nodeInstruction])
-            }}
+            }
+            }
         | EXPRESION 'and' EXPRESION{
             nodoand = new Nodo("and")
             nodoand.setHijos([new Nodo($2)])
             $$ = {
-               returnInstruction: new logica.default(logica.tipoOp.AND,$1.returnInstruction,$3,returnInstruction,@1.first_line,@1.first_column),
+               returnInstruction: new logica.default(logica.tipoOp.AND,$1.returnInstruction,$3.returnInstruction,@1.first_line,@1.first_column),
                nodeInstruction: new Nodo("EXPRESION").generateProduction([$1.nodeInstruction,nodoand,$3.nodeInstruction])
-            }}
+            }
+            }
         | 'not' EXPRESION{
             nodonot = new Nodo("not")
             nodonot.setHijos([new Nodo($1)])
@@ -494,6 +599,91 @@ EXPRESION :
                }
             }
 
+        | 'toLower' 'parentesisAbre' 'cadena' 'parentesisCierra'{
+            nodolower0 = new Nodo("toLower").generateProduction([$1])
+            nodolower1 = new Nodo("parentesisAbre").generateProduction([$2])
+            nodolower2 = new Nodo("cadena").generateProduction([$3])
+            nodolower3 = new Nodo("parentesisCierra").generateProduction([$4])
+
+            $$={
+                returnInstruction: new errorr.default("->Error Semántico<-","Expresión no codificada",@1.first_line,@1.first_column),
+                nodeInstruction: new Nodo("EXPRESION").generateProduction([nodolower0,nodolower1,nodolower2,nodolower3])
+            }
+        }
+
+        | 'toUpper' 'parentesisAbre' 'cadena' 'parentesisCierra'{
+            nodoupper0 = new Nodo("toUpper").generateProduction([$1])
+            nodoupper1 = new Nodo("parentesisAbre").generateProduction([$2])
+            nodoupper2 = new Nodo("cadena").generateProduction([$3])
+            nodoupper3 = new Nodo("parentesisCierra").generateProduction([$4])
+
+            $$={
+                returnInstruction: new errorr.default("->Error Semántico<-","Expresión no codificada",@1.first_line,@1.first_column),
+                nodeInstruction: new Nodo("EXPRESION").generateProduction([nodoupper0,nodoupper1,nodoupper2,nodoupper3])
+            }
+        }
+
+        | 'round' 'parentesisAbre' EXPRESION 'parentesisCierra'{
+            nodoround0 = new Nodo("round").generateProduction([$1])
+            nodoround1 = new Nodo("parentesisAbre").generateProduction([$2])
+            
+            nodoround3 = new Nodo("parentesisCierra").generateProduction([$4])
+
+            $$={
+                returnInstruction: new errorr.default("->Error Semántico<-","Expresión no codificada",@1.first_line,@1.first_column),
+                nodeInstruction: new Nodo("EXPRESION").generateProduction([nodoround0,nodoround1,$3.nodeInstruction,nodoround3])
+            }
+        }
+
+        | 'length' 'parentesisAbre' EXPRESION 'parentesisCierra'{
+            nodolength0 = new Nodo("length").generateProduction([$1])
+            nodolength1 = new Nodo("parentesisAbre").generateProduction([$2])
+            
+            nodolength3 = new Nodo("parentesisCierra").generateProduction([$4])
+
+            $$={
+                returnInstruction: new errorr.default("->Error Semántico<-","Expresión no codificada",@1.first_line,@1.first_column),
+                nodeInstruction: new Nodo("EXPRESION").generateProduction([nodolength0,nodolength1,$3.nodeInstruction,nodolength3])
+            }
+        }
+
+        | 'typeof' 'parentesisAbre' EXPRESION 'parentesisCierra'{
+            nodotypeof0 = new Nodo("Typeof").generateProduction([$1])
+            nodotypeof1 = new Nodo("parentesisAbre").generateProduction([$2])
+            
+            nodotypeof3 = new Nodo("parentesisCierra").generateProduction([$4])
+
+            $$={
+                returnInstruction: new errorr.default("->Error Semántico<-","Expresión no codificada",@1.first_line,@1.first_column),
+                nodeInstruction: new Nodo("EXPRESION").generateProduction([nodotypeof0,nodotypeof1,$3.nodeInstruction,nodotypeof3])
+            }
+        }
+
+        | 'toStringg' 'parentesisAbre' EXPRESION 'parentesisCierra'{
+            nodotostring0 = new Nodo("ToString").generateProduction([$1])
+            nodotostring1 = new Nodo("parentesisAbre").generateProduction([$2])
+            
+            nodotostring3 = new Nodo("parentesisCierra").generateProduction([$4])
+
+            $$={
+                returnInstruction: new errorr.default("->Error Semántico<-","Expresión no codificada",@1.first_line,@1.first_column),
+                nodeInstruction: new Nodo("EXPRESION").generateProduction([nodotostring0,nodotostring1,$3.nodeInstruction,nodotostring3])
+
+            }
+        }
+
+        | 'toCharArray' 'parentesisAbre' cadena 'parentesisCierra'{
+            nodochar0 = new Nodo("ToCharArray").generateProduction([$1])
+            nodochar1 = new Nodo("parentesisAbre").generateProduction([$2])
+            nodochar2 = new Nodo("cadena").generateProduction([$3])
+            nodochar3 = new Nodo("parentesisCierra").generateProduction([$4])
+
+            $$={
+                returnInstruction: new errorr.default("->Error Semántico<-","Expresión no codificada",@1.first_line,@1.first_column),
+                nodeInstruction: new Nodo("EXPRESION").generateProduction([nodochar0,nodochar1,nodochar2,nodochar3])
+
+            }
+        }
       
 ;        
 
@@ -546,6 +736,17 @@ NATIVA :
             nodeInstruction: new Nodo("NATIVA").generateProduction([nodonativa5])
         }
         }
+
+    | 'identificador' 'parentesisAbre' PARAMETROS 'parentesisCierra'{
+            nodonllamada0 = new Nodo("identificador").generateProduction([$1])
+            nodonllamada1 = new Nodo("parentesisAbre").generateProduction([$2])
+            nodonllamada2 = new Nodo("parentesisCierra").generateProduction([$4])
+
+            $$={
+                returnInstruction: new errorr.default("->Error Semántico<-","Expresión no codificada",@1.first_line,@1.first_column),
+                nodeInstruction: new Nodo("NATIVA").generateProduction([nodonllamada0,nodonllamada1,$3.nodeInstruction,nodonllamada2])
+            }
+        }
 ;
 
 TERNARIO: EXPRESION 'interrogacionCierra' EXPRESION 'dosPuntos' EXPRESION {
@@ -556,7 +757,7 @@ TERNARIO: EXPRESION 'interrogacionCierra' EXPRESION 'dosPuntos' EXPRESION {
     nodoternario1.setHijos([new Nodo($4)])
     $$ = {
         returnInstruction: new relacional.default(relacional.tipoOp.TERNARIO,$3.returnInstruction,$5.returnInstruction,$1.returnInstruction,@1.first_line,@1.first_column),
-        nodeInstruction: new Nodo("TERNARIO").generateProduction($1.nodeInstruction,nodoternario0,$3.nodeInstruction,nodoternario1,$5.nodeInstruction)
+        nodeInstruction: new Nodo("TERNARIO").generateProduction([$1.nodeInstruction,nodoternario0,$3.nodeInstruction,nodoternario1,$5.nodeInstruction])
         }
     }
 ;
@@ -635,7 +836,7 @@ INCREDECRE: EXPRESION 'incremento' 'puntoycoma' {
     nodoincre1.setHijos([new Nodo(";")])
 
 
-    $$ = {returnInstruction: new incredecre.default(incredecre.tipoOp.INCREMENTO,$1.returnInstruction,@1.first_line,@1.first_column),
+    $$ = {returnInstruction: new incredecre.default(incredecre.tipoOp.INCREMENTO,$1.returnInstruction,$1.returnInstruction,@1.first_line,@1.first_column),
          nodeInstruction: new Nodo("INCREDECRE").generateProduction([$1.nodeInstruction,nodoincre0,nodoincre1])}
     }
 | EXPRESION 'decremento' 'puntoycoma' {
@@ -645,7 +846,7 @@ INCREDECRE: EXPRESION 'incremento' 'puntoycoma' {
     nododecre1 = new Nodo("puntoycoma")
     nododecre1.setHijos([new Nodo(";")])
 
-    $$ ={   returnInstruction: new incredecre.default(incredecre.tipoOp.DECREMENTO,$1.returnInstruction,@1.first_line,@1.first_column),
+    $$ ={   returnInstruction: new incredecre.default(incredecre.tipoOp.DECREMENTO,$1.returnInstruction,$1.returnInstruction,@1.first_line,@1.first_column),
             nodeInstruction: new Nodo("INCREDECRE").generateProduction([$1.nodeInstruction,nododecre0,nododecre1])
     }
     }
@@ -903,7 +1104,7 @@ ANIDADO: ANIDADO ELIF {
     }
 }
 ;
-ELIF: 'elif' 'parentesisAbre' EXPRESION 'parentesisCierra' 'llaveAbre' INSTRUCCIONBLOQUE 'llaveCierra' {
+ELIF: 'elif' 'parentesisAbre' EXPRESION 'parentesisCierra' 'llaveAbre' INSTRUCCIONESBLOQUE 'llaveCierra' {
     nodoelif0 = new Nodo("elif").generateProduction([$1])
     nodoelif1 = new Nodo("parentesisAbre").generateProduction([$2])
     nodoelif2 = new Nodo("parentesisCierra").generateProduction([$4])
@@ -930,7 +1131,7 @@ SINO: ELSE {
 }
 ;
 
-ELSE: 'else' 'llaveAbre' INSTRUCCIONBLOQUE 'llaveCierra'{
+ELSE: 'else' 'llaveAbre' INSTRUCCIONESBLOQUE 'llaveCierra'{
     nodoelse0 = new Nodo("else").generateProduction([$1])
     nodoelse1 = new Nodo("llaveAbre").generateProduction([$2])
     nodoelse2 = new Nodo("llaveCierra").generateProduction([$4])
@@ -1000,4 +1201,456 @@ INSTRUCCIONBLOQUE: PRINT   {
                     nodeInstruction: (new Nodo("INSTRUCCIONBLOQUE")).generateProduction([$1.nodeInstruction]) 
                 }
             }
+            | SWITCH {
+                $$={
+                    returnInstruction: $1.returnInstruction, 
+                    nodeInstruction: (new Nodo("INSTRUCCIONBLOQUE")).generateProduction([$1.nodeInstruction]) 
+                }
+            }
+            | TRANSFERENCIA {
+                    $$={
+                    returnInstruction: $1.returnInstruction, 
+                    nodeInstruction: (new Nodo("INSTRUCCIONBLOQUE")).generateProduction([$1.nodeInstruction]) 
+                }
+            }
+            | WHILE {
+                    $$={
+                    returnInstruction: $1.returnInstruction, 
+                    nodeInstruction: (new Nodo("INSTRUCCIONBLOQUE")).generateProduction([$1.nodeInstruction]) 
+                }
+            }
+            | FOR {
+                    $$={
+                    returnInstruction: $1.returnInstruction, 
+                    nodeInstruction: (new Nodo("INSTRUCCIONBLOQUE")).generateProduction([$1.nodeInstruction]) 
+                }
+            }
+            | DOWHILE {
+                    $$={
+                    returnInstruction: $1.returnInstruction, 
+                    nodeInstruction: (new Nodo("INSTRUCCIONBLOQUE")).generateProduction([$1.nodeInstruction]) 
+                }
+            }
+            | DOUNTIL {
+                    $$={
+                    returnInstruction: $1.returnInstruction, 
+                    nodeInstruction: (new Nodo("INSTRUCCIONBLOQUE")).generateProduction([$1.nodeInstruction]) 
+                }
+            }
+            | LLAMADA {
+                    $$={
+                    returnInstruction: $1.returnInstruction, 
+                    nodeInstruction: (new Nodo("INSTRUCCIONBLOQUE")).generateProduction([$1.nodeInstruction]) 
+                }
+            }
+            | PUSH {
+                    $$={
+                    returnInstruction: $1.returnInstruction, 
+                    nodeInstruction: (new Nodo("INSTRUCCIONBLOQUE")).generateProduction([$1.nodeInstruction]) 
+                }
+            }
+            | POP {
+                    $$={
+                    returnInstruction: $1.returnInstruction, 
+                    nodeInstruction: (new Nodo("INSTRUCCIONBLOQUE")).generateProduction([$1.nodeInstruction]) 
+                }
+            }
+            | PRINTLN{
+                    $$={
+                    returnInstruction: $1.returnInstruction, 
+                    nodeInstruction: (new Nodo("INSTRUCCIONBLOQUE")).generateProduction([$1.nodeInstruction]) 
+                }
+            }
+/*
+            | INVALID {
+                console.log("Un error lexico");
+                $$={
+                   returnInstruction: new errorr.default("->Error Lexico<-", $1, @1.first_line, @1.first_column), 
+                   nodeInstruction: null
+                   
+                }
+                } //Errores lexicos
+            | error  {console.log("Un error sintactico"); 
+            $$={
+               returnInstruction: new errorr.default("->Error Sintactico<-", $1, @1.first_line, @1.first_column),
+               nodeInstruction: null
+
+            }} //Errores sintacticos
+*/
+;
+SWITCH: 'switch' 'parentesisAbre' EXPRESION 'parentesisCierra' 'llaveAbre' CASES_LIST DEFAULT 'llaveCierra'{
+    nodoswitch0 = new Nodo("switch").generateProduction([$1])
+    nodoswitch1 = new Nodo("parentesisAbre").generateProduction([$2])
+    nodoswitch2 = new Nodo("parentesisCierra").generateProduction([$4])
+    nodoswitch3 = new Nodo("llaveAbre").generateProduction([$5])
+    nodoswitch4 = new Nodo("llaveCierra").generateProduction([$8])
+
+    $$={
+        returnInstruction: new errorr.default("->Error Semántico<-","Instrucción no codificada",@1.first_line,@1.first_column),
+        nodeInstruction : new Nodo("SWITCH").generateProduction([nodoswitch0,nodoswitch1,$3.nodeInstruction,nodoswitch2,nodoswitch3,$6.nodeInstruction,$7.nodeInstruction,nodoswitch4])
+    }
+}
+;
+
+CASES_LIST: CASES{
+    $$={
+        returnInstruction:null,
+        nodeInstruction: new Nodo("CASES_LIST").generateProduction([$1.nodeInstruction])
+    }
+}
+|{
+    $$={
+        returnInstruction:null,
+        nodeInstruction:null
+    }
+}
+;
+
+CASES: CASES CASE{
+    $$={
+        returnInstruction:null,
+        nodeInstruction: new Nodo("CASES").generateProduction([$1.nodeInstruction,$2.nodeInstruction])
+    }
+}
+|CASE {
+    $$={
+        returnInstruction:null,
+        nodeInstruction: new Nodo("CASES").generateProduction([$1.nodeInstruction])
+    }
+}
+;
+
+CASE: 'case' EXPRESION 'dosPuntos' INSTRUCCIONESBLOQUE  {
+    nodocase0 = new Nodo("case").generateProduction([$1])
+    nodocase1 = new Nodo("dosPuntos").generateProduction([$3])
+
+    $$={
+        returnInstruction:null,
+        nodeInstruction: new Nodo("CASE").generateProduction([nodocase0,$2.nodeInstruction,nodocase1,$4.nodeInstruction])
+    }
+}
+;
+
+DEFAULT: 'default' 'dosPuntos' INSTRUCCIONESBLOQUE {
+    nododefault0 = new Nodo("default").generateProduction([$1])
+    nododefault1 = new Nodo("dosPuntos").generateProduction([$2])
+    $$={
+        returnInstruction:null,
+        nodeInstruction: new Nodo("DEFAULT").generateProduction([nododefault0,nododefault1,$3.nodeInstruction])
+    }
+}
+|{
+    $$={
+        returnInstruction:null,
+        nodeInstruction: null
+    }
+}
+;
+
+TRANSFERENCIA: 'break' 'puntoycoma' {
+    nodobreak = new Nodo("break").generateProduction([$1])
+    nodobreak2 = new Nodo ("puntoycoma").generateProduction([$2])
+    $$={
+        returnInstruction: new errorr.default("->Error Semántico<-","Instrucción no codificada",@1.first_line,@1.first_column),
+        nodeInstruction: new Nodo("TRANSFERENCIA").generateProduction([nodobreak,nodobreak2])
+    }
+}
+| 'continue' 'puntoycoma' {
+    nodocontinue = new Nodo("continue").generateProduction([$1])
+    nodocontinue2 = new Nodo ("puntoycoma").generateProduction([$2])
+    $$={
+        returnInstruction: new errorr.default("->Error Semántico<-","Instrucción no codificada",@1.first_line,@1.first_column),
+        nodeInstruction: new Nodo("TRANSFERENCIA").generateProduction([nodocontinue,nodocontinue2])
+    }
+}
+| 'return' 'puntoycoma'{
+    nodoreturn = new Nodo("return").generateProduction([$1])
+    nodoreturn2 = new Nodo ("puntoycoma").generateProduction([$2])
+    $$={
+        returnInstruction: new errorr.default("->Error Semántico<-","Instrucción no codificada",@1.first_line,@1.first_column),
+        nodeInstruction: new Nodo("TRANSFERENCIA").generateProduction([nodoreturn,nodoreturn2])
+    }
+}
+| 'return' EXPRESION 'puntoycoma'{
+    nodoreturn = new Nodo("return").generateProduction([$1])
+    nodoreturn2 = new Nodo ("puntoycoma").generateProduction([$3])
+    $$={
+        returnInstruction: new errorr.default("->Error Semántico<-","Instrucción no codificada",@1.first_line,@1.first_column),
+        nodeInstruction: new Nodo("TRANSFERENCIA").generateProduction([nodoreturn,$2.nodeInstruction,nodoreturn2])
+    }
+}
+;
+
+WHILE: 'while' 'parentesisAbre' EXPRESION 'parentesisCierra' 'llaveAbre' INSTRUCCIONESBLOQUE 'llaveCierra'{
+    nodowhile0 = new Nodo("while").generateProduction([$1])
+    nodowhile1 = new Nodo("parentesisAbre").generateProduction([$2])
+    nodowhile2 = new Nodo("parentesisCierra").generateProduction([$4])
+    nodowhile3 = new Nodo("llaveAbre").generateProduction([$5])
+    nodowhile4 = new Nodo("llaveCierra").generateProduction([$7])
+
+    $$={
+        returnInstruction: new errorr.default("->Error Semántico<-","Instrucción no codificada", @1.first_line,@1.first_column),
+        nodeInstruction: new Nodo("WHILE").generateProduction([nodowhile0,nodowhile1,$3.nodeInstruction,nodowhile2,nodowhile3,$6.nodeInstruction,nodowhile4])
+    }
+}
+;
+FOR: 'for' 'parentesisAbre' FORVALOR EXPRESION 'puntoycoma' ACTUALIZACION 'parentesisCierra' 'llaveAbre' INSTRUCCIONESBLOQUE 'llaveCierra'{
+    nodofor0 = new Nodo("for").generateProduction([$1])
+    nodofor1 = new Nodo("parentesisAbre").generateProduction([$2])
+    nodofor3 = new Nodo("puntoycoma").generateProduction([$5])
+    nodofor4 = new Nodo("parentesisCierra").generateProduction([$7])
+    nodofor5 = new Nodo("llaveAbre").generateProduction([$8])
+    nodofor6 = new Nodo("llaveCierra").generateProduction([$10])
+
+    $$={
+        returnInstruction: new errorr.default("->Error Semántico<-","Instrucción no codificada", @1.first_line,@1.first_column),
+        nodeInstruction: new Nodo("FOR").generateProduction([nodofor0,nodofor1,$3.nodeInstruction,$4.nodeInstruction,nodofor3,$6.nodeInstruction,nodofor4,nodofor5,$9.nodeInstruction,nodofor6])
+}}
+;
+
+FORVALOR: DECLARACION{
+    $$={
+        returnInstruction:null,
+        nodeInstruction: new Nodo("FORVALOR").generateProduction([$1.nodeInstruction])
+    }
+}
+| ASIGNACION{
+    $$={
+        returnInstruction:null,
+        nodeInstruction: new Nodo("FORVALOR").generateProduction([$1.nodeInstruction])
+    }
+}
+;
+
+FORINCREDECRE: EXPRESION 'incremento' {
+    nodoforincre = new Nodo("incremento").generateProduction([$2])
+    $$={
+        returnInstruction: null,
+        nodeInstruction: new Nodo("FORINCREDECRE").generateProduction([$1.nodeInstruction,nodoforincre])
+    }
+}
+| EXPRESION 'decremento'  {
+    nodofordecre = new Nodo("decremento").generateProduction([$2])
+    $$={
+    returnInstruction: null,
+    nodeInstruction: new Nodo("FORINCRE").generateProduction([$1.nodeInstruction,nodofordecre])
+    }
+}
+;
+ACTUALIZACION: 'identificador' 'igual' EXPRESION {
+    nodoact0 = new Nodo("identificador").generateProduction([$1])
+    nodoact1 = new Nodo("igual").generateProduction([$2])
+    $$={
+        returnInstruction:null,
+        nodeInstruction: new Nodo("ACTUALIZACION").generateProduction([nodoact0,nodoact1,$3.nodeInstruction])
+    }
+}
+|EXPRESION{
+    $$={
+        returnInstruction:null,
+        nodeInstruction : new Nodo("ACTUALIZACION").generateProduction([$1.nodeInstruction])
+    }
+}
+
+;
+
+DOWHILE: 'do' 'llaveAbre' INSTRUCCIONESBLOQUE 'llaveCierra' 'while' 'parentesisAbre' EXPRESION 'parentesisCierra' 'puntoycoma'{
+    nododo0 = new Nodo("do").generateProduction([$1])
+    nododo1 = new Nodo("llaveAbre").generateProduction([$2])
+    nododo2 = new Nodo("llaveCierra").generateProduction([$4])
+    nododo3 = new Nodo("while").generateProduction([$5])
+    nododo4 = new Nodo("parentesisAbre").generateProduction([$6])
+    nododo5 = new Nodo("parentesisCierra").generateProduction([$8])
+    nododo6 = new Nodo("puntoycoma").generateProduction([$9]) 
+
+    $$={
+        returnInstruction: new errorr.default("->Error Semántico<-","Instrucción no codificada", @1.first_line,@1.first_column),
+        nodeInstruction: new Nodo("DOWHILE").generateProduction([nododo0,nododo1,$3.nodeInstruction,nododo2,nododo3,nododo4,$7.nodeInstruction,nododo5,nododo6])
+    }
+}
+;
+
+DOUNTIL: 'do' 'llaveAbre' INSTRUCCIONESBLOQUE 'llaveCierra' 'until' 'parentesisAbre' EXPRESION 'parentesisCierra' 'puntoycoma'{
+    nododou0 = new Nodo("do").generateProduction([$1])
+    nododou1 = new Nodo("llaveAbre").generateProduction([$2])
+    nododou2 = new Nodo("llaveCierra").generateProduction([$4])
+    nododou3 = new Nodo("until").generateProduction([$5])
+    nododou4 = new Nodo("parentesisAbre").generateProduction([$6])
+    nododou5 = new Nodo("parentesisCierra").generateProduction([$8])
+    nododou6 = new Nodo("puntoycoma").generateProduction([$9]) 
+
+    $$={
+        returnInstruction: new errorr.default("->Error Semántico<-","Instrucción no codificada", @1.first_line,@1.first_column),
+        nodeInstruction: new Nodo("DOUNTIL").generateProduction([nododou0,nododou1,$3.nodeInstruction,nododou2,nododou3,nododou4,$7.nodeInstruction,nododou5,nododou6])
+    }
+}
+;
+
+FUNCION: 'identificador' 'parentesisAbre' PARAMETROS 'parentesisCierra' 'dosPuntos' TIPO 'llaveAbre' INSTRUCCIONESBLOQUE 'llaveCierra'{
+    nodofuncion0 = new Nodo("identificador").generateProduction([$1])
+    nodofuncion1 = new Nodo("parentesisAbre").generateProduction([$2])
+    nodofuncion2 = new Nodo("parentesisCierra").generateProduction([$4])
+    nodofuncion3 = new Nodo("dosPuntos").generateProduction([$5])
+    nodofuncion4 = new Nodo("llaveAbre").generateProduction([$7])
+    nodofuncion5 = new Nodo("llaveCierra").generateProduction([$9])
+
+    $$={
+        returnInstruction: new errorr.default("->Error Semántico<-","Instrucción no codificada", @1.first_line,@1.first_column),
+        nodeInstruction: new Nodo("FUNCION").generateProduction([nodofuncion0,nodofuncion1,$3.nodeInstruction,nodofuncion2,nodofuncion3,$6.nodeInstruction,nodofuncion4,$8.nodeInstruction,nodofuncion5])
+    }
+}
+;
+
+PARAMETROS: LISTA_PARAMETROS {
+    $$={
+        returnInstruction:null,
+        nodeInstruction: new Nodo("PARAMETROS").generateProduction([$1.nodeInstruction])
+    }
+}
+| PARAMETROS_LLAMADA
+|{
+    $$={
+        returnInstruction:null,
+        nodeInstruction:null
+    }
+}
+;
+
+LISTA_PARAMETROS: LISTA_PARAMETROS 'coma' TIPO 'identificador' {
+    nodolistap2 = new Nodo("coma").generateProduction([$2])
+   
+    nodolistap4 = new Nodo("identificador").generateProduction([$4])
+
+    $$={
+        returnInstruction:null,
+        nodeInstruction: new Nodo("LISTA_PARAMETROS").generateProduction([$1.nodeInstruction,nodolistap2,$3.nodeInstruction,nodolistap4])
+    }
+}
+| TIPO 'identificador' {
+    
+    nodolistap1 = new Nodo("identificador").generateProduction([$2])
+
+    $$={
+        returnInstruction: null,
+        nodeInstruction: new Nodo("LISTA_PARAMETROS").generateProduction([$1.nodeInstruction,nodolistap1])
+    }
+}
+;
+
+
+
+METODO: 'identificador' 'parentesisAbre' PARAMETROS 'parentesisCierra' VOID 'llaveAbre' INSTRUCCIONESBLOQUE 'llaveCierra'{
+    nodometodo0 = new Nodo("identificador").generateProduction([$1])
+    nodometodo1 = new Nodo("parentesisAbre").generateProduction([$2])
+    nodometodo2 = new Nodo("parentesisCierra").generateProduction([$4])
+   
+    nodometodo4 = new Nodo("llaveAbre").generateProduction([$6])
+    nodometodo5 = new Nodo("llaveCierra").generateProduction([$8])
+
+    $$={
+        returnInstruction: new errorr.default("->Error Semántico<-","Instrucción no codificada", @1.first_line,@1.first_column),
+        nodeInstruction: new Nodo("METODO").generateProduction([nodometodo0,nodometodo1,$3.nodeInstruction,nodometodo2,$5.nodeInstruction,nodometodo4,$7.nodeInstruction,nodometodo5])
+    }
+}
+;
+
+VOID: 'dosPuntos' 'void'{
+    nodovoid0 = new Nodo("dosPuntos").generateProduction([$1])
+    nodovoid1 = new Nodo("void").generateProduction([$2])
+
+    $$={
+        returnInstruction:null,
+        nodeInstruction: new Nodo("VOID").generateProduction([nodovoid0,nodovoid1])
+    }
+}
+| {
+    $$={
+        returnInstruction:null,
+        nodeInstruction:null
+    }
+}
+;
+
+LLAMADA: 'identificador' 'parentesisAbre' PARAMETROS 'parentesisCierra' 'puntoycoma' {
+    nodollamada0 = new Nodo("identificador").generateProduction([$1])
+    nodollamada1 = new Nodo("parentesisAbre").generateProduction([$2])
+    nodollamada2 = new Nodo("parentesisCierra").generateProduction([$4])
+    nodollamada3 = new Nodo("puntoycoma").generateProduction([$5])
+
+    $$={
+        returnInstruction: new errorr.default("->Error Semántico<-","Instrucción no codificada", @1.first_line,@1.first_column),
+        nodeInstruction: new Nodo("LLAMADA").generateProduction([nodollamada0,nodollamada1,$3.nodeInstruction,nodollamada2,nodollamada3])
+    }
+
+}
+;
+
+
+
+EXPRESIONES: PARAMETROS_LLAMADA{
+    $$={
+        returnInstruction:null,
+        nodeInstruction: new Nodo("EXPRESIONES").generateProduction([$1.nodeInstruction])
+    }
+}
+| {
+    $$={returnInstruction:null,
+    nodeInstruction:null
+    }
+}
+;
+
+PARAMETROS_LLAMADA: PARAMETROS_LLAMADA 'coma' EXPRESION {
+    nodocoma = new Nodo("coma").generateProduction([$2])
+    $$={
+        returnInstruction:null,
+        nodeInstruction: new Nodo("PARAMETROS_LLAMADA").generateProduction([$1.nodeInstruction,nodocoma,$3.nodeInstruction])
+    }
+}
+| EXPRESION {
+    $$={
+        returnInstruction:null,
+        nodeInstruction: new Nodo("PARAMETROS_LLAMADA").generateProduction([$1.nodeInstruction])
+    }
+}
+;
+
+PUSH: 'identificador' 'punto' 'push' 'parentesisAbre' EXPRESION 'parentesisCierra' 'puntoycoma'{
+    nodopush0 = new Nodo("identificador").generateProduction([$1])
+    nodopush1 = new Nodo("punto").generateProduction([$2])
+    nodopush2 = new Nodo("push").generateProduction([$3])
+    nodopush3 = new Nodo("parentesisAbre").generateProduction([$4])
+    nodopush4 = new Nodo("parentesisCierra").generateProduction([$6])
+    nodopush5 = new Nodo("puntoycoma").generateProduction([$7])
+
+    $$={
+         returnInstruction: new errorr.default("->Error Semántico<-","Instrucción no codificada", @1.first_line,@1.first_column),
+         nodeInstruction: new Nodo("PUSH").generateProduction([nodopush0,nodopush1,nodopush2,nodopush3,$5.nodeInstruction,nodopush4,nodopush5])
+    } 
+}
+;
+
+POP: 'identificador' 'punto' 'pop' 'parentesisAbre' 'parentesisCierra' 'puntoycoma'{
+    nodopop0 = new Nodo("identificador").generateProduction([$1])
+    nodopop1 = new Nodo("punto").generateProduction([$2])
+    nodopop2 = new Nodo("pop").generateProduction([$3])
+    nodopop3 = new Nodo("parentesisAbre").generateProduction([$4])
+    nodopop4 = new Nodo("parentesisCierra").generateProduction([$5])
+    nodopop5 = new Nodo("puntoycoma").generateProduction([$6])
+
+    $$={
+         returnInstruction: new errorr.default("->Error Semántico<-","Instrucción no codificada", @1.first_line,@1.first_column),
+         nodeInstruction: new Nodo("POP").generateProduction([nodopop0,nodopop1,nodopop2,nodopop3,nodopop4,nodopop5])
+    } 
+}
+;
+
+RUN: 'run' LLAMADA {
+    nodorun = new Nodo("run").generateProduction([$1])
+
+    $$={
+        returnInstruction: new errorr.default("->Error Semántico<-","Instrucción no codificada", @1.first_line,@1.first_column),
+        nodeInstruction: new Nodo("RUN").generateProduction([nodorun,$2.nodeInstruction])
+    }
+}
 ;
